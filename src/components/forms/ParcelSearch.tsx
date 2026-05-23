@@ -12,8 +12,6 @@ interface Props {
   hasFreeReport: boolean
 }
 
-const playfair: React.CSSProperties = { fontFamily: 'var(--font-playfair)' }
-
 /**
  * Parsuje kod TERYT gminy z identyfikatora EGB.
  * Przykłady:
@@ -39,7 +37,6 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
     const trimmedId = parcelId.trim()
     if (!trimmedId) return
 
-    // Walidacja formatu — musi zawierać przynajmniej jedną kropkę (EGB)
     if (!trimmedId.includes('.')) {
       setError('Podaj pełny identyfikator EGB z Geoportal (np. 141201_1.0001.6/2). Musi zawierać kropki.')
       return
@@ -50,7 +47,6 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
     setResult(null)
 
     try {
-      // Gmina parsowana automatycznie z TERYT w identyfikatorze
       const teryt = parseTerytFromId(trimmedId)
       const res = await fetch(
         `/api/parcel?parcelId=${encodeURIComponent(trimmedId)}${teryt ? `&teryt=${encodeURIComponent(teryt)}` : ''}`
@@ -85,27 +81,18 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
         {/* Instrukcja */}
         <div className="flex gap-3 bg-blue-50/60 border border-blue-100 rounded-xl p-4 mb-6 text-sm text-blue-800">
           <Info className="h-4 w-4 mt-0.5 shrink-0 text-blue-500" />
-          <div style={playfair}>
+          <div>
             <p className="font-semibold mb-1.5">Jak znaleźć identyfikator działki?</p>
             <ol className="list-decimal ml-4 space-y-1 text-xs text-blue-700">
               <li>
                 Wejdź na{' '}
-                <a
-                  href="https://geoportal.gov.pl/pl/map/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline font-semibold"
-                >
-                  geoportal.gov.pl/pl/map
-                  <ExternalLink className="h-3 w-3 inline ml-0.5" />
+                <a href="https://geoportal.gov.pl/pl/map/" target="_blank" rel="noopener noreferrer" className="underline font-semibold">
+                  geoportal.gov.pl/pl/map <ExternalLink className="h-3 w-3 inline ml-0.5" />
                 </a>
               </li>
               <li>Wyszukaj adres lub odszukaj działkę na mapie</li>
               <li>Kliknij na działkę → pojawi się <strong>Identyfikator działki</strong></li>
-              <li>
-                Skopiuj wartość, np.{' '}
-                <code className="bg-blue-100 px-1.5 py-0.5 rounded text-xs">141201_1.0001.6/2</code>
-              </li>
+              <li>Skopiuj wartość, np. <code className="bg-blue-100 px-1.5 py-0.5 rounded text-xs">141201_1.0001.6/2</code></li>
             </ol>
           </div>
         </div>
@@ -113,11 +100,7 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
         {/* Formularz — JEDNO POLE */}
         <form onSubmit={handleSearch} className="space-y-5">
           <div>
-            <label
-              htmlFor="parcelId"
-              className="block text-sm text-gray-600 mb-1.5"
-              style={playfair}
-            >
+            <label htmlFor="parcelId" className="block text-sm text-gray-600 mb-1.5">
               Identyfikator działki (EGB)
             </label>
             <input
@@ -129,7 +112,7 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
               required
               className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm font-mono outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition placeholder:text-gray-300 disabled:opacity-50"
             />
-            <p className="mt-1.5 text-xs text-gray-400" style={playfair}>
+            <p className="mt-1.5 text-xs text-gray-400">
               Gmina zostanie rozpoznana automatycznie z kodu TERYT
             </p>
           </div>
@@ -137,7 +120,7 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
           {error && (
             <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl p-3">
               <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-              <span style={playfair}>{error}</span>
+              <span>{error}</span>
             </div>
           )}
 
@@ -146,7 +129,6 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
               type="submit"
               disabled={loading}
               className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-3 rounded-full text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-60"
-              style={playfair}
             >
               {loading ? (
                 <><Loader2 className="h-4 w-4 animate-spin" /> Wyszukuję w Geoportal…</>
@@ -159,7 +141,6 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
               type="button"
               onClick={handleReset}
               className="w-full py-3 rounded-full border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
-              style={playfair}
             >
               Szukaj innej działki
             </button>
@@ -188,23 +169,15 @@ function ParcelResultCard({
   hasFreeReport: boolean
   onGenerate: () => void
 }) {
-  const playfair: React.CSSProperties = { fontFamily: 'var(--font-playfair)' }
-
   return (
     <div className="border border-green-200 bg-green-50/50 rounded-2xl p-7 space-y-5">
       {/* Nagłówek */}
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <p
-          className="flex items-center gap-2 font-semibold text-gray-800"
-          style={playfair}
-        >
+        <p className="flex items-center gap-2 font-semibold text-gray-800">
           <CheckCircle2 className="h-5 w-5 text-green-600" />
           Działka znaleziona w Geoportal
         </p>
-        <span
-          className="text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 border border-green-200 font-medium"
-          style={playfair}
-        >
+        <span className="text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 border border-green-200 font-medium">
           ✓ Zweryfikowano
         </span>
       </div>
@@ -222,8 +195,8 @@ function ParcelResultCard({
           const [label, value] = item as [string, string]
           return (
             <div key={label}>
-              <p className="text-xs text-gray-400 uppercase tracking-widest mb-0.5" style={playfair}>{label}</p>
-              <p className="text-sm font-medium text-gray-800" style={playfair}>{value}</p>
+              <p className="text-xs text-gray-400 uppercase tracking-widest mb-0.5">{label}</p>
+              <p className="text-sm font-medium text-gray-800">{value}</p>
             </div>
           )
         })}
@@ -235,7 +208,6 @@ function ParcelResultCard({
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 text-xs text-green-700 hover:underline"
-          style={playfair}
         >
           <MapPin className="h-3 w-3" />
           Pokaż na mapie Google
@@ -247,26 +219,22 @@ function ParcelResultCard({
       <div className="pt-4 border-t border-green-200">
         {hasFreeReport ? (
           <div className="space-y-2">
-            <p className="text-sm text-green-700" style={playfair}>
-              ✓ Masz darmowy raport do wykorzystania
-            </p>
+            <p className="text-sm text-green-700">✓ Masz darmowy raport do wykorzystania</p>
             <button
               onClick={onGenerate}
               className="w-full bg-green-700 text-white py-3 rounded-full text-sm font-medium hover:bg-green-800 transition-colors"
-              style={playfair}
             >
               Generuj darmowy raport
             </button>
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="text-sm text-gray-500" style={playfair}>
+            <p className="text-sm text-gray-500">
               Raport kosztuje <span className="font-semibold text-gray-800">29 PLN</span>
             </p>
             <button
               onClick={onGenerate}
               className="w-full bg-gray-900 text-white py-3 rounded-full text-sm font-medium hover:bg-gray-700 transition-colors"
-              style={playfair}
             >
               Kup raport — 29 PLN
             </button>

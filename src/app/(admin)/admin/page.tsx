@@ -3,6 +3,7 @@ import { createClient, createServiceClient } from '@/lib/supabase/server'
 import AdminPanel from '@/components/admin/AdminPanel'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import LogoutButton from '@/components/LogoutButton'
 
 export default async function AdminPage() {
   const supabase = await createClient()
@@ -27,40 +28,30 @@ export default async function AdminPage() {
             <Link
               href="/dashboard"
               className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
-              style={{ fontFamily: 'var(--font-playfair)' }}
             >
               <ArrowLeft className="h-4 w-4" />
               Dashboard
             </Link>
             <span className="text-gray-200">|</span>
-            <span
-              className="font-semibold text-gray-900"
-              style={{ fontFamily: 'var(--font-playfair)' }}
-            >
+            <span className="font-semibold text-gray-900 font-playfair">
               Panel admina
             </span>
           </div>
-          <span
-            className="text-sm text-gray-400 hidden sm:block"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
-            {user.email}
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-400 hidden sm:block">
+              {user.email}
+            </span>
+            <LogoutButton />
+          </div>
         </div>
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 py-10">
         <div className="mb-8">
-          <h1
-            className="text-4xl text-gray-900"
-            style={{ fontFamily: 'var(--font-playfair)', fontWeight: 400 }}
-          >
+          <h1 className="text-4xl text-gray-900 font-playfair">
             Panel admina
           </h1>
-          <p
-            className="mt-2 text-gray-400"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
+          <p className="mt-2 text-gray-400">
             Zarządzaj danymi MPZP, mediami, raportami i użytkownikami.
           </p>
         </div>

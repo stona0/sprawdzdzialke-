@@ -48,47 +48,26 @@ export default function LoginPage() {
 
   return (
     <main
-      className="min-h-screen flex flex-col"
-      style={{
-        backgroundImage: 'url(/hero-bg.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center top',
-      }}
+      className="min-h-screen flex flex-col bg-cover bg-center-top"
+      style={{ backgroundImage: 'url(/hero-bg.jpg)' }}
     >
       {/* Nav */}
       <nav className="px-8 h-16 flex items-center justify-between">
-        <Link
-          href="/"
-          className="text-lg font-bold text-gray-900"
-          style={{ fontFamily: 'var(--font-playfair)' }}
-        >
+        <Link href="/" className="text-lg font-bold text-gray-900 font-playfair">
           Sprawdź<span className="text-green-700">Działkę</span>.pl
         </Link>
-        <Link
-          href="/register"
-          className="text-sm text-gray-700 hover:text-gray-900 transition-colors"
-          style={{ fontFamily: 'var(--font-playfair)' }}
-        >
+        <Link href="/register" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
           Nie masz konta? <span className="font-semibold underline underline-offset-2">Zarejestruj się</span>
         </Link>
       </nav>
 
       {/* Formularz wycentrowany */}
       <div className="flex-1 flex items-center justify-center px-4 pb-20">
-        <div
-          className="w-full max-w-sm bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/60 px-8 py-10"
-        >
-          {/* Tytuł */}
-          <h1
-            className="text-3xl text-gray-900 mb-1"
-            style={{ fontFamily: 'var(--font-playfair)', fontWeight: 400 }}
-          >
+        <div className="w-full max-w-sm bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/60 px-8 py-10">
+          <h1 className="text-3xl text-gray-900 mb-1 font-playfair">
             Zaloguj się
           </h1>
-          <p
-            className="text-sm text-gray-500 mb-8"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
+          <p className="text-sm text-gray-500 mb-8">
             Wprowadź swój email i hasło
           </p>
 
@@ -122,11 +101,7 @@ export default function LoginPage() {
             )}
 
             <div className="space-y-1.5">
-              <label
-                htmlFor="email"
-                className="block text-sm text-gray-600"
-                style={{ fontFamily: 'var(--font-playfair)' }}
-              >
+              <label htmlFor="email" className="block text-sm text-gray-600">
                 Email
               </label>
               <input
@@ -137,23 +112,17 @@ export default function LoginPage() {
                 onChange={e => setEmail(e.target.value)}
                 required
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition placeholder:text-gray-300"
-                style={{ fontFamily: 'var(--font-playfair)' }}
               />
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm text-gray-600"
-                  style={{ fontFamily: 'var(--font-playfair)' }}
-                >
+                <label htmlFor="password" className="block text-sm text-gray-600">
                   Hasło
                 </label>
                 <Link
                   href="/forgot-password"
                   className="text-xs text-green-700 hover:text-green-800 transition-colors"
-                  style={{ fontFamily: 'var(--font-playfair)' }}
                 >
                   Zapomniałem hasła
                 </Link>
@@ -165,7 +134,6 @@ export default function LoginPage() {
                 onChange={e => setPassword(e.target.value)}
                 required
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
-                style={{ fontFamily: 'var(--font-playfair)' }}
               />
             </div>
 
@@ -173,7 +141,6 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className="w-full bg-gray-900 text-white py-3 rounded-full font-medium hover:bg-gray-700 transition-colors disabled:opacity-60 mt-2"
-              style={{ fontFamily: 'var(--font-playfair)' }}
             >
               {loading ? 'Logowanie...' : 'Zaloguj się'}
             </button>

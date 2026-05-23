@@ -30,41 +30,22 @@ export default function PricingPage() {
       {/* Nav */}
       <nav className="border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-lg font-bold tracking-tight text-gray-900"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
+          <Link href="/" className="text-lg font-bold tracking-tight text-gray-900 font-playfair">
             Sprawdź<span className="text-green-700">Działkę</span>.pl
           </Link>
           <div className="flex items-center gap-6">
-            <Link
-              href="/login"
-              className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
-              style={{ fontFamily: 'var(--font-playfair)' }}
-            >
-              Zaloguj się
-            </Link>
-            <Link
-              href="/register"
-              className="bg-gray-900 text-white text-sm px-5 py-2 rounded-full hover:bg-gray-700 transition-colors"
-              style={{ fontFamily: 'var(--font-playfair)' }}
-            >
-              Zacznij za darmo
-            </Link>
+            <Link href="/login" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Zaloguj się</Link>
+            <Link href="/register" className="bg-gray-900 text-white text-sm px-5 py-2 rounded-full hover:bg-gray-700 transition-colors">Zacznij za darmo</Link>
           </div>
         </div>
       </nav>
 
       {/* Header */}
       <section className="max-w-4xl mx-auto px-6 pt-20 pb-12 text-center">
-        <h1
-          className="text-4xl md:text-5xl text-gray-900 tracking-tight mb-4"
-          style={{ fontFamily: 'var(--font-playfair)', fontWeight: 400 }}
-        >
-          Prosty cennik, <span style={{ fontWeight: 700 }}>bez subskrypcji</span>
+        <h1 className="text-4xl md:text-5xl text-gray-900 tracking-tight mb-4 font-playfair">
+          Prosty cennik, <span className="font-bold">bez subskrypcji</span>
         </h1>
-        <p className="text-gray-500 text-lg max-w-xl mx-auto" style={{ fontFamily: 'var(--font-playfair)' }}>
+        <p className="text-gray-500 text-lg max-w-xl mx-auto">
           Płacisz tylko za raporty których potrzebujesz. Pierwszy raport jest darmowy.
         </p>
       </section>
@@ -76,7 +57,7 @@ export default function PricingPage() {
           {/* Free */}
           <div className="border border-gray-200 rounded-2xl p-8">
             <div className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-2">Starter</div>
-            <div className="text-4xl font-bold text-gray-900 mb-1">0 zł</div>
+            <div className="text-4xl font-bold text-gray-900 mb-1 font-playfair">0 zł</div>
             <p className="text-gray-500 text-sm mb-8">Pierwszy raport gratis</p>
             <ul className="space-y-3 mb-8">
               {starterFeatures.map(f => (
@@ -90,21 +71,14 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/register"
-              className="block text-center border border-gray-300 text-gray-700 font-medium py-3 rounded-full hover:bg-gray-50 transition-colors"
-            >
-              Zacznij za darmo
-            </Link>
+            <Link href="/register" className="block text-center border border-gray-300 text-gray-700 font-medium py-3 rounded-full hover:bg-gray-50 transition-colors">Zacznij za darmo</Link>
           </div>
 
           {/* Paid */}
           <div className="bg-gray-900 rounded-2xl p-8 text-white relative overflow-hidden">
-            <div className="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
-              Popularne
-            </div>
+            <div className="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">Popularne</div>
             <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-2">Pro</div>
-            <div className="text-4xl font-bold mb-1">29 zł</div>
+            <div className="text-4xl font-bold mb-1 font-playfair">29 zł</div>
             <p className="text-gray-400 text-sm mb-8">za raport · jednorazowo</p>
             <ul className="space-y-3 mb-8">
               {proFeatures.map(f => (
@@ -113,16 +87,12 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/register"
-              className="block text-center bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2"
-            >
+            <Link href="/register" className="block text-center bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2">
               Sprawdź swoją działkę <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
 
-        {/* Payment methods */}
         <p className="text-center text-sm text-gray-400 mt-8">
           Płatność przez Stripe — karta, BLIK, Przelewy24. Faktura VAT na życzenie.
         </p>
@@ -131,7 +101,7 @@ export default function PricingPage() {
       {/* Footer */}
       <footer className="bg-gray-50 border-t border-gray-100 py-8">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-gray-400 text-sm font-semibold">
+          <span className="text-gray-400 text-sm font-semibold font-playfair">
             Sprawdź<span className="text-green-500">Działkę</span>.pl
           </span>
           <div className="flex gap-6 text-xs text-gray-500">

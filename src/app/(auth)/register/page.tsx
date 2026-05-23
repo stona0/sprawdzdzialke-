@@ -50,27 +50,15 @@ export default function RegisterPage() {
 
   return (
     <main
-      className="min-h-screen flex flex-col"
-      style={{
-        backgroundImage: 'url(/hero-bg.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center top',
-      }}
+      className="min-h-screen flex flex-col bg-cover bg-center-top"
+      style={{ backgroundImage: 'url(/hero-bg.jpg)' }}
     >
       {/* Nav */}
       <nav className="px-8 h-16 flex items-center justify-between">
-        <Link
-          href="/"
-          className="text-lg font-bold text-gray-900"
-          style={{ fontFamily: 'var(--font-playfair)' }}
-        >
+        <Link href="/" className="text-lg font-bold text-gray-900 font-playfair">
           Sprawdź<span className="text-green-700">Działkę</span>.pl
         </Link>
-        <Link
-          href="/login"
-          className="text-sm text-gray-700 hover:text-gray-900 transition-colors"
-          style={{ fontFamily: 'var(--font-playfair)' }}
-        >
+        <Link href="/login" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
           Masz już konto? <span className="font-semibold underline underline-offset-2">Zaloguj się</span>
         </Link>
       </nav>
@@ -80,24 +68,15 @@ export default function RegisterPage() {
         <div className="w-full max-w-sm bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-white/60 px-8 py-10">
 
           {/* Badge */}
-          <div
-            className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-xs px-3 py-1 rounded-full mb-6"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
+          <div className="inline-flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-xs px-3 py-1 rounded-full mb-6">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
             Pierwszy raport całkowicie za darmo
           </div>
 
-          <h1
-            className="text-3xl text-gray-900 mb-1"
-            style={{ fontFamily: 'var(--font-playfair)', fontWeight: 400 }}
-          >
+          <h1 className="text-3xl text-gray-900 mb-1 font-playfair">
             Utwórz konto
           </h1>
-          <p
-            className="text-sm text-gray-500 mb-8"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
+          <p className="text-sm text-gray-500 mb-8">
             Dołącz i sprawdź swoją działkę w 60 sekund
           </p>
 
@@ -131,13 +110,7 @@ export default function RegisterPage() {
             )}
 
             <div className="space-y-1.5">
-              <label
-                htmlFor="email"
-                className="block text-sm text-gray-600"
-                style={{ fontFamily: 'var(--font-playfair)' }}
-              >
-                Email
-              </label>
+              <label htmlFor="email" className="block text-sm text-gray-600">Email</label>
               <input
                 id="email"
                 type="email"
@@ -146,16 +119,11 @@ export default function RegisterPage() {
                 onChange={e => setEmail(e.target.value)}
                 required
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition placeholder:text-gray-300"
-                style={{ fontFamily: 'var(--font-playfair)' }}
               />
             </div>
 
             <div className="space-y-1.5">
-              <label
-                htmlFor="password"
-                className="block text-sm text-gray-600"
-                style={{ fontFamily: 'var(--font-playfair)' }}
-              >
+              <label htmlFor="password" className="block text-sm text-gray-600">
                 Hasło <span className="text-gray-400">(min. 8 znaków)</span>
               </label>
               <input
@@ -165,7 +133,6 @@ export default function RegisterPage() {
                 onChange={e => setPassword(e.target.value)}
                 required
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition"
-                style={{ fontFamily: 'var(--font-playfair)' }}
               />
             </div>
 
@@ -173,7 +140,6 @@ export default function RegisterPage() {
               type="submit"
               disabled={loading}
               className="w-full bg-gray-900 text-white py-3 rounded-full font-medium hover:bg-gray-700 transition-colors disabled:opacity-60 mt-2"
-              style={{ fontFamily: 'var(--font-playfair)' }}
             >
               {loading ? 'Tworzenie konta...' : 'Zarejestruj się'}
             </button>
