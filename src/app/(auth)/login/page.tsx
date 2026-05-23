@@ -54,7 +54,7 @@ export default function LoginPage() {
       {/* Nav */}
       <nav className="px-8 h-16 flex items-center justify-between">
         <Link href="/" className="text-lg font-bold text-gray-900 font-playfair">
-          Sprawdź<span className="text-green-700">Działkę</span>.pl
+          Sprawdź<span className="text-green-700">Działkę</span>.com
         </Link>
         <Link href="/register" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
           Nie masz konta? <span className="font-semibold underline underline-offset-2">Zarejestruj się</span>

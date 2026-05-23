@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
       {/* Nav */}
       <nav className="px-8 h-16 flex items-center justify-between">
         <Link href="/" className="text-lg font-bold text-gray-900 font-playfair">
-          Sprawdź<span className="text-green-700">Działkę</span>.pl
+          Sprawdź<span className="text-green-700">Działkę</span>.com
         </Link>
         <Link href="/login" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
           Wróć do <span className="font-semibold underline underline-offset-2">logowania</span>

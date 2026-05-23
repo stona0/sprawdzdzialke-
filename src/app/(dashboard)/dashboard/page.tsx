@@ -34,7 +34,7 @@ export default async function DashboardPage() {
       <nav className="border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="text-lg font-bold text-gray-900 font-playfair">
-            Sprawdź<span className="text-green-700">Działkę</span>.pl
+            Sprawdź<span className="text-green-700">Działkę</span>.com
           </Link>
           <div className="flex items-center gap-4">
             {profile?.role === 'admin' && (

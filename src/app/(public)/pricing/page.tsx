@@ -31,7 +31,7 @@ export default function PricingPage() {
       <nav className="border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="text-lg font-bold tracking-tight text-gray-900 font-playfair">
-            Sprawdź<span className="text-green-700">Działkę</span>.pl
+            Sprawdź<span className="text-green-700">Działkę</span>.com
           </Link>
           <div className="flex items-center gap-6">
             <Link href="/login" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Zaloguj się</Link>
@@ -102,14 +102,14 @@ export default function PricingPage() {
       <footer className="bg-gray-50 border-t border-gray-100 py-8">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <span className="text-gray-400 text-sm font-semibold font-playfair">
-            Sprawdź<span className="text-green-500">Działkę</span>.pl
+            Sprawdź<span className="text-green-500">Działkę</span>.com
           </span>
           <div className="flex gap-6 text-xs text-gray-500">
             <Link href="/" className="hover:text-gray-700 transition-colors">Strona główna</Link>
             <Link href="/login" className="hover:text-gray-700 transition-colors">Zaloguj się</Link>
             <Link href="/register" className="hover:text-gray-700 transition-colors">Rejestracja</Link>
           </div>
-          <span className="text-xs text-gray-400">© 2026 SprawdzDziałkę.pl</span>
+          <span className="text-xs text-gray-400">© 2026 SprawdzDziałkę.com</span>
         </div>
       </footer>
     </div>

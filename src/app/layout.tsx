@@ -16,19 +16,19 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "SprawdzDziałkę.pl – Analiza Planistyczna Działek",
+  title: "SprawdzDziałkę.com – Analiza Planistyczna Działek",
   description:
     "Profesjonalna analiza planistyczna działek na podstawie MPZP. Sprawdź warunki zabudowy, strefy i media przed zakupem działki.",
   keywords: "analiza planistyczna, MPZP, działka, zabudowa, raport planistyczny, SprawdzDziałkę",
-  metadataBase: new URL("https://sprawdzdzialke.pl"),
+  metadataBase: new URL("https://sprawdzdzialke.com"),
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: "SprawdzDziałkę.pl – Analiza Planistyczna Działek",
+    title: "SprawdzDziałkę.com – Analiza Planistyczna Działek",
     description: "Raport planistyczny w 60 sekund. MPZP, strefy Natura 2000, media i rekomendacje AI.",
-    url: "https://sprawdzdzialke.pl",
-    siteName: "SprawdzDziałkę.pl",
+    url: "https://sprawdzdzialke.com",
+    siteName: "SprawdzDziałkę.com",
     locale: "pl_PL",
     type: "website",
     // Dodaj og-image.png do /public po wygenerowaniu (1200x630px)
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "SprawdzDziałkę.pl",
+    title: "SprawdzDziałkę.com",
     description: "Sprawdź swoją działkę przed zakupem – MPZP, strefy, media.",
     // images: ["/og-image.png"],
   },

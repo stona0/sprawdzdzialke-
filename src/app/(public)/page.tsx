@@ -14,7 +14,7 @@ export default function HomePage() {
       <nav className="fixed top-0 inset-x-0 z-50 bg-transparent">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <span className="text-lg font-bold tracking-tight text-gray-900 font-playfair">
-            Sprawdź<span className="text-green-700">Działkę</span>.pl
+            Sprawdź<span className="text-green-700">Działkę</span>.com
           </span>
 
           {/* Desktop nav */}
@@ -111,7 +111,7 @@ export default function HomePage() {
               <div className="w-3 h-3 rounded-full bg-yellow-400" />
               <div className="w-3 h-3 rounded-full bg-green-400" />
               <div className="flex-1 mx-4 bg-white rounded-md px-3 py-1 text-xs text-gray-400 border border-gray-200">
-                sprawdzdzialke.pl/report/556-6-dlugoleka
+                sprawdzdzialke.com/report/556-6-dlugoleka
               </div>
             </div>
 
@@ -119,7 +119,7 @@ export default function HomePage() {
             <div className="p-5 bg-white">
               <div className="flex items-start justify-between mb-4 pb-3 border-b border-gray-100">
                 <div>
-                  <p className="text-xs font-semibold text-green-700 mb-1 font-playfair">SprawdzDziałkę.pl</p>
+                  <p className="text-xs font-semibold text-green-700 mb-1 font-playfair">SprawdzDziałkę.com</p>
                   <h2 className="text-base font-semibold text-gray-900 leading-tight font-playfair">
                     Raport działki <strong>556/6</strong><br/>Długołęka
                   </h2>
@@ -339,14 +339,14 @@ export default function HomePage() {
       <footer className="bg-gray-900 border-t border-gray-800 py-8">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <span className="text-gray-400 text-sm font-semibold font-playfair">
-            Sprawdź<span className="text-green-500">Działkę</span>.pl
+            Sprawdź<span className="text-green-500">Działkę</span>.com
           </span>
           <div className="flex gap-6 text-xs text-gray-500">
             <Link href="/pricing" className="hover:text-gray-300 transition-colors">Cennik</Link>
             <Link href="/login" className="hover:text-gray-300 transition-colors">Zaloguj się</Link>
             <Link href="/register" className="hover:text-gray-300 transition-colors">Rejestracja</Link>
           </div>
-          <span className="text-xs text-gray-600">© 2026 SprawdzDziałkę.pl</span>
+          <span className="text-xs text-gray-600">© 2026 SprawdzDziałkę.com</span>
         </div>
       </footer>
     </div>
