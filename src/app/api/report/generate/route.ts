@@ -39,7 +39,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Nie udało się utworzyć profilu' }, { status: 500 })
     }
 
-    const canGenerateFree = profile.free_reports_used === 0 || profile.role === 'admin'
+    const { data: canGenerateFree, error: claimError } = await supabaseService
+      .rpc('claim_free_report', { uid: user.id })
+
+    if (claimError) {
+      console.error('claim_free_report error:', JSON.stringify(claimError))
+      return NextResponse.json(
+        { error: 'Błąd sprawdzania darmowego raportu' },
+        { status: 500 }
+      )
+    }
 
     const { data: report, error: reportError } = await supabaseService
       .from('reports')

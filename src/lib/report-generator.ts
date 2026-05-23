@@ -184,9 +184,6 @@ export async function generateReport(
     .update({ html_content: html, status: 'completed' })
     .eq('id', reportId)
 
-  // Inkrementuj licznik darmowych raportów
-  try { await supabase.rpc('increment_free_reports', { uid: userId }) } catch { /* ignoruj */ }
-
   return html
 }
 
