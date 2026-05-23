@@ -2,12 +2,17 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Head from 'next/head'
 import { MapPin, FileText, Shield, Zap, ChevronRight, Check, Menu, X } from 'lucide-react'
 
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
+    <>
+    <Head>
+      <link rel="preload" href="/hero-bg.jpg" as="image" type="image/jpeg" />
+    </Head>
     <div className="min-h-screen bg-white">
 
       {/* ── NAV ─────────────────────────────────────────────────────────────── */}
@@ -350,5 +355,6 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
+    </>
   )
 }
