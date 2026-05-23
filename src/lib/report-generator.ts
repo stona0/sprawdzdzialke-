@@ -3,6 +3,7 @@ import { getParcelData } from './geoportal'
 import { queryGdosNature, queryOsmUtilities } from './external-data'
 import type { GdosResult, OsmUtilityResult } from './external-data'
 import { getWroclawMpzpForCoords } from './wroclaw-mpzp'
+import { getDlugolekaMpzpZone } from './wrosip-mpzp'
 import Anthropic from '@anthropic-ai/sdk'
 
 // ─── Typy ────────────────────────────────────────────────────────────────────
@@ -38,7 +39,8 @@ interface MpzpData {
   parsed_at: string
   uchwala?: string
   tytul_planu?: string
-  zrodlo?: 'wfs_wroclaw' | 'cache'
+  zrodlo?: 'wfs_wroclaw' | 'cache' | 'wrosip_raster'
+  pewnosc?: 'wysoka' | 'srednia' | 'niska'
 }
 
 interface StrefyData {
@@ -88,6 +90,25 @@ export async function generateReport(
         uchwala: wfsZone.uchwalenie_uchwala ?? undefined,
         tytul_planu: wfsZone.tytul_planu ?? undefined,
         zrodlo: 'wfs_wroclaw',
+      }
+    }
+  }
+
+  // Długołęka: raster analysis via wrosip.pl Zoomify tiles
+  const isDlugoleka = gmina.toLowerCase().includes('długołęka') || gmina.toLowerCase().includes('dlugoleka')
+  if (!mpzp && isDlugoleka && coords) {
+    const wrosipZone = await getDlugolekaMpzpZone(coords.lat, coords.lng).catch(() => null)
+    if (wrosipZone && wrosipZone.symbol !== '?') {
+      mpzp = {
+        symbol: wrosipZone.symbol,
+        przeznaczenie: wrosipZone.przeznaczenie,
+        wysokosc_max: null,
+        pbc_min: null,
+        typ_dachu: null,
+        parsed_at: new Date().toISOString(),
+        tytul_planu: wrosipZone.plan_name,
+        zrodlo: 'wrosip_raster',
+        pewnosc: wrosipZone.pewnosc,
       }
     }
   }
