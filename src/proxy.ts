@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 /**
- * Middleware – auth guard + token refresh.
+ * Proxy – auth guard + token refresh.
  *
  * Logika:
  * 1. Tworzy Supabase client z cookies (anon key) → odświeża JWT jeśli wygasł.
@@ -38,7 +38,7 @@ function isPublic(pathname: string): boolean {
   return false
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Publiczne ścieżki — nie ruszaj
