@@ -14,23 +14,46 @@ interface Props {
 
 const playfair: React.CSSProperties = { fontFamily: 'var(--font-playfair)' }
 
+/**
+ * Parsuje kod TERYT gminy z identyfikatora EGB.
+ * Przykłady:
+ *   "141201_1.0001.6/2"   → "141201_1"
+ *   "0261011.0001.AR_1.6" → "0261011"
+ * Zwraca pusty string jeśli nie da się sparsować.
+ */
+function parseTerytFromId(id: string): string {
+  const trimmed = id.trim()
+  const dotIndex = trimmed.indexOf('.')
+  if (dotIndex === -1) return ''
+  return trimmed.substring(0, dotIndex)
+}
+
 export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
   const [parcelId, setParcelId] = useState('')
-  const [gmina, setGmina] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [result, setResult] = useState<ParcelData | null>(null)
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault()
-    if (!parcelId.trim() || !gmina.trim()) return
+    const trimmedId = parcelId.trim()
+    if (!trimmedId) return
+
+    // Walidacja formatu — musi zawierać przynajmniej jedną kropkę (EGB)
+    if (!trimmedId.includes('.')) {
+      setError('Podaj pełny identyfikator EGB z Geoportal (np. 141201_1.0001.6/2). Musi zawierać kropki.')
+      return
+    }
+
     setLoading(true)
     setError('')
     setResult(null)
 
     try {
+      // Gmina parsowana automatycznie z TERYT w identyfikatorze
+      const teryt = parseTerytFromId(trimmedId)
       const res = await fetch(
-        `/api/parcel?parcelId=${encodeURIComponent(parcelId.trim())}&gmina=${encodeURIComponent(gmina.trim())}`
+        `/api/parcel?parcelId=${encodeURIComponent(trimmedId)}${teryt ? `&teryt=${encodeURIComponent(teryt)}` : ''}`
       )
       const data = await res.json()
 
@@ -51,7 +74,6 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
     setResult(null)
     setError('')
     setParcelId('')
-    setGmina('')
   }
 
   return (
@@ -88,46 +110,28 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
           </div>
         </div>
 
-        {/* Formularz */}
+        {/* Formularz — JEDNO POLE */}
         <form onSubmit={handleSearch} className="space-y-5">
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor="parcelId"
-                className="block text-sm text-gray-600 mb-1.5"
-                style={playfair}
-              >
-                Identyfikator działki (EGB)
-              </label>
-              <input
-                id="parcelId"
-                placeholder="np. 141201_1.0001.6/2"
-                value={parcelId}
-                onChange={e => setParcelId(e.target.value)}
-                disabled={loading || !!result}
-                required
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm font-mono outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition placeholder:text-gray-300 disabled:opacity-50"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="gmina"
-                className="block text-sm text-gray-600 mb-1.5"
-                style={playfair}
-              >
-                Gmina
-              </label>
-              <input
-                id="gmina"
-                placeholder="np. Kraków, Warszawa"
-                value={gmina}
-                onChange={e => setGmina(e.target.value)}
-                disabled={loading || !!result}
-                required
-                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition placeholder:text-gray-300 disabled:opacity-50"
-                style={playfair}
-              />
-            </div>
+          <div>
+            <label
+              htmlFor="parcelId"
+              className="block text-sm text-gray-600 mb-1.5"
+              style={playfair}
+            >
+              Identyfikator działki (EGB)
+            </label>
+            <input
+              id="parcelId"
+              placeholder="np. 141201_1.0001.6/2"
+              value={parcelId}
+              onChange={e => setParcelId(e.target.value)}
+              disabled={loading || !!result}
+              required
+              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm font-mono outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition placeholder:text-gray-300 disabled:opacity-50"
+            />
+            <p className="mt-1.5 text-xs text-gray-400" style={playfair}>
+              Gmina zostanie rozpoznana automatycznie z kodu TERYT
+            </p>
           </div>
 
           {error && (

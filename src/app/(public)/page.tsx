@@ -1,7 +1,12 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
-import { MapPin, FileText, Shield, Zap, ChevronRight, Check } from 'lucide-react'
+import { MapPin, FileText, Shield, Zap, ChevronRight, Check, Menu, X } from 'lucide-react'
 
 export default function HomePage() {
+  const [menuOpen, setMenuOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-white font-sans">
 
@@ -11,19 +16,65 @@ export default function HomePage() {
           <span className="text-lg font-bold tracking-tight text-gray-900" style={{ fontFamily: 'var(--font-playfair)' }}>
             Sprawdź<span className="text-green-700">Działkę</span>.pl
           </span>
+
+          {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-8 text-gray-700" style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem' }}>
             <a href="#funkcje" className="hover:text-gray-900 transition-colors">Funkcje</a>
             <Link href="/pricing" className="hover:text-gray-900 transition-colors">Cennik</Link>
             <Link href="/login" className="hover:text-gray-900 transition-colors">Zaloguj się</Link>
           </div>
-          <Link
-            href="/register"
-            className="bg-gray-900 text-white text-sm px-5 py-2 rounded-full hover:bg-gray-700 transition-colors"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
-            Zacznij za darmo
-          </Link>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/register"
+              className="bg-gray-900 text-white text-sm px-5 py-2 rounded-full hover:bg-gray-700 transition-colors"
+              style={{ fontFamily: 'var(--font-playfair)' }}
+            >
+              Zacznij za darmo
+            </Link>
+
+            {/* Hamburger — mobile only */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="md:hidden p-2 text-gray-700 hover:text-gray-900 transition-colors"
+              aria-label="Menu"
+            >
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile menu dropdown */}
+        {menuOpen && (
+          <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-lg">
+            <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-3">
+              <a
+                href="#funkcje"
+                onClick={() => setMenuOpen(false)}
+                className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors"
+                style={{ fontFamily: 'var(--font-playfair)' }}
+              >
+                Funkcje
+              </a>
+              <Link
+                href="/pricing"
+                onClick={() => setMenuOpen(false)}
+                className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors"
+                style={{ fontFamily: 'var(--font-playfair)' }}
+              >
+                Cennik
+              </Link>
+              <Link
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors"
+                style={{ fontFamily: 'var(--font-playfair)' }}
+              >
+                Zaloguj się
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
@@ -274,7 +325,7 @@ export default function HomePage() {
           <h2 className="text-4xl font-bold text-gray-900 mb-16">Jak to działa?</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: '01', title: 'Wpisz identyfikator', desc: 'Podaj numer działki lub pełny identyfikator EGB z Geoportal.gov.pl.' },
+              { step: '01', title: 'Wklej identyfikator', desc: 'Skopiuj identyfikator EGB z Geoportal.gov.pl i wklej w formularz.' },
               { step: '02', title: 'Poczekaj 60 sekund', desc: 'System automatycznie odpytuje ULDK, GDOŚ, ISOK i analizuje dane przez AI.' },
               { step: '03', title: 'Pobierz raport PDF', desc: 'Gotowy raport z rekomendacjami. Pokaż prawnikowi lub deweloperowi.' },
             ].map(s => (
