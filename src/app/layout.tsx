@@ -56,8 +56,7 @@ export const metadata: Metadata = {
     siteName: "SprawdzDziałkę.com",
     locale: "pl_PL",
     type: "website",
-    // TODO: Wygeneruj og-image.png (1200x630px) i odkomentuj:
-    // images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "SprawdzDziałkę.com — raport planistyczny działki" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "SprawdzDziałkę.com — raport planistyczny działki" }],
   },
 
   twitter: {
@@ -65,7 +64,7 @@ export const metadata: Metadata = {
     title: "SprawdzDziałkę.com — Sprawdź działkę w 60 sekund",
     description:
       "Sprawdź swoją działkę przed zakupem — MPZP, strefy, media, rekomendacje AI.",
-    // images: ["/og-image.png"],
+    images: ["/og-image.png"],
   },
 
   robots: {
