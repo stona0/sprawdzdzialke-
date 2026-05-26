@@ -1,5 +1,19 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Check, X, ChevronRight } from 'lucide-react'
+
+export const metadata: Metadata = {
+  title: 'Cennik',
+  description:
+    'Sprawdź cennik SprawdzDziałkę.com. Pierwszy raport za darmo, kolejne od 29 zł. Bez subskrypcji — płacisz tylko za raporty których potrzebujesz.',
+  alternates: {
+    canonical: 'https://sprawdzdzialke.com/pricing',
+  },
+  openGraph: {
+    title: 'Cennik — SprawdzDziałkę.com',
+    description: 'Pierwszy raport za darmo. Pełny raport Pro za 29 zł — MPZP, media, AI rekomendacje.',
+  },
+}
 
 const starterFeatures = [
   { text: '1 raport gratis', included: true },

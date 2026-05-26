@@ -1,0 +1,33 @@
+# SprawdzDziałkę.com
+
+> Narzędzie do analizy działek budowlanych w Polsce. Raport planistyczny w 60 sekund.
+
+## Co robimy
+
+SprawdzDziałkę.com generuje automatyczne raporty planistyczne dla działek budowlanych w Polsce. Użytkownik podaje identyfikator EGB działki, a system w ciągu 30–60 sekund pobiera dane z oficjalnych rejestrów publicznych i generuje kompletny raport zawierający:
+
+- Dane ewidencyjne działki (powierzchnia, obręb, powiat) z ULDK GUGiK
+- Status MPZP (Miejscowy Plan Zagospodarowania Przestrzennego) — przeznaczenie terenu, parametry zabudowy
+- Ochrona przyrody — strefy Natura 2000, parki krajobrazowe, rezerwaty (GDOŚ WFS)
+- Media i uzbrojenie terenu — wodociąg, kanalizacja, gaz, energia elektryczna
+- Rekomendacje AI — analiza ryzyk inwestycyjnych specyficznych dla działki
+
+## Dla kogo
+
+- Osoby kupujące działkę budowlaną w Polsce
+- Deweloperzy sprawdzający potencjał inwestycyjny
+- Pośrednicy nieruchomości przygotowujący oferty
+- Architekci weryfikujący parametry zabudowy
+
+## Cennik
+
+- Starter: 0 zł — pierwszy raport za darmo
+- Pro: 29 zł za raport — pełna analiza z rekomendacjami AI, bez subskrypcji
+
+## Źródła danych
+
+Dane pobierane z oficjalnych rejestrów: GUGiK (ULDK), Generalna Dyrekcja Ochrony Środowiska (GDOŚ WFS), WFS urzędów gmin (MPZP), OpenStreetMap (media), ISOK KZGW (strefy zalewowe).
+
+## Kontakt
+
+Strona: https://sprawdzdzialke.com
