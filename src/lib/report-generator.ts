@@ -4,6 +4,7 @@ import { queryGdosNature, queryOsmUtilities } from './external-data'
 import type { GdosResult, OsmUtilityResult } from './external-data'
 import { getWroclawMpzpForCoords } from './wroclaw-mpzp'
 import { getDlugolekaMpzpZone } from './wrosip-mpzp'
+import { generateUtilityMap } from './utility-map'
 import Anthropic from '@anthropic-ai/sdk'
 
 // ─── Typy ────────────────────────────────────────────────────────────────────
@@ -25,6 +26,8 @@ export interface ReportData {
   strefy: StrefyData
   // [4] Media
   media: MediaData
+  // [4b] Mapa uzbrojenia
+  utilityMapUrl: string | null
   // [5] Rekomendacje
   rekomendacje: string[]
   ryzyka: string[]
@@ -144,12 +147,13 @@ export async function generateReport(
     .maybeSingle()
 
   // 3b. External automatic data – run in parallel, don't block on failure
-  const [gdosResult, osmResult] = coords
+  const [gdosResult, osmResult, utilityMapUrl] = coords
     ? await Promise.all([
         queryGdosNature(coords.lat, coords.lng).catch((): GdosResult => ({ areas: [], queried: false })),
         queryOsmUtilities(coords.lat, coords.lng).catch((): OsmUtilityResult => ({ wodociag: null, kanalizacja: null, gaz: null, energia: null })),
+        generateUtilityMap(coords.lat, coords.lng).catch(() => null),
       ])
-    : [null, null]
+    : [null, null, null]
 
   const media: MediaData = {
     wodociag:    mergeMedia(sipRow?.wodociag,    osmResult?.wodociag    ?? null, 'ZGK/MPWiK'),
@@ -193,6 +197,7 @@ export async function generateReport(
     mpzp,
     strefy,
     media,
+    utilityMapUrl: utilityMapUrl ?? null,
     rekomendacje,
     ryzyka,
   }
@@ -627,6 +632,27 @@ function buildHTML(d: ReportData): string {
         <span><strong>Strefa konserwatorska:</strong> ${esc(d.strefy.konserwatorska)}</span>
       </div>
     </div>
+
+    <!-- [4b] Mapa uzbrojenia -->
+    ${d.utilityMapUrl ? `
+    <div class="section full">
+      <div class="section-title"><span class="icon">🗺</span>Uzbrojenie terenu w media</div>
+      <img
+        src="${d.utilityMapUrl}"
+        alt="Mapa uzbrojenia terenu"
+        style="width:100%;border-radius:8px;display:block;margin-bottom:10px;"
+      />
+      <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:#6b7280;margin-top:6px;">
+        <span><span style="display:inline-block;width:18px;height:3px;background:#e63946;vertical-align:middle;margin-right:4px;"></span>Sieć elektroenergetyczna</span>
+        <span><span style="display:inline-block;width:18px;height:3px;background:#457b9d;vertical-align:middle;margin-right:4px;"></span>Wodociąg</span>
+        <span><span style="display:inline-block;width:18px;height:3px;background:#e07800;vertical-align:middle;margin-right:4px;"></span>Kanalizacja</span>
+        <span><span style="display:inline-block;width:18px;height:3px;background:#c9b100;vertical-align:middle;margin-right:4px;"></span>Sieć gazowa</span>
+        <span><span style="display:inline-block;width:18px;height:3px;background:#888;vertical-align:middle;margin-right:4px;"></span>Telekomunikacja</span>
+        <span style="margin-left:auto;font-size:11px;">Źródło: GUGiK GESUT + OpenStreetMap</span>
+      </div>
+      <p style="font-size:11px;color:#9ca3af;margin-top:8px;">⚠ Stan faktyczny może odbiegać od danych na mapie. Zalecana weryfikacja u lokalnych operatorów sieci.</p>
+    </div>
+    ` : ''}
 
     <!-- [5] Rekomendacje AI -->
     <div class="section">
