@@ -137,12 +137,9 @@ async function renderMap(lat: number, lng: number): Promise<Buffer | null> {
         const subdomain = ['a', 'b', 'c', 'd'][(tx + ty) % 4]
         tilePromises.push(
           fetch(
-            `https://${subdomain}.basemaps.cartocdn.com/rastertiles/voyager/${ZOOM}/${tx}/${ty}.png`,
+            `https://tile.openstreetmap.org/${ZOOM}/${tx}/${ty}.png`,
             {
-              headers: {
-                'User-Agent': 'Mozilla/5.0 SprawdzDzialke/1.0 (sprawdzdzialke.com)',
-                'Referer': 'https://sprawdzdzialke.com/',
-              },
+              headers: { 'User-Agent': 'SprawdzDzialke/1.0 (+https://sprawdzdzialke.com)' },
               signal: AbortSignal.timeout(8000),
             }
           )
