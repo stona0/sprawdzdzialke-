@@ -139,7 +139,10 @@ async function renderMap(lat: number, lng: number): Promise<Buffer | null> {
           fetch(
             `https://${subdomain}.basemaps.cartocdn.com/rastertiles/voyager/${ZOOM}/${tx}/${ty}.png`,
             {
-              headers: { 'User-Agent': 'SprawdzDzialke/1.0 (sprawdzdzialke.com)' },
+              headers: {
+                'User-Agent': 'Mozilla/5.0 SprawdzDzialke/1.0 (sprawdzdzialke.com)',
+                'Referer': 'https://sprawdzdzialke.com/',
+              },
               signal: AbortSignal.timeout(8000),
             }
           )
