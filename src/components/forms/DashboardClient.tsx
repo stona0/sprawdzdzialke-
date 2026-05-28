@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import ParcelSearch from './ParcelSearch'
@@ -22,6 +22,10 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
   const searchParams = useSearchParams()
   const [generating, setGenerating] = useState(false)
   const [pendingPayment, setPendingPayment] = useState<PendingPayment | null>(null)
+  const pollAbortRef = useRef<AbortController | null>(null)
+
+  // Cleanup polling on unmount
+  useEffect(() => () => { pollAbortRef.current?.abort() }, [])
 
   // Obsługa powrotu ze Stripe
   useEffect(() => {
@@ -77,7 +81,10 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
 
       // 3. Raport generuje się w tle — polluj co 3 s
       const reportId = data.reportId as string
-      await pollReportStatus(reportId)
+      pollAbortRef.current?.abort()
+      const ac = new AbortController()
+      pollAbortRef.current = ac
+      await pollReportStatus(reportId, ac.signal)
 
     } catch (err) {
       console.error('[generate] fetch exception:', err)
@@ -86,20 +93,14 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
     }
   }
 
-  async function pollReportStatus(reportId: string) {
+  async function pollReportStatus(reportId: string, signal: AbortSignal) {
     const MAX_POLLS = 40  // max 2 minuty (40 × 3 s)
-    let polls = 0
 
-    const check = async (): Promise<void> => {
-      polls++
-      if (polls > MAX_POLLS) {
-        toast.error('Generowanie trwa zbyt długo. Odśwież stronę za chwilę.')
-        setGenerating(false)
-        return
-      }
+    for (let i = 0; i < MAX_POLLS; i++) {
+      if (signal.aborted) return
 
       try {
-        const res = await fetch(`/api/report/${reportId}/status`)
+        const res = await fetch(`/api/report/${reportId}/status`, { signal })
         const data = await res.json()
 
         if (data.status === 'completed') {
@@ -113,17 +114,19 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
           setGenerating(false)
           return
         }
-
-        // 'generating' — czekaj i sprawdź ponownie
-        await new Promise(r => setTimeout(r, 3000))
-        await check()
-      } catch {
+      } catch (err) {
+        if (signal.aborted) return
         toast.error('Błąd połączenia. Spróbuj ponownie.')
         setGenerating(false)
+        return
       }
+
+      // Czekaj 3 s przed kolejnym sprawdzeniem
+      await new Promise(r => setTimeout(r, 3000))
     }
 
-    await check()
+    toast.error('Generowanie trwa zbyt długo. Odśwież stronę za chwilę.')
+    setGenerating(false)
   }
 
   async function handlePaymentConfirm() {

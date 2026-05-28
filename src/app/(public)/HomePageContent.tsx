@@ -21,6 +21,7 @@ export default function HomePageContent() {
             <a href="#funkcje" className="hover:text-gray-900 transition-colors">Funkcje</a>
             <Link href="/pricing" className="hover:text-gray-900 transition-colors">Cennik</Link>
             <a href="#faq" className="hover:text-gray-900 transition-colors">FAQ</a>
+            <Link href="/blog" className="hover:text-gray-900 transition-colors">Blog</Link>
             <Link href="/login" className="hover:text-gray-900 transition-colors">Zaloguj się</Link>
           </div>
 
@@ -50,6 +51,7 @@ export default function HomePageContent() {
               <a href="#funkcje" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">Funkcje</a>
               <Link href="/pricing" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">Cennik</Link>
               <a href="#faq" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">FAQ</a>
+              <Link href="/blog" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">Blog</Link>
               <Link href="/login" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">Zaloguj się</Link>
             </div>
           </div>
@@ -344,6 +346,7 @@ export default function HomePageContent() {
           </span>
           <div className="flex gap-6 text-xs text-gray-500">
             <Link href="/pricing" className="hover:text-gray-300 transition-colors">Cennik</Link>
+            <Link href="/blog" className="hover:text-gray-300 transition-colors">Blog</Link>
             <a href="#faq" className="hover:text-gray-300 transition-colors">FAQ</a>
             <Link href="/login" className="hover:text-gray-300 transition-colors">Zaloguj się</Link>
             <Link href="/register" className="hover:text-gray-300 transition-colors">Rejestracja</Link>

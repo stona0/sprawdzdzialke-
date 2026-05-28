@@ -139,24 +139,27 @@ export async function generateReport(
     }
   }
 
-  // 3. SIP/media (manual data entered by admin)
-  const { data: sipRow } = await supabase
+  // 3. SIP/media + external data — wszystko równolegle (SIP zależy tylko od gmina)
+  const sipPromise = supabase
     .from('sip_layers')
     .select('*')
     .ilike('gmina_nazwa', `%${gmina}%`)
     .maybeSingle()
 
   // 3b. External automatic data – run in parallel, don't block on failure
-  const [gdosResult, osmResult, utilityMapUrl] = coords
-    ? await Promise.all([
-        queryGdosNature(coords.lat, coords.lng).catch((): GdosResult => ({ areas: [], queried: false })),
-        queryOsmUtilities(coords.lat, coords.lng).catch((): OsmUtilityResult => ({ wodociag: null, kanalizacja: null, gaz: null, energia: null })),
-        Promise.race([
-          generateUtilityMap(coords.lat, coords.lng).catch(() => null),
-          new Promise<null>(resolve => setTimeout(() => resolve(null), 30_000)),
-        ]),
-      ])
-    : [null, null, null]
+  const [{ data: sipRow }, [gdosResult, osmResult, utilityMapUrl]] = await Promise.all([
+    sipPromise,
+      coords
+      ? Promise.all([
+          queryGdosNature(coords.lat, coords.lng).catch((): GdosResult => ({ areas: [], queried: false })),
+          queryOsmUtilities(coords.lat, coords.lng).catch((): OsmUtilityResult => ({ wodociag: null, kanalizacja: null, gaz: null, energia: null })),
+          Promise.race([
+            generateUtilityMap(coords.lat, coords.lng).catch(() => null),
+            new Promise<null>(resolve => setTimeout(() => resolve(null), 30_000)),
+          ]),
+        ])
+      : Promise.resolve([null, null, null] as [null, null, null]),
+  ])
 
   const media: MediaData = {
     wodociag:    mergeMedia(sipRow?.wodociag,    osmResult?.wodociag    ?? null, 'ZGK/MPWiK'),
