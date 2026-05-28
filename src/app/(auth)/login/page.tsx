@@ -35,14 +35,20 @@ export default function LoginPage() {
 
   async function handleGoogleLogin() {
     const supabase = createClient()
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        skipBrowserRedirect: false,
       },
     })
     if (error) {
       setError('Nie udało się połączyć z Google. Spróbuj ponownie.')
+      return
+    }
+    // @supabase/ssr v0.10+ zwraca URL zamiast automatycznie redirectować
+    if (data?.url) {
+      window.location.href = data.url
     }
   }
 
