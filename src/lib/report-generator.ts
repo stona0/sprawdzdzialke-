@@ -640,7 +640,7 @@ function buildHTML(d: ReportData): string {
       <img
         src="${d.utilityMapUrl}"
         alt="Mapa uzbrojenia terenu"
-        style="width:100%;border-radius:8px;display:block;margin-bottom:10px;"
+        style="width:100%;max-width:1200px;border-radius:8px;display:block;margin-bottom:10px;"
       />
       <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:#6b7280;margin-top:6px;">
         <span><span style="display:inline-block;width:18px;height:3px;background:#e63946;vertical-align:middle;margin-right:4px;"></span>Sieć elektroenergetyczna</span>
