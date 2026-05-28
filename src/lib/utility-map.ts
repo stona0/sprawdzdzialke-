@@ -121,7 +121,8 @@ function buildLeafletHtml(lat: number, lng: number): string {
       }
     }
 
-    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    var osm = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd',
       maxZoom: 19,
       attribution: ''
     });
@@ -253,8 +254,9 @@ async function renderWithSharp(lat: number, lng: number): Promise<Buffer | null>
     const tilePromises: Promise<{ tx: number; ty: number; buf: Buffer }>[] = []
     for (let ty = ty0; ty <= ty1; ty++) {
       for (let tx = tx0; tx <= tx1; tx++) {
+        const subdomain = ['a','b','c','d'][(tx + ty) % 4]
         tilePromises.push(
-          fetch(`https://tile.openstreetmap.org/${ZOOM}/${tx}/${ty}.png`, {
+          fetch(`https://${subdomain}.basemaps.cartocdn.com/rastertiles/voyager/${ZOOM}/${tx}/${ty}.png`, {
             headers: { 'User-Agent': 'SprawdzDzialke/1.0 (sprawdzdzialke.com)' },
             signal: AbortSignal.timeout(8000),
           })
