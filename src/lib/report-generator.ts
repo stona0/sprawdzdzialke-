@@ -153,7 +153,7 @@ export async function generateReport(
         queryOsmUtilities(coords.lat, coords.lng).catch((): OsmUtilityResult => ({ wodociag: null, kanalizacja: null, gaz: null, energia: null })),
         Promise.race([
           generateUtilityMap(coords.lat, coords.lng).catch(() => null),
-          new Promise<null>(resolve => setTimeout(() => resolve(null), 20_000)),
+          new Promise<null>(resolve => setTimeout(() => resolve(null), 30_000)),
         ]),
       ])
     : [null, null, null]
