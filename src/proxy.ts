@@ -24,6 +24,7 @@ const PUBLIC_PATHS = [
 // Prefixy które są zawsze publiczne
 const PUBLIC_PREFIXES = [
   '/api/payments/webhook', // Stripe webhook — no cookies, signature-verified
+  '/auth/callback',        // Supabase OAuth callback — wymienia code na sesję
   '/_next',               // Next.js assets
   '/favicon',
 ]
