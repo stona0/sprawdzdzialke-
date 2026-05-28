@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // sharp ma natywne bindingi (.node) — nie bundluj webpackiem, require at runtime
+  serverExternalPackages: ['sharp', 'playwright', '@sparticuz/chromium'],
 };
 
 export default nextConfig;
