@@ -4,6 +4,9 @@ import { generateReport } from '@/lib/report-generator'
 import { checkRateLimit, getRateLimitKey } from '@/lib/rate-limit'
 import { validateParcelId, validateGmina, sanitize } from '@/lib/validation'
 
+// Netlify/Vercel: extend function timeout (seconds)
+export const maxDuration = 60
+
 // Rate limit: max 5 raportów na 10 minut per user
 const RATE_LIMIT_MAX = 5
 const RATE_LIMIT_WINDOW = 10 * 60 * 1000 // 10 min

@@ -2,5 +2,9 @@
   command = "npm run build"
   publish = ".next"
 
+[functions]
+  # Extend timeout for report generation (Playwright + AI calls can take 30-50s)
+  node_bundler = "nft"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"

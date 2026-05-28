@@ -151,7 +151,10 @@ export async function generateReport(
     ? await Promise.all([
         queryGdosNature(coords.lat, coords.lng).catch((): GdosResult => ({ areas: [], queried: false })),
         queryOsmUtilities(coords.lat, coords.lng).catch((): OsmUtilityResult => ({ wodociag: null, kanalizacja: null, gaz: null, energia: null })),
-        generateUtilityMap(coords.lat, coords.lng).catch(() => null),
+        Promise.race([
+          generateUtilityMap(coords.lat, coords.lng).catch(() => null),
+          new Promise<null>(resolve => setTimeout(() => resolve(null), 20_000)),
+        ]),
       ])
     : [null, null, null]
 
