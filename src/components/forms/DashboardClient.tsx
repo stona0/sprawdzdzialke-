@@ -50,24 +50,35 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ parcelId: parcel.parcelId, gmina: parcel.gmina }),
       })
-      const data = await res.json()
+
+      // Próbuj sparsować JSON; jeśli serwer zwrócił HTML (502/504) — pokaż status
+      let data: Record<string, unknown> = {}
+      const text = await res.text()
+      try {
+        data = JSON.parse(text)
+      } catch {
+        toast.error(`Błąd serwera (HTTP ${res.status}). Spróbuj ponownie.`)
+        console.error('[generate] non-JSON response:', res.status, text.slice(0, 300))
+        setGenerating(false)
+        return
+      }
 
       if (!res.ok) {
-        toast.error(data.error ?? 'Błąd generowania raportu')
+        toast.error(data.error as string ?? 'Błąd generowania raportu')
         setGenerating(false)
         return
       }
 
       if (data.requiresPayment) {
-        // Pokaż dialog z ceną zamiast od razu przekierowywać
-        setPendingPayment({ parcel, reportId: data.reportId })
+        setPendingPayment({ parcel, reportId: data.reportId as string })
         setGenerating(false)
         return
       }
 
       toast.success('Raport wygenerowany!')
-      router.push(`/report/${data.reportId}`)
-    } catch {
+      router.push(`/report/${data.reportId as string}`)
+    } catch (err) {
+      console.error('[generate] fetch exception:', err)
       toast.error('Błąd połączenia. Spróbuj ponownie.')
       setGenerating(false)
     }
