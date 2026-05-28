@@ -115,19 +115,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ requiresPayment: true, reportId: report.id })
     }
 
-    // ── Generate ────────────────────────────────────────────────────
-    try {
-      await generateReport(parcelId, gmina, user.id, report.id)
-      return NextResponse.json({ reportId: report.id, status: 'completed' })
-    } catch (err) {
+    // ── Generate — fire and forget (unikamy 504 od Netlify CDN) ─────
+    // Zwracamy natychmiast, klient polluje /api/report/[id]/status
+    generateReport(parcelId, gmina, user.id, report.id).catch(async (err) => {
+      console.error('[generate] generateReport failed:', err)
       await supabaseService
         .from('reports')
         .update({ status: 'failed' })
         .eq('id', report.id)
+    })
 
-      const message = err instanceof Error ? err.message : 'Błąd generowania raportu'
-      return NextResponse.json({ error: message }, { status: 500 })
-    }
+    return NextResponse.json({ reportId: report.id, status: 'generating' })
   } catch (err) {
     console.error('Unhandled error in /api/report/generate:', err)
     return NextResponse.json({ error: 'Wewnętrzny błąd serwera' }, { status: 500 })

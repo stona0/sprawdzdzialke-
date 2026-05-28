@@ -45,20 +45,19 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
     setGenerating(true)
 
     try {
+      // 1. Kick off generation — zwraca natychmiast (unika 504)
       const res = await fetch('/api/report/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ parcelId: parcel.parcelId, gmina: parcel.gmina }),
       })
 
-      // Próbuj sparsować JSON; jeśli serwer zwrócił HTML (502/504) — pokaż status
       let data: Record<string, unknown> = {}
       const text = await res.text()
       try {
         data = JSON.parse(text)
       } catch {
         toast.error(`Błąd serwera (HTTP ${res.status}). Spróbuj ponownie.`)
-        console.error('[generate] non-JSON response:', res.status, text.slice(0, 300))
         setGenerating(false)
         return
       }
@@ -69,19 +68,62 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
         return
       }
 
+      // 2. Płatność wymagana — pokaż dialog
       if (data.requiresPayment) {
         setPendingPayment({ parcel, reportId: data.reportId as string })
         setGenerating(false)
         return
       }
 
-      toast.success('Raport wygenerowany!')
-      router.push(`/report/${data.reportId as string}`)
+      // 3. Raport generuje się w tle — polluj co 3 s
+      const reportId = data.reportId as string
+      await pollReportStatus(reportId)
+
     } catch (err) {
       console.error('[generate] fetch exception:', err)
       toast.error('Błąd połączenia. Spróbuj ponownie.')
       setGenerating(false)
     }
+  }
+
+  async function pollReportStatus(reportId: string) {
+    const MAX_POLLS = 40  // max 2 minuty (40 × 3 s)
+    let polls = 0
+
+    const check = async (): Promise<void> => {
+      polls++
+      if (polls > MAX_POLLS) {
+        toast.error('Generowanie trwa zbyt długo. Odśwież stronę za chwilę.')
+        setGenerating(false)
+        return
+      }
+
+      try {
+        const res = await fetch(`/api/report/${reportId}/status`)
+        const data = await res.json()
+
+        if (data.status === 'completed') {
+          toast.success('Raport wygenerowany!')
+          router.push(`/report/${reportId}`)
+          return
+        }
+
+        if (data.status === 'failed') {
+          toast.error('Błąd generowania raportu. Spróbuj ponownie.')
+          setGenerating(false)
+          return
+        }
+
+        // 'generating' — czekaj i sprawdź ponownie
+        await new Promise(r => setTimeout(r, 3000))
+        await check()
+      } catch {
+        toast.error('Błąd połączenia. Spróbuj ponownie.')
+        setGenerating(false)
+      }
+    }
+
+    await check()
   }
 
   async function handlePaymentConfirm() {
