@@ -154,7 +154,7 @@ export async function generateReport(
           queryGdosNature(coords.lat, coords.lng).catch((): GdosResult => ({ areas: [], queried: false })),
           queryOsmUtilities(coords.lat, coords.lng).catch((): OsmUtilityResult => ({ wodociag: null, kanalizacja: null, gaz: null, energia: null })),
           Promise.race([
-            generateUtilityMap(coords.lat, coords.lng).catch(() => null),
+            generateUtilityMap(coords.lat, coords.lng, parcel?.geomWkt).catch(() => null),
             new Promise<null>(resolve => setTimeout(() => resolve(null), 30_000)),
           ]),
         ])
@@ -178,7 +178,7 @@ export async function generateReport(
 
   // 5. Rekomendacje Claude
   const { rekomendacje, ryzyka } = await generateRekomendacje({
-    parcel: parcel ?? { parcelId, numer: parcelId, gmina, found: false, obreb: null, powiat: null, wojewodztwo: null, powierzchnia: null, wspolrzedne: null },
+    parcel: parcel ?? { parcelId, numer: parcelId, gmina, found: false as const, obreb: null, powiat: null, wojewodztwo: null, powierzchnia: null, wspolrzedne: null, geomWkt: null },
     mpzp,
     media,
     strefy,
@@ -646,17 +646,9 @@ function buildHTML(d: ReportData): string {
       <img
         src="${d.utilityMapUrl}"
         alt="Mapa uzbrojenia terenu"
-        style="width:100%;max-width:1200px;border-radius:8px;display:block;margin-bottom:10px;"
+        style="width:100%;max-width:1200px;border-radius:8px;display:block;"
       />
-      <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:#6b7280;margin-top:6px;">
-        <span><span style="display:inline-block;width:18px;height:3px;background:#e63946;vertical-align:middle;margin-right:4px;"></span>Sieć elektroenergetyczna</span>
-        <span><span style="display:inline-block;width:18px;height:3px;background:#457b9d;vertical-align:middle;margin-right:4px;"></span>Wodociąg</span>
-        <span><span style="display:inline-block;width:18px;height:3px;background:#e07800;vertical-align:middle;margin-right:4px;"></span>Kanalizacja</span>
-        <span><span style="display:inline-block;width:18px;height:3px;background:#c9b100;vertical-align:middle;margin-right:4px;"></span>Sieć gazowa</span>
-        <span><span style="display:inline-block;width:18px;height:3px;background:#888;vertical-align:middle;margin-right:4px;"></span>Telekomunikacja</span>
-        <span style="margin-left:auto;font-size:11px;">Źródło: GUGiK GESUT + OpenStreetMap</span>
-      </div>
-      <p style="font-size:11px;color:#9ca3af;margin-top:8px;">⚠ Stan faktyczny może odbiegać od danych na mapie. Zalecana weryfikacja u lokalnych operatorów sieci.</p>
+      <p style="font-size:11px;color:#9ca3af;margin-top:8px;">Źródło: GUGiK GESUT + CartoDB Positron &nbsp;·&nbsp; ⚠ Stan faktyczny może odbiegać od danych na mapie. Zalecana weryfikacja u lokalnych operatorów sieci.</p>
     </div>
     ` : ''}
 

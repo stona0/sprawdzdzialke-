@@ -10,6 +10,7 @@ export interface ParcelData {
   powiat: string | null
   wojewodztwo: string | null
   wspolrzedne: { lat: number; lng: number } | null
+  geomWkt: string | null  // raw WKT polygon in EPSG:2180 (for boundary drawing on map)
   found: boolean
 }
 
@@ -110,6 +111,7 @@ function parseULDKResponse(text: string, parcelId: string, gmina: string): Parce
     powiat: county?.trim() ?? null,
     wojewodztwo: voivodeship?.trim() ?? null,
     wspolrzedne: parseCentroid(geomWkt),
+    geomWkt: geomWkt ?? null,
     found: true,
   }
 }
@@ -119,7 +121,7 @@ function notFound(parcelId: string, gmina: string): ParcelData {
     parcelId, numer: parcelId,
     powierzchnia: null, obreb: null,
     gmina, powiat: null, wojewodztwo: null,
-    wspolrzedne: null, found: false,
+    wspolrzedne: null, geomWkt: null, found: false,
   }
 }
 

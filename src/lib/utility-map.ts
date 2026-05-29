@@ -1,17 +1,16 @@
 /**
- * Utility map generator — CartoDB Voyager tiles + GESUT WMS → Supabase Storage cache
+ * Utility map generator — CartoDB Positron + GESUT WMS (SLD-styled) → Supabase Storage cache
  *
  * Pipeline:
- *  1. Sprawdź bucket utility-maps w Supabase Storage (klucz ~100m siatka)
+ *  1. Sprawdź bucket utility-maps w Supabase Storage (klucz ~100m siatka, wersja v2)
  *  2. Cache hit → zwróć publiczny CDN URL natychmiast
- *  3. Cache miss → sharp tile-stitch (CartoDB Voyager + GESUT WMS overlay, zoom 17, 1200×750)
+ *  3. Cache miss → sharp tile-stitch:
+ *       - CartoDB Positron base tiles (jasne, czyste — nie zasłaniają sieci)
+ *       - GESUT WMS z SLD_BODY (grube, kolorowe linie per typ sieci)
+ *       - SVG overlays: granica działki, okrąg analizy, legenda, marker
  *     → upload do Storage → CDN URL
  *
- * CartoDB Voyager: jasne, czyste tło z wyraźnymi etykietami — linie GESUT dobrze widoczne.
- *
- * Dane:
- *  - Base tiles:  CartoDB Voyager (basemaps.cartocdn.com) — darmowe, bez klucza
- *  - Overlay:     GUGiK GESUT WMS (integracja02.gugik.gov.pl)
+ * Wersja v2: CartoDB Positron + SLD styling + granica działki + legenda
  */
 
 const GESUT_WMS =
@@ -28,13 +27,23 @@ const GESUT_LAYERS = [
 
 const STORAGE_BUCKET = 'utility-maps'
 
+// Kolory per typ sieci (zgodne z map_prompt.md)
+const NETWORK_STYLES = [
+  { layer: 'przewod_elektroenergetyczny', color: '#DC2626', width: 4 },
+  { layer: 'przewod_wodociagowy',         color: '#2563EB', width: 4 },
+  { layer: 'przewod_kanalizacyjny',       color: '#D97706', width: 4 },
+  { layer: 'przewod_gazowy',             color: '#F59E0B', width: 4 },
+  { layer: 'przewod_telekomunikacyjny',  color: '#4B5563', width: 3 },
+  { layer: 'przewod_cieplowniczy',       color: '#7C3AED', width: 3 },
+]
+
 // ─── Cache helpers ────────────────────────────────────────────────────────────
 
-/** Klucz cache: zaokrąglenie do 3 miejsc dziesiętnych ≈ siatka 100 m */
+/** Klucz cache v2: zaokrąglenie do 3 miejsc dziesiętnych ≈ siatka 100 m */
 function cacheKey(lat: number, lng: number): string {
   const la = Math.round(lat * 1000) / 1000
   const lo = Math.round(lng * 1000) / 1000
-  return `${la}_${lo}.jpg`
+  return `${la}_${lo}_v2.jpg`
 }
 
 async function checkCache(key: string): Promise<string | null> {
@@ -104,16 +113,181 @@ function lngLatTo3857(lat: number, lng: number) {
   return { x, y }
 }
 
+/** EPSG:2180 (CS92) → przybliżone WGS84 — dokładność ~50-100m, OK dla wizualizacji */
+function epsg2180ToWgs84(x: number, y: number): { lat: number; lng: number } {
+  const lat = (y + 5_300_000) / (111_320 * 0.9993)
+  const lng = 19.0 + (x - 500_000) / (111_320 * 0.9993 * Math.cos(toRad(lat)))
+  return { lat, lng }
+}
+
+/** Parsuje WKT POLYGON (SRID=2180;POLYGON (...)) → tablica punktów WGS84 */
+function parseWktToWgs84(wkt: string): Array<{ lat: number; lng: number }> {
+  const pairs = wkt.match(/-?\d+(?:\.\d+)?\s+-?\d+(?:\.\d+)?/g)
+  if (!pairs || pairs.length < 3) return []
+  return pairs.map(p => {
+    const [x, y] = p.trim().split(/\s+/).map(Number)
+    return epsg2180ToWgs84(x, y)
+  })
+}
+
+// ─── SLD Builder ─────────────────────────────────────────────────────────────
+
+function buildSLD(): string {
+  const namedLayers = NETWORK_STYLES.map(({ layer, color, width }) => `  <NamedLayer>
+    <Name>${layer}</Name>
+    <UserStyle>
+      <FeatureTypeStyle>
+        <Rule>
+          <LineSymbolizer>
+            <Stroke>
+              <CssParameter name="stroke">${color}</CssParameter>
+              <CssParameter name="stroke-width">${width}</CssParameter>
+              <CssParameter name="stroke-linecap">round</CssParameter>
+              <CssParameter name="stroke-linejoin">round</CssParameter>
+            </Stroke>
+          </LineSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>`).join('\n')
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor version="1.0.0"
+  xmlns="http://www.opengis.net/sld"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+${namedLayers}
+</StyledLayerDescriptor>`
+}
+
+// ─── SVG Overlays ─────────────────────────────────────────────────────────────
+
+/** Granica działki — niebieski dashed polygon */
+function buildParcelBoundarySvg(
+  W: number, H: number,
+  polygon: Array<{ lat: number; lng: number }>,
+  zoom: number, tx0: number, ty0: number,
+  cropX0: number, cropY0: number,
+  origW: number, origH: number
+): Buffer | null {
+  if (polygon.length < 3) return null
+
+  const points = polygon.map(pt => {
+    const { px, py } = lngLatToPixel(pt.lat, pt.lng, zoom, tx0, ty0)
+    const ox = ((px - cropX0) / origW) * W
+    const oy = ((py - cropY0) / origH) * H
+    return `${ox.toFixed(1)},${oy.toFixed(1)}`
+  }).join(' ')
+
+  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="${points}"
+    fill="rgba(37,99,235,0.06)"
+    stroke="#2563EB"
+    stroke-width="3"
+    stroke-dasharray="10 6"
+    stroke-linejoin="round"/>
+</svg>`
+  return Buffer.from(svg)
+}
+
+/** Okrąg analizy 200m — szary dashed circle */
+function buildAnalysisCircleSvg(
+  W: number, H: number,
+  lat: number, lng: number,
+  zoom: number, tx0: number, ty0: number,
+  cropX0: number, cropY0: number,
+  origW: number, origH: number
+): Buffer {
+  const { px, py } = lngLatToPixel(lat, lng, zoom, tx0, ty0)
+  const ocx = ((px - cropX0) / origW) * W
+  const ocy = ((py - cropY0) / origH) * H
+
+  // Piksele na metr w płaszczyźnie mapy przy danym zoomie
+  const pixelsPerMeter =
+    256 * Math.pow(2, zoom) / (2 * Math.PI * 6378137 * Math.cos(toRad(lat)))
+  // Przelicz przez skalę resize
+  const r = 200 * pixelsPerMeter * (W / origW)
+
+  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="${ocx.toFixed(1)}" cy="${ocy.toFixed(1)}" r="${r.toFixed(1)}"
+    fill="none" stroke="#D1D5DB" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.9"/>
+</svg>`
+  return Buffer.from(svg)
+}
+
+/** Panel legendy — lewy górny róg */
+function buildLegendSvg(W: number, H: number): Buffer {
+  const items: Array<{ label: string; color: string; dash?: string; width: number }> = [
+    { label: 'Wybrany obszar',     color: '#2563EB', dash: '8 5', width: 2 },
+    { label: 'Sieć energetyczna',  color: '#DC2626', width: 3 },
+    { label: 'Wodociąg',           color: '#2563EB', width: 3 },
+    { label: 'Kanalizacja',        color: '#D97706', dash: '8 4', width: 3 },
+    { label: 'Sieć gazowa',        color: '#F59E0B', width: 3 },
+    { label: 'Telekomunikacja',    color: '#4B5563', dash: '4 4', width: 2 },
+    { label: 'Sieć ciepłownicza', color: '#7C3AED', width: 2 },
+  ]
+
+  const padL = 14
+  const padT = 14
+  const lineLen = 30
+  const textGap = 8
+  const itemH = 22
+  const titleH = 26
+  const boxPadV = 10
+  const boxPadH = 14
+  const boxW = 195
+  const boxH = titleH + items.length * itemH + boxPadV * 2
+
+  const rows = items.map((item, i) => {
+    const y = padT + boxPadV + titleH + i * itemH + itemH / 2
+    const dashAttr = item.dash ? ` stroke-dasharray="${item.dash}"` : ''
+    return `
+    <line x1="${padL + boxPadH}" y1="${y}" x2="${padL + boxPadH + lineLen}" y2="${y}"
+      stroke="${item.color}" stroke-width="${item.width}"${dashAttr} stroke-linecap="round"/>
+    <text x="${padL + boxPadH + lineLen + textGap}" y="${y + 4}"
+      font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#374151">${item.label}</text>`
+  }).join('')
+
+  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <filter id="ls">
+    <feDropShadow dx="0" dy="1" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
+  </filter>
+  <rect x="${padL}" y="${padT}" width="${boxW}" height="${boxH}"
+    rx="8" fill="white" fill-opacity="0.97" filter="url(#ls)"/>
+  <text x="${padL + boxPadH}" y="${padT + boxPadV + 14}"
+    font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="bold" fill="#111827">Legenda</text>
+  ${rows}
+</svg>`
+  return Buffer.from(svg)
+}
+
+/** Marker centralny (okrąg + krzyżyk) */
+function buildMarkerSvg(W: number, H: number): Buffer {
+  const cx = W / 2
+  const cy = H / 2
+  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="${cx}" cy="${cy}" r="10" fill="none" stroke="#DC2626" stroke-width="3" opacity="0.9"/>
+  <circle cx="${cx}" cy="${cy}" r="3" fill="#DC2626" opacity="0.9"/>
+  <line x1="${cx - 16}" y1="${cy}" x2="${cx + 16}" y2="${cy}" stroke="#DC2626" stroke-width="2" opacity="0.7"/>
+  <line x1="${cx}" y1="${cy - 16}" x2="${cx}" y2="${cy + 16}" stroke="#DC2626" stroke-width="2" opacity="0.7"/>
+</svg>`
+  return Buffer.from(svg)
+}
+
 // ─── Renderer ─────────────────────────────────────────────────────────────────
 
-async function renderMap(lat: number, lng: number): Promise<Buffer | null> {
+async function renderMap(
+  lat: number,
+  lng: number,
+  geomWkt?: string | null
+): Promise<Buffer | null> {
   try {
     const sharp = (await import('sharp')).default
     const W = 1200
     const H = 750
     const ZOOM = 17
 
-    // Bbox ~600×400m wokół punktu
+    // Bbox ~600×400m wokół punktu (padding 30% extra wokół działki)
     const degPerM_lat = 1 / 111320
     const degPerM_lng = 1 / (111320 * Math.cos(toRad(lat)))
     const padLat = 370 * degPerM_lat
@@ -130,20 +304,22 @@ async function renderMap(lat: number, lng: number): Promise<Buffer | null> {
     const tx0 = tNW.x, ty0 = tNW.y
     const tx1 = tSE.x, ty1 = tSE.y
 
-    // Pobierz kafelki CartoDB Voyager równolegle
+    // Pobierz kafelki CartoDB Positron równolegle
     const tilePromises: Promise<{ tx: number; ty: number; buf: Buffer } | null>[] = []
     for (let ty = ty0; ty <= ty1; ty++) {
       for (let tx = tx0; tx <= tx1; tx++) {
         const subdomain = ['a', 'b', 'c', 'd'][(tx + ty) % 4]
+        const url = `https://${subdomain}.basemaps.cartocdn.com/light_all/${ZOOM}/${tx}/${ty}.png`
         tilePromises.push(
-          fetch(
-            `https://tile.openstreetmap.org/${ZOOM}/${tx}/${ty}.png`,
-            {
-              headers: { 'User-Agent': 'SprawdzDzialke/1.0 (+https://sprawdzdzialke.com)' },
-              signal: AbortSignal.timeout(8000),
-            }
-          )
-            .then(r => r.arrayBuffer())
+          fetch(url, {
+            headers: {
+              'User-Agent': 'SprawdzDzialke/2.0 (+https://sprawdzdzialke.com)',
+              'Referer':    'https://sprawdzdzialke.com',
+              'Accept':     'image/png,image/*',
+            },
+            signal: AbortSignal.timeout(8000),
+          })
+            .then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error(`HTTP ${r.status}`)))
             .then(ab => ({ tx, ty, buf: Buffer.from(ab) }))
             .catch(() => null)
         )
@@ -158,7 +334,7 @@ async function renderMap(lat: number, lng: number): Promise<Buffer | null> {
       return null
     }
 
-    // Sklej kafelki
+    // Sklej kafelki na canvas
     const canvasW = (tx1 - tx0 + 1) * 256
     const canvasH = (ty1 - ty0 + 1) * 256
 
@@ -168,63 +344,99 @@ async function renderMap(lat: number, lng: number): Promise<Buffer | null> {
       top: (ty - ty0) * 256,
     }))
 
+    // Jasne tło CartoDB (białawo-szare) na wypadek brakujących kafelków
     const canvasBuf = await sharp({
-      create: { width: canvasW, height: canvasH, channels: 4, background: { r: 250, g: 250, b: 246, alpha: 1 } },
+      create: { width: canvasW, height: canvasH, channels: 4, background: { r: 246, g: 246, b: 244, alpha: 1 } },
     })
       .composite(composites)
       .png()
       .toBuffer()
 
-    // Crop do bbox i resize do 1200×750
+    // Wyznacz współrzędne crop (NW corner i SE corner w przestrzeni canvas)
     const { px: cropX0, py: cropY0 } = lngLatToPixel(latMax, lngMin, ZOOM, tx0, ty0)
     const { px: cropX1, py: cropY1 } = lngLatToPixel(latMin, lngMax, ZOOM, tx0, ty0)
+    const origW = cropX1 - cropX0
+    const origH = cropY1 - cropY0
 
+    // Crop do bbox i resize do 1200×750
     const baseBuf = await sharp(canvasBuf)
       .extract({
-        left: Math.max(0, Math.round(cropX0)),
-        top: Math.max(0, Math.round(cropY0)),
-        width: Math.max(Math.round(cropX1 - cropX0), 1),
-        height: Math.max(Math.round(cropY1 - cropY0), 1),
+        left:   Math.max(0, Math.round(cropX0)),
+        top:    Math.max(0, Math.round(cropY0)),
+        width:  Math.max(Math.round(origW), 1),
+        height: Math.max(Math.round(origH), 1),
       })
       .resize(W, H)
       .png()
       .toBuffer()
 
-    // Pobierz GESUT overlay (WMS GetMap, EPSG:3857)
+    // Pobierz GESUT overlay z SLD_BODY (kolorowe, grube linie)
     const sw = lngLatTo3857(latMin, lngMin)
     const ne = lngLatTo3857(latMax, lngMax)
     const bbox = `${sw.x.toFixed(0)},${sw.y.toFixed(0)},${ne.x.toFixed(0)},${ne.y.toFixed(0)}`
+    const sldBody = buildSLD()
 
     const gesutUrl =
       `${GESUT_WMS}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap` +
       `&LAYERS=${GESUT_LAYERS}&STYLES=` +
       `&CRS=EPSG:3857&BBOX=${bbox}` +
-      `&WIDTH=${W}&HEIGHT=${H}&FORMAT=image/png&TRANSPARENT=TRUE`
+      `&WIDTH=${W}&HEIGHT=${H}&FORMAT=image/png&TRANSPARENT=TRUE` +
+      `&SLD_BODY=${encodeURIComponent(sldBody)}`
 
     let gesutBuf: Buffer | null = null
     try {
-      const gesutResp = await fetch(gesutUrl, { signal: AbortSignal.timeout(10000) })
+      const gesutResp = await fetch(gesutUrl, { signal: AbortSignal.timeout(12000) })
       const raw = Buffer.from(await gesutResp.arrayBuffer())
       // Sprawdź czy to PNG (nie błąd XML)
-      if (raw[0] === 0x89 && raw[1] === 0x50) gesutBuf = raw
+      if (raw[0] === 0x89 && raw[1] === 0x50) {
+        gesutBuf = raw
+        console.log(`[utility-map] GESUT SLD OK: ${raw.length} bytes`)
+      } else {
+        // Fallback bez SLD (oryginalny styl GESUT)
+        const fallbackUrl =
+          `${GESUT_WMS}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap` +
+          `&LAYERS=${GESUT_LAYERS}&STYLES=` +
+          `&CRS=EPSG:3857&BBOX=${bbox}` +
+          `&WIDTH=${W}&HEIGHT=${H}&FORMAT=image/png&TRANSPARENT=TRUE`
+        const fallbackResp = await fetch(fallbackUrl, { signal: AbortSignal.timeout(10000) })
+        const fallbackRaw = Buffer.from(await fallbackResp.arrayBuffer())
+        if (fallbackRaw[0] === 0x89 && fallbackRaw[1] === 0x50) gesutBuf = fallbackRaw
+      }
     } catch {
-      // GESUT opcjonalne — bez overlay też jest sensowna mapa
+      // GESUT opcjonalne — mapa bez overlay też jest użyteczna
+      console.warn('[utility-map] GESUT fetch failed')
     }
 
-    // Composite: base + GESUT overlay + marker
+    // ── Buduj listę composites ────────────────────────────────────────────────
     const compositeInputs: Parameters<ReturnType<typeof sharp>['composite']>[0] = []
 
+    // 1. GESUT overlay
     if (gesutBuf) {
       compositeInputs.push({ input: gesutBuf, blend: 'over' })
     }
 
-    // Czerwony marker (okrąg + krzyżyk)
-    const markerSvg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="${W / 2}" cy="${H / 2}" r="12" fill="none" stroke="#dc2626" stroke-width="3" opacity="0.9"/>
-      <line x1="${W/2 - 18}" y1="${H/2}" x2="${W/2 + 18}" y2="${H/2}" stroke="#dc2626" stroke-width="2.5" opacity="0.9"/>
-      <line x1="${W/2}" y1="${H/2 - 18}" x2="${W/2}" y2="${H/2 + 18}" stroke="#dc2626" stroke-width="2.5" opacity="0.9"/>
-    </svg>`
-    compositeInputs.push({ input: Buffer.from(markerSvg), blend: 'over' })
+    // 2. Granica działki (jeśli mamy WKT)
+    if (geomWkt) {
+      const polygon = parseWktToWgs84(geomWkt)
+      const boundarySvg = buildParcelBoundarySvg(
+        W, H, polygon, ZOOM, tx0, ty0, cropX0, cropY0, origW, origH
+      )
+      if (boundarySvg) {
+        compositeInputs.push({ input: boundarySvg, blend: 'over' })
+      }
+    }
+
+    // 3. Okrąg analizy 200m
+    const circleSvg = buildAnalysisCircleSvg(
+      W, H, lat, lng, ZOOM, tx0, ty0, cropX0, cropY0, origW, origH
+    )
+    compositeInputs.push({ input: circleSvg, blend: 'over' })
+
+    // 4. Legenda (top-left panel)
+    compositeInputs.push({ input: buildLegendSvg(W, H), blend: 'over' })
+
+    // 5. Marker centralny
+    compositeInputs.push({ input: buildMarkerSvg(W, H), blend: 'over' })
 
     return await sharp(baseBuf)
       .composite(compositeInputs)
@@ -241,14 +453,16 @@ async function renderMap(lat: number, lng: number): Promise<Buffer | null> {
 /**
  * Generuje mapę uzbrojenia terenu 1200×750 px dla podanych współrzędnych.
  *
- * Zwraca:
- *  - CDN URL (Supabase Storage) jeśli cache hit lub upload się udał
- *  - base64 data URL jako ostatni fallback
- *  - null przy całkowitym błędzie
+ * @param lat       - szerokość geograficzna centrum (WGS84)
+ * @param lng       - długość geograficzna centrum (WGS84)
+ * @param geomWkt   - WKT polygon działki w EPSG:2180 (opcjonalnie — rysuje granicę)
+ *
+ * Zwraca CDN URL (Supabase Storage), base64 jako fallback, lub null przy błędzie.
  */
 export async function generateUtilityMap(
   lat: number,
-  lng: number
+  lng: number,
+  geomWkt?: string | null
 ): Promise<string | null> {
   const key = cacheKey(lat, lng)
 
@@ -260,7 +474,7 @@ export async function generateUtilityMap(
   }
 
   // 2. Renderuj mapę
-  const jpegBuf = await renderMap(lat, lng)
+  const jpegBuf = await renderMap(lat, lng, geomWkt)
   if (!jpegBuf) return null
 
   // 3. Wgraj do Storage → CDN URL
