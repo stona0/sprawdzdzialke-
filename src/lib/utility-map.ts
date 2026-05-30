@@ -39,11 +39,11 @@ const NETWORK_STYLES = [
 
 // ─── Cache helpers ────────────────────────────────────────────────────────────
 
-/** Klucz cache v2: zaokrąglenie do 3 miejsc dziesiętnych ≈ siatka 100 m */
+/** Klucz cache v3: zoom18, KIEG cadastral, HTML legenda */
 function cacheKey(lat: number, lng: number): string {
   const la = Math.round(lat * 1000) / 1000
   const lo = Math.round(lng * 1000) / 1000
-  return `${la}_${lo}_v2.jpg`
+  return `${la}_${lo}_v3.jpg`
 }
 
 async function checkCache(key: string): Promise<string | null> {
@@ -215,51 +215,8 @@ function buildAnalysisCircleSvg(
   return Buffer.from(svg)
 }
 
-/** Panel legendy — lewy górny róg */
-function buildLegendSvg(W: number, H: number): Buffer {
-  const items: Array<{ label: string; color: string; dash?: string; width: number }> = [
-    { label: 'Wybrany obszar',     color: '#2563EB', dash: '8 5', width: 2 },
-    { label: 'Sieć energetyczna',  color: '#DC2626', width: 3 },
-    { label: 'Wodociąg',           color: '#2563EB', width: 3 },
-    { label: 'Kanalizacja',        color: '#D97706', dash: '8 4', width: 3 },
-    { label: 'Sieć gazowa',        color: '#F59E0B', width: 3 },
-    { label: 'Telekomunikacja',    color: '#4B5563', dash: '4 4', width: 2 },
-    { label: 'Sieć ciepłownicza', color: '#7C3AED', width: 2 },
-  ]
-
-  const padL = 14
-  const padT = 14
-  const lineLen = 30
-  const textGap = 8
-  const itemH = 22
-  const titleH = 26
-  const boxPadV = 10
-  const boxPadH = 14
-  const boxW = 195
-  const boxH = titleH + items.length * itemH + boxPadV * 2
-
-  const rows = items.map((item, i) => {
-    const y = padT + boxPadV + titleH + i * itemH + itemH / 2
-    const dashAttr = item.dash ? ` stroke-dasharray="${item.dash}"` : ''
-    return `
-    <line x1="${padL + boxPadH}" y1="${y}" x2="${padL + boxPadH + lineLen}" y2="${y}"
-      stroke="${item.color}" stroke-width="${item.width}"${dashAttr} stroke-linecap="round"/>
-    <text x="${padL + boxPadH + lineLen + textGap}" y="${y + 4}"
-      font-family="Arial,Helvetica,sans-serif" font-size="11" fill="#374151">${item.label}</text>`
-  }).join('')
-
-  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-  <filter id="ls">
-    <feDropShadow dx="0" dy="1" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
-  </filter>
-  <rect x="${padL}" y="${padT}" width="${boxW}" height="${boxH}"
-    rx="8" fill="white" fill-opacity="0.97" filter="url(#ls)"/>
-  <text x="${padL + boxPadH}" y="${padT + boxPadV + 14}"
-    font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="bold" fill="#111827">Legenda</text>
-  ${rows}
-</svg>`
-  return Buffer.from(svg)
-}
+// Legenda przeniesiona do HTML raportu — SVG text nie renderuje się
+// poprawnie przez librsvg bez systemowych fontów na serwerze.
 
 /** Marker centralny (okrąg + krzyżyk) */
 function buildMarkerSvg(W: number, H: number): Buffer {
@@ -285,13 +242,13 @@ async function renderMap(
     const sharp = (await import('sharp')).default
     const W = 1200
     const H = 750
-    const ZOOM = 17
+    const ZOOM = 18   // zoom 18 = bardzo dobre detale, widać drogi, działki, zabudowania
 
-    // Bbox ~600×400m wokół punktu (padding 30% extra wokół działki)
+    // Bbox ~520×840m wokół punktu — dobry balans: widać okolice ale działka dominuje
     const degPerM_lat = 1 / 111320
     const degPerM_lng = 1 / (111320 * Math.cos(toRad(lat)))
-    const padLat = 370 * degPerM_lat
-    const padLng = 600 * degPerM_lng
+    const padLat = 260 * degPerM_lat
+    const padLng = 420 * degPerM_lng
 
     const latMin = lat - padLat
     const latMax = lat + padLat
@@ -407,15 +364,41 @@ async function renderMap(
       console.warn('[utility-map] GESUT fetch failed')
     }
 
+    // Pobierz warstwę katastralną KIEG (granice działek + budynki)
+    let kiegBuf: Buffer | null = null
+    try {
+      const kiegUrl =
+        `https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaEwidencjiGruntow` +
+        `?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap` +
+        `&LAYERS=Dzialki,Budynki&STYLES=` +
+        `&CRS=EPSG:3857&BBOX=${bbox}` +
+        `&WIDTH=${W}&HEIGHT=${H}&FORMAT=image/png&TRANSPARENT=TRUE`
+      const kiegResp = await fetch(kiegUrl, { signal: AbortSignal.timeout(10000) })
+      const kiegRaw = Buffer.from(await kiegResp.arrayBuffer())
+      if (kiegRaw[0] === 0x89 && kiegRaw[1] === 0x50) {
+        kiegBuf = kiegRaw
+        console.log(`[utility-map] KIEG OK: ${kiegRaw.length} bytes`)
+      } else {
+        console.warn('[utility-map] KIEG returned non-PNG')
+      }
+    } catch {
+      console.warn('[utility-map] KIEG fetch failed (optional)')
+    }
+
     // ── Buduj listę composites ────────────────────────────────────────────────
     const compositeInputs: Parameters<ReturnType<typeof sharp>['composite']>[0] = []
 
-    // 1. GESUT overlay
+    // 1. Warstwa katastralna KIEG (działki + budynki) — pod liniami GESUT
+    if (kiegBuf) {
+      compositeInputs.push({ input: kiegBuf, blend: 'over' })
+    }
+
+    // 2. GESUT overlay (linie mediów — na wierzchu działek)
     if (gesutBuf) {
       compositeInputs.push({ input: gesutBuf, blend: 'over' })
     }
 
-    // 2. Granica działki (jeśli mamy WKT)
+    // 3. Granica wybranej działki (niebieski dashed polygon)
     if (geomWkt) {
       const polygon = parseWktToWgs84(geomWkt)
       const boundarySvg = buildParcelBoundarySvg(
@@ -426,16 +409,13 @@ async function renderMap(
       }
     }
 
-    // 3. Okrąg analizy 200m
+    // 4. Okrąg analizy 200m
     const circleSvg = buildAnalysisCircleSvg(
       W, H, lat, lng, ZOOM, tx0, ty0, cropX0, cropY0, origW, origH
     )
     compositeInputs.push({ input: circleSvg, blend: 'over' })
 
-    // 4. Legenda (top-left panel)
-    compositeInputs.push({ input: buildLegendSvg(W, H), blend: 'over' })
-
-    // 5. Marker centralny
+    // 5. Marker centralny (legenda jest w HTML raportu, nie w obrazku)
     compositeInputs.push({ input: buildMarkerSvg(W, H), blend: 'over' })
 
     return await sharp(baseBuf)

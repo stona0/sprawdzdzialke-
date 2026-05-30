@@ -643,12 +643,49 @@ function buildHTML(d: ReportData): string {
     ${d.utilityMapUrl ? `
     <div class="section full">
       <div class="section-title"><span class="icon">🗺</span>Uzbrojenie terenu w media</div>
-      <img
-        src="${d.utilityMapUrl}"
-        alt="Mapa uzbrojenia terenu"
-        style="width:100%;max-width:1200px;border-radius:8px;display:block;"
-      />
-      <p style="font-size:11px;color:#9ca3af;margin-top:8px;">Źródło: GUGiK GESUT + CartoDB Positron &nbsp;·&nbsp; ⚠ Stan faktyczny może odbiegać od danych na mapie. Zalecana weryfikacja u lokalnych operatorów sieci.</p>
+      <div style="position:relative;display:block;line-height:0;">
+        <img
+          src="${d.utilityMapUrl}"
+          alt="Mapa uzbrojenia terenu"
+          style="width:100%;border-radius:8px;display:block;"
+        />
+        <!-- Legenda HTML — nakładka na mapę, lewy górny róg -->
+        <div style="
+          position:absolute;top:12px;left:12px;
+          background:rgba(255,255,255,0.96);
+          border-radius:8px;
+          box-shadow:0 2px 10px rgba(0,0,0,0.15);
+          padding:10px 14px;
+          font-family:'Inter',system-ui,sans-serif;
+          font-size:11px;
+          line-height:1;
+          min-width:160px;
+        ">
+          <div style="font-weight:700;font-size:11.5px;color:#111827;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid #f0f0f0;">Legenda</div>
+          ${[
+            { label: 'Granica działki',    color: '#2563EB', dash: '6 4', w: 2 },
+            { label: 'Sieć energetyczna',  color: '#DC2626', dash: null,  w: 3 },
+            { label: 'Wodociąg',           color: '#2563EB', dash: null,  w: 3 },
+            { label: 'Kanalizacja',        color: '#D97706', dash: '6 3', w: 3 },
+            { label: 'Sieć gazowa',        color: '#F59E0B', dash: null,  w: 3 },
+            { label: 'Telekomunikacja',    color: '#4B5563', dash: '4 3', w: 2 },
+            { label: 'Sieć ciepłownicza', color: '#7C3AED', dash: null,  w: 2 },
+          ].map(item => `
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <svg width="30" height="10" style="flex-shrink:0;">
+              <line x1="0" y1="5" x2="30" y2="5"
+                stroke="${item.color}" stroke-width="${item.w}"
+                ${item.dash ? `stroke-dasharray="${item.dash}"` : ''}
+                stroke-linecap="round"/>
+            </svg>
+            <span style="color:#374151;white-space:nowrap;">${item.label}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+      <p style="font-size:11px;color:#9ca3af;margin-top:8px;line-height:1.5;">
+        Źródło: GUGiK GESUT + GUGiK KIEG + CartoDB Positron &nbsp;·&nbsp;
+        ⚠ Stan faktyczny może odbiegać od danych na mapie. Zalecana weryfikacja u lokalnych operatorów sieci.
+      </p>
     </div>
     ` : ''}
 
