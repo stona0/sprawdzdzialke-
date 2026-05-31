@@ -27,6 +27,7 @@ const PUBLIC_PREFIXES = [
   '/auth/callback',        // Supabase OAuth callback — wymienia code na sesję
   '/_next',               // Next.js assets
   '/favicon',
+  '/blog',                // Blog — publiczny, indeksowany przez Googlebota
 ]
 
 function isPublic(pathname: string): boolean {
