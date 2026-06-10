@@ -6,45 +6,45 @@ import { createServerClient } from '@supabase/ssr'
  *
  * Logika:
  * 1. Tworzy Supabase client z cookies (anon key) → odświeża JWT jeśli wygasł.
- * 2. Ścieżki publiczne (/login, /register, /forgot-password, /, /pricing, /api/payments/webhook)
- *    → przepuszcza bez sprawdzania sesji.
- * 3. Wszystko inne (/dashboard/*, /report/*, /admin/*, /api/*) → wymaga zalogowania.
- *    Jeśli brak sesji → redirect na /login.
+ * 2. Tylko CHRONIONE ścieżki (/dashboard/*, /report/*, /admin/*, wybrane /api/*) 
+ *    wymagają sesji. Brak sesji → redirect na /login.
+ * 3. Wszystko inne jest publiczne — Next.js routing zwraca 404 dla nieznanych ścieżek
+ *    (app/not-found.tsx), co eliminuje soft-404 (HTTP 200 zamiast 404).
  */
 
-// Ścieżki ZAWSZE publiczne — nie wymagają sesji
-const PUBLIC_PATHS = [
-  '/',
-  '/login',
-  '/register',
-  '/forgot-password',
-  '/pricing',
+// Prefixy ścieżek CHRONIONYCH — wymagają zalogowania
+const PROTECTED_PREFIXES = [
+  '/dashboard',
+  '/report',
+  '/admin',
+  '/cennik',  // legacy URL — middleware przepuści do next.config redirect
 ]
 
-// Prefixy które są zawsze publiczne
-const PUBLIC_PREFIXES = [
-  '/api/payments/webhook', // Stripe webhook — no cookies, signature-verified
-  '/auth/callback',        // Supabase OAuth callback — wymienia code na sesję
-  '/_next',               // Next.js assets
-  '/favicon',
-  '/blog',                // Blog — publiczny, indeksowany przez Googlebota
+// Prefixy API wymagające sesji (z wyjątkiem webhook)
+const PROTECTED_API_PREFIXES = [
+  '/api/parcel',
+  '/api/report',
+  '/api/admin',
+  '/api/payments/create-checkout',
+  '/api/payments/verify',
 ]
 
-function isPublic(pathname: string): boolean {
-  if (PUBLIC_PATHS.includes(pathname)) return true
-  for (const prefix of PUBLIC_PREFIXES) {
-    if (pathname.startsWith(prefix)) return true
+function isProtected(pathname: string): boolean {
+  for (const prefix of PROTECTED_PREFIXES) {
+    if (pathname === prefix || pathname.startsWith(prefix + '/')) return true
   }
-  // Static files
-  if (pathname.match(/\.\w{2,5}$/)) return true
+  for (const prefix of PROTECTED_API_PREFIXES) {
+    if (pathname === prefix || pathname.startsWith(prefix + '/')) return true
+  }
   return false
 }
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Publiczne ścieżki — nie ruszaj
-  if (isPublic(pathname)) {
+  // Tylko chronione ścieżki wymagają sesji.
+  // Wszystko inne → publiczne (Next.js routing zwróci 404 dla nieznanych ścieżek)
+  if (!isProtected(pathname)) {
     return NextResponse.next()
   }
 
