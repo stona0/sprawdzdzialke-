@@ -11,6 +11,7 @@ import { article as article08 } from './08-jak-sprawdzic-czy-dzialka-jest-budowl
 import { article as article09 } from './09-ksiega-wieczysta-dzialki-jak-sprawdzic';
 import { article as article10 } from './10-natura-2000-co-oznacza-dla-dzialki';
 import { article as article11 } from './11-jak-odczytac-numer-dzialki-ewidencyjnej';
+import { article as article12 } from './12-jak-uzyskac-warunki-zabudowy';
 
 export const articles: BlogArticle[] = [
   article01,
@@ -24,6 +25,7 @@ export const articles: BlogArticle[] = [
   article09,
   article10,
   article11,
+  article12,
 ];
 
 export function getArticleBySlug(slug: string): BlogArticle | undefined {
