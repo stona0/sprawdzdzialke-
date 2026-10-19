@@ -113,13 +113,17 @@ const NUM = /\d+(?:[.,]\d+)*/g
 
 /** Odrzuca punkty bez podstawy w faktach lub z liczbami, których w faktach nie ma. */
 export function validateItems(items: RawItem[], facts: Record<string, unknown>): { ok: string[]; rejected: number } {
-  const factText = JSON.stringify(facts).replace(/,(\d)/g, '.$1')
+  // Numer działki to identyfikator, nie wartość — „9” z „19/9” nie może uwiarygodnić „9 m”.
+  const { dzialka, ...rest } = facts as Record<string, unknown> & { dzialka?: Record<string, unknown> }
+  const values = { ...rest, dzialka: { ...(dzialka ?? {}), numer: undefined } }
+  const norm = (n: string) => n.replace(/,/g, '.')
+  const known = new Set((JSON.stringify(values).match(NUM) ?? []).map(norm))
   const ok: string[] = []
   let rejected = 0
   for (const it of items) {
     const basisOk = it.podstawa.length > 0 && it.podstawa.every(k => (FACT_KEYS as readonly string[]).includes(k))
-    const nums = (it.tekst.match(NUM) ?? []).map(n => n.replace(',', '.'))
-    const numsOk = nums.every(n => factText.includes(n))
+    const nums = (it.tekst.match(NUM) ?? []).map(norm)
+    const numsOk = nums.every(n => known.has(n))
     if (basisOk && numsOk && it.tekst.trim()) ok.push(it.tekst.trim())
     else rejected++
   }
