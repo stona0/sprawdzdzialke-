@@ -46,3 +46,7 @@ next-env.d.ts
 
 # Claude
 .claude/
+
+# Playwright
+/test-results/
+/playwright-report/
