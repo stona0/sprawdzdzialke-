@@ -1,0 +1,228 @@
+# SprawdzDziałkę.com — raport z naprawy (branch `fix/autonomous-recovery`)
+
+Stan na 19.10.2026. Nic nie zostało wdrożone na produkcję, nic nie zostało zapisane do produkcyjnej bazy ani do konta Stripe.
+
+## 1. Podsumowanie
+
+1. Po naprawach ścieżka użytkownika działa end-to-end: logowanie → wyszukanie działki → raport darmowy → raport płatny po webhooku Stripe. Dowód to test Playwright na lokalnym mocku Supabase (3/3) oraz 8 przykładowych raportów z prawdziwych działek w `reports-sample/`. Wyjątki: usługa OpenStreetMap jest niestabilna, a płatności w Stripe Checkout nie dało się przetestować bez kluczy testowych.
+2. Główna przyczyna złych raportów: **każda działka była lokalizowana 19–25 km od faktycznego położenia**. Przybliżony wzór EPSG:2180 → WGS84 mylił się dla każdej z 9 sprawdzonych działek, więc MPZP i plan ogólny Wrocławia, GDOŚ, OSM i mapa uzbrojenia dotyczyły zupełnie innego miejsca.
+3. Główna przyczyna niedziałania w produkcji (prawdopodobna, bez dostępu do logów hostingu): generowanie raportu startowało jako niezawiedzione `Promise` po wysłaniu odpowiedzi. Na serverless taka praca jest ucinana, więc raport zostawał na zawsze w statusie „generating”.
+4. Do tego model biznesowy nie działał. Licznik darmowych raportów nigdy nie rósł, więc każdy raport był darmowy, a ścieżka płatności nigdy się nie uruchamiała. Kilka źródeł było martwych albo źle użytych: host GESUT, szwajcarska instancja Overpass, wycofany model Claude, podkład mapy z napisem „API KEY REQUIRED”, a fallbacki MPZP podawały symbole niezwiązane z działką.
+5. Raport opiera się teraz na zweryfikowanych źródłach ogólnokrajowych. Pokazuje stan prawny po reformie (WZ tylko w obszarze uzupełnienia zabudowy planu ogólnego) oraz status każdego źródła, a AI pisze wyłącznie na podstawie faktów z danych. Ostrzeżenie: rejestry państwowe są niekompletne i bywają opóźnione, więc raport uczciwie mówi „nie ustalono” tam, gdzie wcześniej zgadywał.
+
+## 2. Stan zastany (Faza 0)
+
+**Architektura**
+- Next.js 16.2.4 (App Router, `proxy.ts` jako auth guard), Supabase (Auth + Postgres + Storage), Stripe Checkout + webhook, Claude.
+- Deploy: `netlify.toml` w repo, choć HANDOFF wskazuje Vercel.
+- Raport to string HTML zapisywany w `reports.html_content` i renderowany w `<iframe>`.
+
+**Trasy**
+
+| Trasa | Rola |
+|---|---|
+| `/`, `/pricing`, `/blog/*` | publiczne |
+| `/login`, `/register`, `/forgot-password`, `/auth/callback` | Supabase Auth (hasło + Google OAuth) |
+| `/dashboard` | wyszukiwarka działki + lista raportów |
+| `/report/[id]` | podgląd raportu, druk = PDF |
+| `/payment-success` | powrót ze Stripe |
+| `/admin` | import MPZP z PDF (Claude), dane mediów per gmina, listy |
+| `GET /api/parcel` | ULDK GetParcelById |
+| `POST /api/report/generate`, `GET /api/report/[id]/status` | generowanie + polling |
+| `/api/payments/{create-checkout,webhook,verify}` | Stripe |
+| `/api/admin/*` | parse-mpzp, save-mpzp, mpzp-status, sip |
+
+**Zmienne środowiskowe** (`.env.local`, wartości nieujawniane):
+- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+- `ANTHROPIC_API_KEY`
+- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- `NEXT_PUBLIC_APP_URL`
+
+Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e Storage są wpisane na sztywno w kodzie). Według notatek projektu klucze Stripe w `.env.local` są kluczami live.
+
+**Build, lint, testy przed zmianami**
+- `npm install` OK. `npm run build` OK, TypeScript bez błędów.
+- Brak skryptu `lint` i konfiguracji ESLint.
+- Brak jakichkolwiek testów.
+- `npm audit`: 10 podatności, w tym 1 krytyczna w Next.
+
+**Zewnętrzne źródła danych w kodzie — przed zmianami**
+
+| Źródło | Endpoint | Typ | Co miało zwracać | Stan zastany |
+|---|---|---|---|---|
+| ULDK GUGiK | `uldk.gugik.gov.pl/service.php` | REST/tekst | geometria WKT (EPSG:2180), gmina, obręb | działa; **błąd przeliczenia współrzędnych ~24 km** w `geoportal.ts` |
+| WFS MPZP UM Wrocławia | `http://gis1.um.wroc.pl/.../OGC_mpzp/.../WFSServer` | WFS 1.1.0 | symbol terenu | HTTP→302; zapytanie prostokątem ~2 m wokół (złego) punktu → zawsze pusto |
+| ArcGIS UM Wrocławia (POG) | `gis.um.wroc.pl/portal_srv/rest/services/POG_PROJEKT_OBOW_*` | ArcGIS REST | strefa POG, OUZ | działa (dodane w poprzedniej sesji, tylko punkt) |
+| wrosip.pl + Supabase Storage | Zoomify `wrosip.pl/zoom//dlugoleka` | raster | symbol MPZP z koloru piksela | zawodne z założenia: bbox planu szacowany „±200 m”, legenda jednego planu dla wszystkich |
+| Supabase `mpzp_cache` | — | DB | parametry MPZP | filtr TERYT po **nazwie** gminy; zwracał dowolny symbol z gminy |
+| GDOŚ | `sdi.gdos.gov.pl/wfs` | WFS 2.0 (GeoServer) | Natura 2000, parki, rezerwaty | działa; złe współrzędne → cudze obszary |
+| OSM Overpass | kumi.systems, overpass-api.de, overpass.osm.ch | Overpass API | linie, rurociągi | kumi: timeout; osm.ch: **tylko Szwajcaria** (200 + 0 obiektów); overpass-api.de: 502/406 |
+| KIUT/GESUT | `integracja02.gugik.gov.pl/...UzbrojeniaTerenu` | WMS (tylko obraz) | nakładka sieci | **pusta odpowiedź 200** — sieci nigdy się nie rysowały |
+| KIEG | `integracja.gugik.gov.pl/...EwidencjiGruntow` | WMS | granice działek | działa |
+| CARTO | `basemaps.cartocdn.com/light_all` | kafelki XYZ | podkład mapy | **obraz ze znakiem „API KEY REQUIRED”** |
+| ISOK | — | — | strefy powodziowe | nie zaimplementowane (`isok.ts` = zaślepka, tylko link) |
+| Claude | `claude-haiku-4-5-20251001` (rekomendacje), `claude-sonnet-4-20250514` (PDF MPZP) | API | JSON | Haiku OK; **Sonnet 4 wycofany** (model not found) |
+| Stripe | Checkout + webhook | API | płatność 29 PLN | kod poprawny, ale nigdy nieosiągany |
+
+## 3. Definicja „działa” i wynik każdego kroku
+
+| # | Krok | Kryterium sukcesu (mierzalne) | Przed | Po |
+|---|---|---|---|---|
+| 1 | Wejście bez sesji | `/dashboard` → przekierowanie na `/login?redirectTo=…` | DZIAŁA | DZIAŁA (e2e) |
+| 2 | Logowanie | e-mail + hasło → `/dashboard` | DZIAŁA* | DZIAŁA (e2e na mocku) |
+| 3 | Walidacja ID | ID bez kropek → komunikat; nieistniejące → „Nie znaleziono działki” | DZIAŁA | DZIAŁA (e2e) |
+| 4 | Geometria działki | punkt wewnątrz działki z błędem < 1 m względem referencji ULDK EPSG:4326 | **NIE DZIAŁA** (błąd 19–25 km; link „Pokaż na mapie Google” prowadził obok) | DZIAŁA (test jednostkowy na 4 działkach, < 1 m) |
+| 5 | MPZP | dla działki objętej planem: plan + teren; dla nieobjętej: „brak MPZP”; gdy brak danych: „nie ustalono” | **NIE DZIAŁA** (Wrocław zawsze „brak”, fallbacki zgadywały) | DZIAŁA: Wrocław (GIS miasta, wszystkie tereny z udziałem %), gminy w KIMPZP. CZĘŚCIOWO: gminy spoza KIMPZP → „nie ustalono” |
+| 6 | Plan ogólny i ścieżka do zabudowy | werdykt MPZP / WZ możliwe / WZ niemożliwe / nieustalone, zgodny ze stanem prawnym od 1.09.2026 | NIE DZIAŁA | DZIAŁA dla Wrocławia (strefa, OUZ). CZĘŚCIOWO poza Wrocławiem: status POG gminy z Rejestru Urbanistycznego, bez geometrii OUZ |
+| 7 | Ochrona przyrody | rozróżnienie „na działce” i „do 300 m” | NIE DZIAŁA (złe miejsce) | DZIAŁA (live: Milicz, Pilczyce) |
+| 8 | Powódź | scenariusze Q10/Q1/Q0,2/wał/budowla + OSZP | NIE DZIAŁA (tylko link) | DZIAŁA (live: Kłodzko, Pilczyce, Lipa Piotrowska) |
+| 9 | Uzbrojenie | odległość od granicy działki do sieci lub jawne „brak danych” | NIE DZIAŁA | CZĘŚCIOWO: KIUT działa tam, gdzie powiat przekazuje dane (nie Wrocław, nie Kraków); OSM zależny od przeciążonego publicznego Overpass |
+| 10 | Analiza AI | rekomendacje oparte wyłącznie na danych; brak liczb spoza danych; fallback bez AI | CZĘŚCIOWO (działało na złych danych, bez kontroli) | DZIAŁA z ograniczeniami (rozdz. 5) |
+| 11 | Generowanie w tle | raport kończy się statusem `completed`/`failed`, nigdy nie wisi | **NIE DZIAŁA** na serverless (fire-and-forget) | DZIAŁA (`after()`, e2e); wiszące > 5 min → `failed`. Zachowanie na Netlify niezweryfikowane |
+| 12 | Raport (podgląd/PDF) | iframe z treścią; druk przeglądarki | DZIAŁA (zła treść) | DZIAŁA (e2e) |
+| 13 | Płatność | po darmowym raporcie kolejny wymaga płatności; webhook z poprawną sygnaturą generuje raport, zła → 400, ponowienie nie dubluje | **NIE DZIAŁA** (paywall nieosiągalny) | DZIAŁA (e2e z podpisanym webhookiem). Stripe Checkout — nietestowany |
+
+\* Logowanie nie było testowane na produkcyjnym Supabase (zakaz zapisu do produkcji). Na kodzie nic nie wskazuje na błąd.
+
+**Działki testowe** (`tests/parcels.ts`):
+
+| Działka | Typ | Wynik |
+|---|---|---|
+| 026401_1.0001.2395 | Wrocław, Rynek | MPZP 12UA\*UC, strefa konserwatorska |
+| 026401_1.0054.888 | Wrocław, Lipa Piotrowska | bez MPZP, w OUZ |
+| 026401_1.0041.442 | Wrocław, Pilczyce | Q1%, Natura 2000 |
+| 020802_1.0010.AR_3.27/16 | Kłodzko | Q1% |
+| 022302_2.0020.440/1 | Długołęka, Kiełczów | MPZP z KIMPZP, brak POG |
+| 060501_2.0004.273/4 | Batorz | wieś bez MPZP |
+| 021303_4.0001.AR_18.19/9 | Milicz | Natura 2000 |
+| 126105_9.0001.580/4 | Kraków | MPZP KP.1 |
+
+**Dowody**
+- `npm test`: 48 testów jednostkowych na fixture'ach.
+- `npm run test:live`: 8/8 działek zgodnych z ręczną weryfikacją źródeł.
+- `npm run test:e2e`: 3/3.
+- `reports-sample/*.html|json`: przykładowe raporty.
+- Generowanie raportu trwa 22–25 s, z czego ~15 s to czekanie na OSM.
+
+## 4. Lista zmian
+
+| Commit | Problem | Rozwiązanie |
+|---|---|---|
+| `fc16864` | Raport nie pokazywał planu ogólnego Wrocławia | Sekcja POG (strefa, parametry, OUZ) |
+| `c1d13ee` | Centroid przeliczany przybliżonym wzorem, błąd 19–25 km; średnia wierzchołków wypada poza działki w kształcie L/U | `proj4` z definicją PUWG 1992; punkt na pewno wewnątrz działki; parser WKT (dziury, MULTIPOLYGON); vitest |
+| `2b1bb01` | Fire-and-forget po wysłaniu odpowiedzi (generowanie i webhook) — na serverless raport wisi | `after()` z `next/server`; raport w „generating” > 5 min (liczone od płatności, jeśli była) → „failed” |
+| `5fc1447` | `free_reports_used` nigdy nie rósł, każdy raport darmowy | Atomowe zajęcie slotu (`UPDATE … WHERE free_reports_used = 0`), zwrot przy błędzie generowania |
+| `a80d2ed` | Brak ogólnokrajowych źródeł MPZP i powodzi | Nowe moduły: KIMPZP (EPSG:2180, osie N,E), Rejestr Urbanistyczny, ISOK, GDOŚ „na działce/w pobliżu”, klient ArcGIS z udziałem % |
+| `18964df` | Sieci tylko jako obraz; Overpass z instancją szwajcarską | Odległość do sieci z pikseli KIUT (±2 m, „przez działkę”, „brak danych w KIUT”); Overpass równolegle, z odległościami |
+| `32ac3d2` | Podkład CARTO z „API KEY REQUIRED”, martwy host GESUT, obrazki cache rysowane 24 km obok | Ortofotomapa GUGiK, właściwy host KIUT, pogrubianie linii (serwer ignoruje SLD), cache v4 |
+| `57e0037` | MPZP Wrocławia zawsze puste; fallbacki zgadywały symbol; `isWroclaw` po nazwie łapał „Kąty Wrocławskie” | Zapytania obrysem działki; usunięte fallbacki rastra i `mpzp_cache` z raportu; ocena ścieżki do zabudowy po reformie; tabela statusów źródeł; AI tylko z faktów |
+| `637b90b` | Import uchwał MPZP w panelu admina padał (wycofany model) | `claude-opus-5-5`, streaming, odczyt tekstu spoza bloku thinking, obsługa refusal/max_tokens |
+| `46e1884` | Brak testów | 48 testów jednostkowych, testy live na 8 działkach, skrypt przykładowych raportów |
+| `e69fd17` | Brak e2e; jedyna baza to produkcja | Mock Supabase (Auth, PostgREST, Storage) + Playwright |
+| `42f1947` | Ortofotomapa GUGiK potrafi zwrócić 404 lub biały obraz | Dwa warianty usługi, odrzucanie pustych obrazów, neutralne tło zamiast braku mapy |
+| `92e8a66` | Krytyczne podatności Next (m.in. obejście proxy/middleware — a autoryzacja stoi na `proxy.ts`), sharp, ws, undici | Next 16.4.2, sharp 0.35.5, `npm audit fix`; regresja: tsc, testy, build, e2e |
+| `99efbfd` | Artykuł blogowy o WZ sprzeczny z prawem od 1.09.2026 | Ramka aktualizacji, poprawiona sekcja o nowelizacji i FAQ |
+| `a84a721` | AI nadinterpretowało dane (zła instytucja, „gaz dostępny” przy braku, „cała działka”, ucięte zdania) | Jednoznaczne fakty, lista dopuszczalnych instytucji, poziom ryzyka powodziowego; przykładowe raporty |
+
+**Usunięta funkcjonalność i powód**
+- `wrosip-mpzp.ts` (MPZP Długołęki z koloru piksela): plan wybierany po przybliżonym prostokącie (±200 m), a legenda kolorów pochodziła z jednego planu (#40) i była stosowana do wszystkich. Przykład błędu: działkę w Kiełczowie przypisywało do planu „Obręb wsi Długołęka”, podczas gdy krajowa integracja pokazuje rzeczywisty plan „Kiełczów część B”. Zastąpione przez KIMPZP.
+- Fallback `mpzp_cache` w raporcie: zwracał najnowszy symbol z gminy bez związku z położeniem działki, a filtr porównywał TERYT z nazwą gminy. Tabela i import w panelu admina zostały.
+- `external-data.ts` i zaślepka `isok.ts`: zastąpione przez `src/lib/sources/*`.
+- Okrąg „analizy 200 m” na mapie: nic nie analizował.
+
+## 5. Blockery i ryzyka
+
+| # | Problem | Przyczyna | Próby | Rekomendacja |
+|---|---|---|---|---|
+| B1 | **OSM/Overpass niedostępny** podczas całej sesji (bez linii WN z napięciem) | Publiczne instancje przeciążone: overpass-api.de 502/406/timeout, kumi i private.coffee timeout, mail.ru ~18 s | Zmiana instancji, równoległe zapytania, nagłówki UA/Accept, limit 15 s | Własny ekstrakt OSM (Geofabrik `poland-latest`) → tabela linii energetycznych w PostGIS, odświeżanie co miesiąc. Wtedy Overpass jest zbędny |
+| B2 | Stripe Checkout nieprzetestowany | W `.env.local` są tylko klucze live; tworzenie sesji live w ramach testu = efekt uboczny na produkcji | Przetestowany webhook (podpis, idempotencja, generowanie); dialog płatności w e2e | Dodać klucze testowe Stripe (`sk_test_…`) do środowiska dev/staging i dopisać krok checkout do e2e |
+| B3 | Zachowanie na hostingu niezweryfikowane | Brak dostępu do Netlify/Vercel i logów. Netlify: limit czasu funkcji synchronicznych jest krótki (zależnie od planu); wsparcie `after()`/`waitUntil` trzeba potwierdzić. Generowanie trwa ~25 s | `after()` + `maxDuration = 60` + detekcja zawieszonych raportów | Wdrożyć branch na staging. Jeśli limit czasu nie wystarcza: Vercel (Fluid compute) albo kolejka (Netlify Background Function / Supabase queue) |
+| B4 | Geometria OUZ poza Wrocławiem | Krajowa usługa GUGiK `PlanyOgolneGmin` nie zwraca nic nawet dla gmin z POG w mocy (Siechnice, Przemęt, Radlin, Strzeleczki), a na skali kraju nic nie rysuje | GetFeatureInfo HTML/JSON/text, GetMap całej Polski | Pobierać GML planów ogólnych z Rejestru Urbanistycznego (API ma download) do własnej bazy, analogicznie do Wrocławia |
+| B5 | Brak stagingu i trwałego cache | Jedyny projekt Supabase = produkcja; zakaz modyfikacji bazy | Cache w pamięci procesu (TTL, deduplikacja zapytań) | Osobny projekt Supabase na staging; tabela `source_cache` lub Upstash |
+
+**Ryzyka danych**
+- **Rejestr Urbanistyczny bywa opóźniony.** 19.10.2026 POG Wrocławia był w nim „w opracowaniu”, choć obowiązuje od 19.09.2026. Raport mówi to wprost i każe potwierdzić w urzędzie.
+- **KIMPZP:** „brak wyniku” interpretujemy jako brak MPZP (gmina podłączona, w punkcie brak planu). Gmina może jednak nie przekazywać wszystkich planów. Gminy poza integracją (np. Gdańsk) → „nie ustalono”. Część gmin podaje tylko dane aktu, bez symbolu terenu.
+- **ISOK:** metadane map mają ważność do 21.12.2025, a usługa nie wskazuje nowszych. Mapy nie obejmują podtopień ani małych cieków.
+- **KIUT:** duże miasta nie przekazują danych. Odległość ±2 m z obrazu. Brak informacji o napięciu, średnicy i wolnej mocy.
+- **Niestabilność usług państwowych:** w trakcie sesji ortofotomapa `StandardResolution` przez pewien czas zwracała 404. Wszystkie źródła mają timeout, retry i status w raporcie; awaria pojedynczego źródła daje raport częściowy, nie błąd.
+- **AI (Haiku 4.5):** walidator odrzuca punkty z liczbami spoza danych i bez wskazania podstawy, ale nie łapie błędów semantycznych. Po poprawkach promptu zostały pojedyncze spekulacje (np. Milicz: „położenie nad Baryczą wskazuje na potencjalne zagrożenie hydrologiczne”, choć ISOK nie pokazuje strefy). Kluczowe ustalenia i werdykt w raporcie powstają regułami, nie przez AI.
+
+**Ryzyka bezpieczeństwa (poza zakresem zmian w kodzie)**
+- **Token GitHub (PAT) zapisany jawnym tekstem w URL remote'a `origin`** w `.git/config`. Należy go natychmiast unieważnić i ustawić remote bez tokenu (credential helper).
+- Klucze **live** Stripe w lokalnym `.env.local`. Development powinien używać kluczy testowych.
+- Rate limiter i cache w pamięci nie są współdzielone między instancjami serverless.
+- Pozostały 2 umiarkowane podatności (`postcss-selector-parser` przez `@tailwindcss/typography`; tylko czas budowania).
+
+## 6. Luki konkurencyjne: linie energetyczne i wod-kan
+
+| Źródło | Dane wektorowe? | Odległość od działki | Pokrycie | Stan |
+|---|---|---|---|---|
+| **KIUT/GESUT (GUGiK)** | Nie — tylko WMS; GetFeatureInfo „nie udostępnia danych opisowych” | **Tak**, z pikseli obrazu (±2 m): prąd, woda, kanalizacja, gaz; wykrywa sieć przez działkę | Powiaty przekazujące dane; brak m.in. Wrocławia i Krakowa | **Zbudowane i w raporcie** (`src/lib/sources/gesut.ts`). Live: Milicz — prąd 7 m, woda 1 m, kanalizacja 9 m, gaz 11 m; Kiełczów — prąd 126 m, kanalizacja 119 m |
+| **OSM** | Tak (z napięciem, operatorem) | Tak (dokładnie, z geometrii) | Dobre dla napowietrznych linii WN/SN, słabe dla sieci podziemnych | Zbudowane (`osm.ts`, reguła „linia WN ≤ 50 m” → ryzyko). Bezużyteczne bez stabilnego Overpass (B1) |
+| **BDOT10k (SULN, SUPR)** | Tak, ale WFS GUGiK udostępnia tylko listę paczek per powiat (GML) | Możliwa po ETL | Cały kraj; linie napowietrzne z klasą napięcia, główne rurociągi | Niezbudowane: wymaga pobrania i przetworzenia ~380 paczek powiatowych |
+| Operatorzy sieci / mapa zasadnicza z powiatu | Różnie; zwykle płatne, na wniosek | — | — | Nie do zautomatyzowania rzetelnie; raport kieruje po warunki przyłączenia |
+
+**Rekomendacja.** Wod-kan i prąd „z odległością” dla powiatów z KIUT jest gotowe, a konkurencja zwykle i tak opiera się na tym samym źródle. Dla linii wysokiego napięcia (pasy technologiczne, ryzyko dla zabudowy) warto zbudować własny ETL z OSM i BDOT10k do PostGIS. Szacunek: 3–5 dni pracy plus miesięczne odświeżanie; daje to napięcie i dokładną geometrię bez zależności od Overpass.
+
+**Czego nie da się zrobić rzetelnie:**
+- potwierdzić **możliwości przyłączenia** (moc, przepustowość, czy sieć jest czynna) — tylko operator, na wniosek;
+- podać danych o sieciach w miastach spoza KIUT.
+
+Raport mówi to wprost zamiast udawać.
+
+## 7. Wpływ reformy planistycznej na produkt
+
+**Stan prawny przyjęty w kodzie** (ustawa z 7.07.2023 z późn. zm.; termin przesunięty ustawą z 30.04.2026):
+- od **1.09.2026** studia uwarunkowań straciły moc;
+- nową decyzję WZ można co do zasady wydać tylko w gminie z **obowiązującym planem ogólnym** i tylko w **obszarze uzupełnienia zabudowy** (OUZ);
+- gminy bez POG nie wydają nowych WZ ani nie uchwalają nowych MPZP;
+- decyzje WZ prawomocne od 1.01.2026 wygasają po 5 latach;
+- od 1.07.2026 działa Rejestr Urbanistyczny.
+
+Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 61 ust. 1a) są tylko sygnalizowane — raport ich nie rozstrzyga.
+
+**Zrobione**
+- Werdykt „ścieżka do zabudowy” (`src/lib/report/assessment.ts`): MPZP → WZ możliwe (OUZ) → WZ niemożliwe (poza OUZ / brak POG) → nieustalone, z poziomem pewności.
+- POG Wrocławia: strefa, parametry, OUZ, obszar śródmiejski, udział %.
+- Status POG gminy dla całego kraju (Rejestr Urbanistyczny) z ostrzeżeniem o opóźnieniach.
+- Usunięte odesłanie do „studium uwarunkowań” z treści raportu.
+- Artykuł blogowy o WZ zaktualizowany.
+
+**Do zrobienia**
+1. Geometria OUZ i stref POG dla wszystkich gmin z GML Rejestru Urbanistycznego (B4). Bez tego poza Wrocławiem werdykt dla gmin z POG to „nieustalone”.
+2. Pozostałe artykuły bloga (01, 02, 03, 05) wspominają studium i stare zasady WZ — do przeredagowania.
+3. Import MPZP w panelu admina: zamiast parsowania PDF przez Claude pobierać GML aktów (APP) z Rejestru Urbanistycznego — dane oficjalne, z geometrią.
+4. Link do wypisu/wyrysu (e-usługi gminy, Rejestr Urbanistyczny) w raporcie.
+
+## 8. Założenia przyjęte bez Twojej zgody
+
+1. Projekt Supabase z `.env.local` traktuję jako **produkcję**: zero zapisów (także do Storage). E2E i przykładowe raporty działają bez niego (mock, mapy jako data URI).
+2. Nie używałem kluczy Stripe (live). Webhook testowany na fałszywym sekrecie z podpisem wygenerowanym przez bibliotekę Stripe.
+3. Rekomendacje zostają na **Claude Haiku 4.5** — wybór właściciela opisany w HANDOFF. Do parsowania PDF wybrałem **`claude-opus-5-5`** w miejsce wycofanego Sonnet 4. Parsowania PDF nie uruchomiłem na prawdziwym dokumencie (koszt, panel admina).
+4. Warstwy ArcGIS UM Wrocławia z „PROJEKT” w nazwie traktuję jako dane obowiązujące. Mają status „prawnie wiążący” i datę 19.09.2026; to te same warstwy, z których korzysta geoportal miasta.
+5. „Obszar szczególnego zagrożenia powodzią” = strefa Q10% lub Q1%. Pas między wałem a rzeką nie jest wykrywany.
+6. Status POG „prawnie wiążący lub realizowany” w Rejestrze Urbanistycznym = POG obowiązuje.
+7. `sip_layers` (dane ręczne admina) wyszukiwane po dokładnej nazwie gminy (bez „(miasto)”) zamiast `%nazwa%`.
+8. Podniesiony `@types/node` do 22 (wymóg vitest 5; runtime to Node 22). Nowe zależności: `proj4`, `polygon-clipping`, `vitest`, `@playwright/test`, `tsx`.
+9. Przykładowe raporty (2,8 MB, mapy osadzone) są w repozytorium, bo zadanie wymagało katalogu `reports-sample/`.
+10. Nie konfigurowałem ESLint (brak konfiguracji w projekcie, Next 16 nie ma już `next lint`). Rolę statycznej kontroli pełni `tsc --noEmit`.
+
+## 9. Top 5 kolejnych kroków
+
+1. **Staging i sekrety (1–2 dni).** Unieważnić PAT z `.git/config`, osobny projekt Supabase i klucze testowe Stripe dla dev/staging, wdrożyć ten branch na staging i sprawdzić `after()` i limity czasu na docelowym hostingu (B2, B3). Bez tego nie da się bezpiecznie wypuścić żadnej poprawki.
+2. **Trwały cache i kolejka (2–3 dni).** Usługi państwowe są wolne i niestabilne; wspólny cache (tabela w Postgres lub Redis) skraca raport do kilku sekund przy powtórzeniach i chroni przed awariami. Kolejka usuwa zależność od limitu czasu funkcji.
+3. **Geometria planów ogólnych z Rejestru Urbanistycznego (3–5 dni).** Po 1.09.2026 to najważniejsza informacja dla kupującego (czy w ogóle dostanie WZ), a dziś mamy ją tylko dla Wrocławia.
+4. **Własny ETL linii energetycznych z OSM i BDOT10k (3–5 dni).** Zamyka lukę konkurencyjną z napięciem i dokładną odległością, bez zależności od publicznego Overpass (B1).
+5. **Jakość AI: eval i lepszy model (1–2 dni).** Zbudować zestaw ewaluacyjny z działek testowych (sprawdzanie zgodności z faktami), porównać Haiku 4.5 z nowszym modelem i pokazywać w raporcie „podstawę” każdej rekomendacji. Błędy semantyczne AI to dziś największe ryzyko jakości treści. Koszt modelu na raport jest pomijalny przy cenie 29 PLN.
+
+## Jak uruchomić weryfikację
+
+```bash
+npm install
+npm run typecheck
+npm test                 # 48 testów jednostkowych (fixture'y)
+npm run test:live        # 8 działek na żywych usługach (~2 min)
+npm run test:e2e         # Playwright + mock Supabase (~1 min; wymaga ANTHROPIC_API_KEY w .env.local, inaczej rekomendacje regułowe)
+npx tsx --env-file=.env.local --tsconfig tsconfig.json scripts/generate-sample-reports.mts   # reports-sample/
+```
