@@ -3,6 +3,8 @@ import { getParcelData } from './geoportal'
 import { queryGdosNature, queryOsmUtilities } from './external-data'
 import type { GdosResult, OsmUtilityResult } from './external-data'
 import { getWroclawMpzpForCoords } from './wroclaw-mpzp'
+import { queryWroclawPog } from './wroclaw-pog'
+import type { WroclawPog } from './wroclaw-pog'
 import { getDlugolekaMpzpZone } from './wrosip-mpzp'
 import { generateUtilityMap } from './utility-map'
 import Anthropic from '@anthropic-ai/sdk'
@@ -22,6 +24,8 @@ export interface ReportData {
   wspolrzedne: string | null
   // [2] MPZP
   mpzp: MpzpData | null
+  // [2b] Plan ogólny gminy
+  pog: WroclawPog | null
   // [3] Strefy
   strefy: StrefyData
   // [4] Media
@@ -76,6 +80,10 @@ export async function generateReport(
   // 2. MPZP — dla Wrocławia użyj WFS na żywo po współrzędnych
   const coords = parcel?.wspolrzedne ?? null
   const isWroclaw = gmina.toLowerCase().includes('wrocław') || gmina.toLowerCase().includes('wroclaw')
+
+  const pogPromise = isWroclaw && coords
+    ? queryWroclawPog(coords.lat, coords.lng).catch(() => null)
+    : Promise.resolve(null)
 
   let mpzp: MpzpData | null = null
 
@@ -176,10 +184,13 @@ export async function generateReport(
     konserwatorska: mpzp ? 'Sprawdź tekst uchwały MPZP' : 'DO WERYFIKACJI',
   }
 
+  const pog = await pogPromise
+
   // 5. Rekomendacje Claude
   const { rekomendacje, ryzyka } = await generateRekomendacje({
     parcel: parcel ?? { parcelId, numer: parcelId, gmina, found: false as const, obreb: null, powiat: null, wojewodztwo: null, powierzchnia: null, wspolrzedne: null, geomWkt: null },
     mpzp,
+    pog,
     media,
     strefy,
   })
@@ -201,6 +212,7 @@ export async function generateReport(
       ? `${parcel.wspolrzedne.lat}, ${parcel.wspolrzedne.lng}`
       : null,
     mpzp,
+    pog,
     strefy,
     media,
     utilityMapUrl: utilityMapUrl ?? null,
@@ -224,6 +236,7 @@ export async function generateReport(
 async function generateRekomendacje(ctx: {
   parcel: { numer: string; gmina: string; found: boolean }
   mpzp: MpzpData | null
+  pog: WroclawPog | null
   media: MediaData
   strefy: StrefyData
 }): Promise<{ rekomendacje: string[]; ryzyka: string[] }> {
@@ -234,6 +247,7 @@ async function generateRekomendacje(ctx: {
 
 Działka: ${ctx.parcel.numer}, gmina: ${ctx.parcel.gmina}
 MPZP: ${ctx.mpzp ? `symbol ${ctx.mpzp.symbol}, przeznaczenie: ${ctx.mpzp.przeznaczenie}, wys. max: ${ctx.mpzp.wysokosc_max}m, PBC min: ${ctx.mpzp.pbc_min}%` : 'brak danych MPZP'}
+Plan ogólny gminy (POG): ${formatPogForPrompt(ctx.pog)}
 Media: wodociąg: ${ctx.media.wodociag}, kanalizacja: ${ctx.media.kanalizacja}, gaz: ${ctx.media.gaz}, energia: ${ctx.media.energia}
 Ochrona przyrody: ${ctx.strefy.ochrona_przyrody}
 Strefa zalewowa: ${ctx.strefy.zalewowa}
@@ -276,6 +290,22 @@ Maksymalnie 4 rekomendacje i 3 ryzyka. Każdy punkt max 2 zdania. Bądź konkret
 }
 
 // ─── Formatowanie ─────────────────────────────────────────────────────────────
+
+function formatPogForPrompt(pog: WroclawPog | null): string {
+  if (!pog) return 'brak danych'
+  const s = pog.strefa
+  return [
+    `strefa ${s.oznaczenie} (${s.nazwa ?? s.symbol})`,
+    `wys. max ${s.maks_wysokosc ?? '-'} m`,
+    `intensywność max ${s.maks_intensywnosc ?? '-'}`,
+    `udział zabudowy max ${s.maks_udzial_zabudowy ?? '-'}%`,
+    `PBC min ${s.min_pbc ?? '-'}%`,
+    `profil podstawowy: ${s.profil_podstawowy.join(', ') || '-'}`,
+    `profil dodatkowy: ${s.profil_dodatkowy.join(', ') || '-'}`,
+    `obszar uzupełnienia zabudowy: ${pog.obszar_uzupelnienia_zabudowy ? 'TAK' : 'NIE (bez MPZP nowe WZ dla budynków co do zasady niemożliwe)'}`,
+    `obszar zabudowy śródmiejskiej: ${pog.obszar_zabudowy_srodmiejskiej ? 'TAK' : 'NIE'}`,
+  ].join('; ')
+}
 
 function formatMedia(val: string | undefined | null, operator: string): string {
   if (!val || val === 'brak_danych') return `❓ DO WERYFIKACJI u operatora (${operator})`
@@ -330,6 +360,37 @@ function row(label: string, value: string | null | undefined): string {
   return `<div class="row"><span class="row-label">${esc(label)}</span><span class="row-value">${value}</span></div>`
 }
 
+function buildPogSection(pog: WroclawPog, hasMpzp: boolean): string {
+  const s = pog.strefa
+  const fmt = (v: number | null, unit = '') => v != null ? `${v.toLocaleString('pl-PL')}${unit}` : null
+
+  const wz = hasMpzp
+    ? { cls: 'zone-unk', icon: '📋', text: 'Działka objęta MPZP — o zabudowie decyduje plan miejscowy. Ustalenia POG wiążą przy uchwalaniu nowego planu.' }
+    : pog.obszar_uzupelnienia_zabudowy
+      ? { cls: 'zone-ok', icon: '✅', text: `Działka leży w obszarze uzupełnienia zabudowy (${pog.obszar_uzupelnienia_zabudowy}) — możliwe uzyskanie decyzji o warunkach zabudowy zgodnej z planem ogólnym.` }
+      : { cls: 'zone-warn', icon: '⚠️', text: 'Działka bez MPZP i poza obszarem uzupełnienia zabudowy — nowe decyzje o warunkach zabudowy dla budynków co do zasady nie mogą być wydane. Zabudowa wymaga uchwalenia planu miejscowego.' }
+
+  return `
+    <div class="section full">
+      <div class="section-title"><span class="icon">🗺</span>Plan ogólny gminy (POG)</div>
+      ${row('Strefa planistyczna', `<strong>${esc(s.oznaczenie)}</strong>`)}
+      ${row('Rodzaj strefy', esc(s.nazwa))}
+      ${row('Maks. wysokość zabudowy', fmt(s.maks_wysokosc, ' m'))}
+      ${row('Maks. nadziemna intensywność', fmt(s.maks_intensywnosc))}
+      ${row('Maks. udział pow. zabudowy', fmt(s.maks_udzial_zabudowy, '%'))}
+      ${row('Min. udział pow. biol. czynnej', fmt(s.min_pbc, '%'))}
+      ${row('Profil podstawowy', esc(s.profil_podstawowy.join(', ')))}
+      ${row('Profil dodatkowy', esc(s.profil_dodatkowy.join(', ')))}
+      ${row('Obszar zabudowy śródmiejskiej', pog.obszar_zabudowy_srodmiejskiej ? `Tak (${esc(pog.obszar_zabudowy_srodmiejskiej)})` : 'Nie')}
+      ${row('Obowiązuje od', pog.obowiazuje_od ? new Date(pog.obowiazuje_od).toLocaleDateString('pl-PL') : null)}
+      ${row('Źródło danych', '🔴 Na żywo — GIS Urząd Miejski Wrocławia (uchwała nr XXXVI/872/26)')}
+      <div class="zone-row ${wz.cls}" style="margin-top:12px;">
+        <span class="zone-icon">${wz.icon}</span>
+        <span><strong>Warunki zabudowy:</strong> ${esc(wz.text)}</span>
+      </div>
+    </div>`
+}
+
 function buildHTML(d: ReportData): string {
 
   const mpzpRows = d.mpzp ? [
@@ -345,7 +406,11 @@ function buildHTML(d: ReportData): string {
         ? '🔴 Na żywo — GIS Urząd Miejski Wrocławia'
         : `Baza SprawdzDziałkę (import ${new Date(d.mpzp.parsed_at).toLocaleDateString('pl-PL')})`
     ),
-  ].join('') : `<p class="no-data">Brak danych MPZP w bazie — sprawdź studium uwarunkowań lub złóż wniosek o warunki zabudowy w urzędzie gminy.</p>`
+  ].join('') : d.pog
+    ? `<p class="no-data">Działka nie jest objęta MPZP — o możliwości zabudowy decydują ustalenia planu ogólnego (sekcja POG).</p>`
+    : `<p class="no-data">Brak danych MPZP w bazie — sprawdź plan ogólny gminy lub złóż wniosek o warunki zabudowy w urzędzie gminy.</p>`
+
+  const pogHTML = d.pog ? buildPogSection(d.pog, d.mpzp != null) : ''
 
   const rekomendacjeHTML = d.rekomendacje.length
     ? d.rekomendacje.map(r => `<li class="ai-item">${esc(r)}</li>`).join('')
@@ -638,6 +703,8 @@ function buildHTML(d: ReportData): string {
         <span><strong>Strefa konserwatorska:</strong> ${esc(d.strefy.konserwatorska)}</span>
       </div>
     </div>
+
+    ${pogHTML}
 
     <!-- [4b] Mapa uzbrojenia -->
     ${d.utilityMapUrl ? `
