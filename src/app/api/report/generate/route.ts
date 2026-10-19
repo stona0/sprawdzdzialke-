@@ -86,7 +86,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Nie udało się utworzyć profilu' }, { status: 500 })
     }
 
-    const canGenerateFree = profile.free_reports_used === 0 || profile.role === 'admin'
+    // Darmowy raport „zajmujemy” warunkowym UPDATE-em (tylko gdy licznik = 0),
+    // więc dwa równoległe żądania nie dostaną dwóch darmowych raportów.
+    // Wcześniej licznika nigdy nie zwiększano — każdy raport był darmowy.
+    const isAdmin = profile.role === 'admin'
+    let usedFreeSlot = false
+    if (!isAdmin) {
+      const { data: claimed } = await supabaseService
+        .from('profiles')
+        .update({ free_reports_used: 1 })
+        .eq('user_id', user.id)
+        .eq('free_reports_used', 0)
+        .select('user_id')
+      usedFreeSlot = (claimed?.length ?? 0) > 0
+    }
+    const canGenerateFree = isAdmin || usedFreeSlot
+
+    const releaseFreeSlot = async () => {
+      if (!usedFreeSlot) return
+      await supabaseService
+        .from('profiles')
+        .update({ free_reports_used: 0 })
+        .eq('user_id', user.id)
+        .eq('free_reports_used', 1)
+    }
 
     // ── Create report ───────────────────────────────────────────────
     const { data: report, error: reportError } = await supabaseService
@@ -95,7 +118,7 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         parcel_id: parcelId,
         gmina,
-        status: 'generating',
+        status: canGenerateFree ? 'generating' : 'pending',
         paid: canGenerateFree,
       })
       .select()
@@ -103,15 +126,11 @@ export async function POST(request: NextRequest) {
 
     if (reportError || !report) {
       console.error('Report insert error:', JSON.stringify(reportError))
+      await releaseFreeSlot()
       return NextResponse.json({ error: 'Nie udało się utworzyć raportu' }, { status: 500 })
     }
 
     if (!canGenerateFree) {
-      await supabaseService
-        .from('reports')
-        .update({ status: 'pending' })
-        .eq('id', report.id)
-
       return NextResponse.json({ requiresPayment: true, reportId: report.id })
     }
 
@@ -124,6 +143,8 @@ export async function POST(request: NextRequest) {
       } catch (err) {
         console.error('[generate] generateReport failed:', err)
         await supabaseService.from('reports').update({ status: 'failed' }).eq('id', report.id)
+        // Nieudany raport nie powinien zużyć jedynego darmowego raportu.
+        await releaseFreeSlot()
       }
     })
 
