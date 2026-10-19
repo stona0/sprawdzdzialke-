@@ -1,178 +1,97 @@
 /**
- * wroclaw-mpzp.ts
- * Zapytania do publicznego WFS Urzędu Miejskiego Wrocławia
- * Serwis OGC: http://gis1.um.wroc.pl/arcgis/services/ogc/OGC_mpzp/MapServer/WFSServer
- *
- * Zwraca strefę MPZP (symbol + przeznaczenie + nr uchwały) dla podanych współrzędnych WGS84.
- * Nie wymaga uwierzytelniania.
+ * MPZP Wrocławia — ArcGIS REST UM Wrocławia (te same warstwy co geoportal.wroclaw.pl).
+ * Zapytanie obrysem działki, a nie punktem: działka może leżeć w kilku terenach
+ * (np. MN + droga KDD) i raport podaje udział każdego.
  */
+import type { MultiPolygon } from './geo'
+import { cacheableResult, cached, DAY, runSource, type SourceResult } from './http'
+import { queryByParcel, str } from './sources/arcgis'
 
-const WFS_URL = 'http://gis1.um.wroc.pl/arcgis/services/ogc/OGC_mpzp/MapServer/WFSServer'
+const SRV = 'https://gis.um.wroc.pl/portal_srv/rest/services/POG_PROJEKT_OP_plany_miejscowe/MapServer'
+const L = {
+  tereny: `${SRV}/72`,
+  planyObowiazujace: `${SRV}/79`,
+  planyUchwaloneNieobowiazujace: `${SRV}/78`,
+  planyWOpracowaniu: `${SRV}/77`,
+  planyWOpracowaniuDzielnice: `${SRV}/88`,
+  strefyDziedzictwa: `${SRV}/69`,
+  stanowiskaArcheologiczne: `${SRV}/63`,
+}
 
 export interface WroclawMpzpZone {
-  symbol_terenu: string
-  symbol_literowy: string | null
-  przeznaczenie: string | null               // opis_w_legendzie
-  klasyfikacja: string | null                // uproszczona_klasyfikacja_przeznaczenia
-  nr_planu: number | null
-  uchwalenie_uchwala: string | null          // numer uchwały rady miejskiej
-  tytul_planu: string | null
-  id_terenu: number | null
+  symbol: string
+  symbolLiterowy: string | null
+  przeznaczenie: string | null
+  klasyfikacja: string | null
+  nrPlanu: string | null
+  sharePct: number
 }
 
-/**
- * Zapytaj WFS o strefę MPZP dla punktu (lat, lng w WGS84).
- * Zwraca pierwszą pasującą strefę lub null jeśli brak planu.
- */
-export async function queryWroclawMpzp(
-  lat: number,
-  lng: number,
-  timeoutMs = 8000
-): Promise<WroclawMpzpZone | null> {
-  // WFS 1.1.0 + EPSG:4326 używa odwróconej kolejności osi: lat,lon (Y,X)
-  const delta = 0.00002
-  const bbox = `${lat - delta},${lng - delta},${lat + delta},${lng + delta}`
-
-  const url =
-    `${WFS_URL}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature` +
-    `&TYPENAME=tereny` +
-    `&MAXFEATURES=1` +
-    `&SRSNAME=EPSG:4326` +
-    `&BBOX=${bbox},EPSG:4326`
-
-  try {
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), timeoutMs)
-
-    const res = await fetch(url, {
-      signal: controller.signal,
-      headers: { Accept: 'application/xml, text/xml' },
-      // Node.js next-fetch nie wysyła User-Agent automatycznie
-      next: { revalidate: 0 },
-    })
-    clearTimeout(timer)
-
-    if (!res.ok) return null
-
-    const xml = await res.text()
-    return parseWfsGml(xml)
-  } catch {
-    return null
-  }
+export interface WroclawPlan {
+  nr: string | null
+  tytul: string | null
+  uchwalaUrl: string | null
+  stan: string | null
 }
 
-/**
- * Parsuje odpowiedź GML z WFS – wyciąga atrybuty pierwszego feature.
- * Nie używamy zewnętrznego parsera XML — prosta ekstrakcja tagów.
- */
-function parseWfsGml(xml: string): WroclawMpzpZone | null {
-  // Brak wyników
-  if (xml.includes('numberOfFeatures="0"') || !xml.includes('symbol_terenu')) {
-    return null
-  }
+export interface WroclawMpzp {
+  zones: WroclawMpzpZone[]
+  plans: WroclawPlan[]
+  /** Plany uchwalone, ale jeszcze nieobowiązujące, oraz w opracowaniu — ważne dla kupującego. */
+  plansPending: WroclawPlan[]
+  heritage: string[]
+  archeologia: boolean
+}
 
-  function extract(tag: string): string | null {
-    // GML z ArcGIS zwraca tagi jako <esri:tag> lub <tag>
-    const patterns = [
-      new RegExp(`<[^:>]*:${tag}[^>]*>([^<]*)<`, 'i'),
-      new RegExp(`<${tag}[^>]*>([^<]*)<`, 'i'),
-    ]
-    for (const re of patterns) {
-      const m = xml.match(re)
-      if (m && m[1].trim()) return m[1].trim()
-    }
-    return null
-  }
-
-  function extractInt(tag: string): number | null {
-    const v = extract(tag)
-    if (!v) return null
-    const n = parseInt(v, 10)
-    return isNaN(n) ? null : n
-  }
-
-  const symbol = extract('symbol_terenu')
-  if (!symbol) return null
-
+function plan(a: Record<string, string | number | null>, stan?: string): WroclawPlan {
   return {
-    symbol_terenu: symbol,
-    symbol_literowy: extract('symbol_literowy'),
-    przeznaczenie: extract('opis_w_legendzie'),
-    klasyfikacja: extract('uproszczona_klasyfikacja_przeznaczenia'),
-    nr_planu: extractInt('nr_planu'),
-    uchwalenie_uchwala: null, // wymaga join z obowiazujace_plany_miejscowe
-    tytul_planu: null,
-    id_terenu: extractInt('id_terenu'),
+    nr: str(a.PLA_NR),
+    tytul: str(a.TYTUL),
+    uchwalaUrl: str(a.UCHWALENIE_UCHWALA_URL),
+    stan: stan ?? str(a.STAN_NAZWA),
   }
 }
 
-/**
- * Zapytaj o dane planu (nr uchwały, tytuł) po nr_planu.
- * Osobne zapytanie do warstwy obowiazujace_plany_miejscowe.
- */
-export async function queryWroclawPlanDetails(
-  nrPlanu: number,
-  timeoutMs = 6000
-): Promise<{ uchwalenie_uchwala: string | null; tytul: string | null }> {
-  const filter = encodeURIComponent(
-    `<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">` +
-    `<ogc:PropertyIsEqualTo>` +
-    `<ogc:PropertyName>nr_planu</ogc:PropertyName>` +
-    `<ogc:Literal>${nrPlanu}</ogc:Literal>` +
-    `</ogc:PropertyIsEqualTo></ogc:Filter>`
-  )
-  const url =
-    `${WFS_URL}?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature` +
-    `&TYPENAME=obowiazujace_plany_miejscowe` +
-    `&MAXFEATURES=1` +
-    `&FILTER=${filter}`
-
-  try {
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), timeoutMs)
-    const res = await fetch(url, { signal: controller.signal, next: { revalidate: 0 } })
-    clearTimeout(timer)
-    if (!res.ok) return { uchwalenie_uchwala: null, tytul: null }
-
-    const xml = await res.text()
-
-    function extract(tag: string): string | null {
-      const patterns = [
-        new RegExp(`<[^:>]*:${tag}[^>]*>([^<]*)<`, 'i'),
-        new RegExp(`<${tag}[^>]*>([^<]*)<`, 'i'),
-      ]
-      for (const re of patterns) {
-        const m = xml.match(re)
-        if (m && m[1].trim()) return m[1].trim()
-      }
-      return null
-    }
-
-    return {
-      uchwalenie_uchwala: extract('uchwalenie_uchwala'),
-      tytul: extract('tytul'),
-    }
-  } catch {
-    return { uchwalenie_uchwala: null, tytul: null }
-  }
+export function isWroclawTerc(terc: string): boolean {
+  return terc === '026401'
 }
 
-/**
- * Pełne zapytanie: strefa + dane planu, gotowe do użycia w raporcie.
- */
-export async function getWroclawMpzpForCoords(
-  lat: number,
-  lng: number
-): Promise<WroclawMpzpZone | null> {
-  const zone = await queryWroclawMpzp(lat, lng)
-  if (!zone) return null
+export async function queryWroclawMpzp(parcelId: string, geom: MultiPolygon): Promise<SourceResult<WroclawMpzp>> {
+  return cached(`wroclaw-mpzp:${parcelId}`, DAY, () => runSource('MPZP – GIS UM Wrocławia', async () => {
+    const [tereny, plany, uchwalone, wOpr, wOprDz, dziedzictwo, archeo] = await Promise.all([
+      queryByParcel(L.tereny, geom, 'NRPLANU,SBLTERENU,UPROSZCZONA_KLASYFIKACJA,SYM_LIT,SYM_LIT_OPIS'),
+      queryByParcel(L.planyObowiazujace, geom, 'PLA_NR,STAN_NAZWA,TYTUL,UCHWALENIE_UCHWALA_URL'),
+      queryByParcel(L.planyUchwaloneNieobowiazujace, geom, '*'),
+      queryByParcel(L.planyWOpracowaniu, geom, '*'),
+      queryByParcel(L.planyWOpracowaniuDzielnice, geom, '*'),
+      queryByParcel(L.strefyDziedzictwa, geom, '*', { minSharePct: 0.1 }),
+      queryByParcel(L.stanowiskaArcheologiczne, geom, '*', { minSharePct: 0.1 }),
+    ])
 
-  // Dociągnij dane planu jeśli mamy nr_planu
-  if (zone.nr_planu) {
-    const plan = await queryWroclawPlanDetails(zone.nr_planu)
-    zone.uchwalenie_uchwala = plan.uchwalenie_uchwala
-    zone.tytul_planu = plan.tytul
-  }
+    const zones: WroclawMpzpZone[] = tereny.map(h => ({
+      symbol: str(h.attributes.SBLTERENU) ?? '?',
+      symbolLiterowy: str(h.attributes.SYM_LIT),
+      przeznaczenie: str(h.attributes.SYM_LIT_OPIS),
+      klasyfikacja: str(h.attributes.UPROSZCZONA_KLASYFIKACJA),
+      nrPlanu: str(h.attributes.NRPLANU),
+      sharePct: +h.sharePct.toFixed(1),
+    }))
 
-  return zone
+    const heritage = [...new Set(dziedzictwo
+      .map(h => str(h.attributes.PKL_OBKT_OPIS) ?? str(h.attributes.OPISOBIEKTU) ?? str(h.attributes.ETYKIETA))
+      .filter((s): s is string => !!s))]
+
+    const data: WroclawMpzp = {
+      zones,
+      plans: plany.map(h => plan(h.attributes)),
+      plansPending: [
+        ...uchwalone.map(h => plan(h.attributes, 'uchwalony, jeszcze nieobowiązujący')),
+        ...wOpr.map(h => plan(h.attributes, 'w opracowaniu')),
+        ...wOprDz.map(h => plan(h.attributes, 'w opracowaniu')),
+      ],
+      heritage,
+      archeologia: archeo.length > 0,
+    }
+    return { status: zones.length || data.plans.length ? 'ok' : 'no_data', data }
+  }), cacheableResult)
 }
