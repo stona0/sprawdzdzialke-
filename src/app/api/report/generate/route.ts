@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { after, NextRequest, NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { generateReport } from '@/lib/report-generator'
 import { checkRateLimit, getRateLimitKey } from '@/lib/rate-limit'
@@ -115,14 +115,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ requiresPayment: true, reportId: report.id })
     }
 
-    // ── Generate — fire and forget (unikamy 504 od Netlify CDN) ─────
-    // Zwracamy natychmiast, klient polluje /api/report/[id]/status
-    generateReport(parcelId, gmina, user.id, report.id).catch(async (err) => {
-      console.error('[generate] generateReport failed:', err)
-      await supabaseService
-        .from('reports')
-        .update({ status: 'failed' })
-        .eq('id', report.id)
+    // Odpowiadamy od razu (klient polluje /api/report/[id]/status), a generowanie
+    // idzie w after(). Gołe niezawiedzione Promise ginęło na serverless: platforma
+    // zamraża funkcję po wysłaniu odpowiedzi i raport zostawał w „generating”.
+    after(async () => {
+      try {
+        await generateReport(parcelId, gmina, user.id, report.id)
+      } catch (err) {
+        console.error('[generate] generateReport failed:', err)
+        await supabaseService.from('reports').update({ status: 'failed' }).eq('id', report.id)
+      }
     })
 
     return NextResponse.json({ reportId: report.id, status: 'generating' })

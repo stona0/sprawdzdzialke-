@@ -1,6 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import ReportView from '@/components/report/ReportView'
+import { resolveReportStatus } from '@/lib/report-status'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -24,11 +25,13 @@ export default async function ReportPage({ params }: Props) {
 
   if (!report) notFound()
 
+  const status = await resolveReportStatus(supabaseService, report)
+
   return (
     <ReportView
       reportId={report.id}
       htmlContent={report.html_content}
-      status={report.status}
+      status={status}
       parcelId={report.parcel_id}
       gmina={report.gmina}
     />

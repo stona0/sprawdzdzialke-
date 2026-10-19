@@ -1,8 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { after, NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase/server'
 import { generateReport } from '@/lib/report-generator'
 import Stripe from 'stripe'
+
+export const maxDuration = 60
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -73,12 +75,13 @@ export async function POST(request: NextRequest) {
       .update({ paid: true, status: 'generating' })
       .eq('id', reportId)
 
-    generateReport(parcelId, gmina, userId, reportId).catch(async (err) => {
-      console.error('[webhook] generateReport failed:', err)
-      await supabase
-        .from('reports')
-        .update({ status: 'failed' })
-        .eq('id', reportId)
+    after(async () => {
+      try {
+        await generateReport(parcelId, gmina, userId, reportId)
+      } catch (err) {
+        console.error('[webhook] generateReport failed:', err)
+        await supabase.from('reports').update({ status: 'failed' }).eq('id', reportId)
+      }
     })
   }
 
