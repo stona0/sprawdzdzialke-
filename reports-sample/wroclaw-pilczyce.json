@@ -1,0 +1,210 @@
+{
+  "version": 2,
+  "parcelId": "026401_1.0041.442",
+  "generatedAt": "2026-10-19T20:27:14.372Z",
+  "parcel": {
+    "parcelId": "026401_1.0041.442",
+    "numer": "442",
+    "powierzchnia": 251280,
+    "obreb": "Pilczyce",
+    "gmina": "Wrocław (miasto)",
+    "teryt": "026401_1",
+    "terc": "026401",
+    "powiat": "powiat Wrocław",
+    "wojewodztwo": "dolnośląskie",
+    "wspolrzedne": {
+      "lat": 51.153071,
+      "lng": 16.962738
+    },
+    "geomWkt": "SRID=2180;POLYGON((357339.90780789 366974.487025808,357332.283442537 366949.785276436,357308.077491586 366902.710808774,357297.507785105 366876.585612332,357292.77486017 366859.708824917,357290.821480186 366842.060496191,357287.316713549 366799.054035691,357274.090498368 366731.800187401,357278.745907098 366726.581668716,357283.021437775 366718.642257772,357298.1683953 366698.365240043,357305.160739093 366680.997135565,357321.622597765 366672.215260026,357335.713890237 366704.64937738,357346.131777227 366722.550484147,357372.365359621 366767.592079424,357396.464371062 366796.510282082,357409.2649459 366808.640971817,357435.029657711 366830.007126499,357478.371928789 366890.237738544,357507.308596203 366925.282007664,357550.034944723 366948.302863231,357565.581073522 366954.442274491,357585.384275799 366958.563477977,357621.427499531 366964.717075045,357730.066827639 366959.347185461,357827.158194139 366939.204497699,357832.740548862 366936.21160225,357850.790825777 366991.461923598,357859.187404113 367026.344616895,357863.725009908 367086.126168782,357882.63420097 367152.63889411,357883.990282835 367162.603992644,357880.57057119 367173.491734954,357870.737875929 367191.642193466,357867.684211097 367201.2194113,357858.642764928 367238.448493326,357853.326767982 367253.383628306,357846.064328841 367270.368530191,357846.018969144 367276.369067081,357856.200457082 367306.80501809,357861.410863033 367326.669254651,357879.256881241 367340.210800732,357891.545102359 367351.493731935,357891.99367961 367357.281623057,357896.122169493 367362.274731781,357811.999351541 367364.040445177,357730.091212702 367370.912263675,357659.98813957 367369.636320989,357564.171373477 367349.056844832,357536.334557143 367341.231217965,357478.14802117 367339.270407688,357426.064576665 367350.924866726,357356.843231004 367362.886349119,357291.949865258 367378.779601387,357289.300686113 367366.348935621,357294.144975156 367352.52581734,357296.851402096 367341.157931803,357299.808524396 367304.485384459,357308.7650664 367256.160256851,357309.117116998 367234.853834324,357313.75809208 367213.136212706,357328.948984976 367189.548730198,357338.947882811 367170.09344519,357347.56643664 367110.217914553,357350.168127578 367085.413102418,357347.589538679 367062.881969095,357339.90780789 366974.487025808))",
+    "found": true
+  },
+  "mpzp": {
+    "covered": false,
+    "wroclaw": {
+      "zones": [],
+      "plans": [],
+      "plansPending": [
+        {
+          "nr": "854",
+          "tytul": "Dzielnica urbanistyczna E – Zachód",
+          "uchwalaUrl": null,
+          "stan": "w opracowaniu"
+        }
+      ],
+      "heritage": [],
+      "archeologia": false
+    },
+    "kimpzp": null,
+    "status": "no_data"
+  },
+  "pog": {
+    "wroclaw": {
+      "strefy": [
+        {
+          "oznaczenie": "71SO",
+          "symbol": "SO",
+          "nazwa": "strefa otwarta",
+          "maks_intensywnosc": null,
+          "maks_udzial_zabudowy": null,
+          "maks_wysokosc": null,
+          "min_pbc": 80,
+          "profil_podstawowy": [
+            "teren rolnictwa z zakazem zabudowy",
+            "teren lasu",
+            "teren zieleni naturalnej",
+            "teren wód",
+            "teren komunikacji",
+            "teren ogrodów działkowych",
+            "teren infrastruktury technicznej"
+          ],
+          "profil_dodatkowy": [],
+          "sharePct": 100
+        }
+      ],
+      "obszar_uzupelnienia_zabudowy": null,
+      "ouzSharePct": 0,
+      "obszar_zabudowy_srodmiejskiej": null,
+      "obowiazuje_od": "2026-09-19",
+      "uchwala": "XXXVI/872/26",
+      "zrodlo": "GIS Urzędu Miejskiego Wrocławia"
+    },
+    "ru": {
+      "entry": {
+        "tytul": "Plan ogólny gminy Wrocław",
+        "status": "w opracowaniu",
+        "obowiazujeOd": "2025-10-23",
+        "dataPublikacji": "2026-09-15",
+        "terc": "026401",
+        "gmina": "Wrocław"
+      },
+      "inForce": false
+    },
+    "inForce": true,
+    "source": "GIS Urzędu Miejskiego Wrocławia"
+  },
+  "assessment": {
+    "verdict": "wz_niemozliwe_poza_ouz",
+    "title": "Nowa decyzja WZ co do zasady niemożliwa (poza OUZ)",
+    "text": "Gmina ma obowiązujący plan ogólny, ale działka nie leży w obszarze uzupełnienia zabudowy. Od 1.09.2026 nowej decyzji o warunkach zabudowy dla budynków co do zasady nie można tu uzyskać — zabudowa wymaga uchwalenia miejscowego planu. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+    "confidence": "wysoka"
+  },
+  "flood": {
+    "scenarios": [
+      "Q1",
+      "Q0.2",
+      "BUDOWLA"
+    ],
+    "oszp": true,
+    "risk": [
+      {
+        "scenario": "Q1",
+        "level": "niskie ryzyko"
+      },
+      {
+        "scenario": "Q0.2",
+        "level": "niskie ryzyko"
+      },
+      {
+        "scenario": "BUDOWLA",
+        "level": "niskie ryzyko"
+      }
+    ],
+    "validTo": "2025-12-21"
+  },
+  "nature": {
+    "onParcel": [
+      {
+        "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+        "name": "Las Pilczycki"
+      }
+    ],
+    "nearby": [
+      {
+        "type": "Rezerwat przyrody",
+        "name": "Las Pilczycki im. prof. Dariusza Tarnawskiego"
+      }
+    ]
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "sip": null,
+  "findings": [
+    {
+      "level": "ryzyko",
+      "basis": "powodz",
+      "text": "Działka leży w obszarze szczególnego zagrożenia powodzią (Q1%). Obowiązują ograniczenia z ustawy Prawo wodne; zabudowa wymaga uzgodnień z PGW Wody Polskie, a ubezpieczenie może być droższe."
+    },
+    {
+      "level": "ryzyko",
+      "basis": "przyroda",
+      "text": "Działka leży w obszarze chronionym: Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Las Pilczycki”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+    },
+    {
+      "level": "uwaga",
+      "basis": "mpzp",
+      "text": "Dla terenu trwają prace planistyczne: Dzielnica urbanistyczna E – Zachód (w opracowaniu). Ustalenia mogą się zmienić."
+    }
+  ],
+  "sources": [
+    {
+      "source": "MPZP – GIS UM Wrocławia",
+      "status": "no_data",
+      "ms": 372,
+      "fetchedAt": "2026-10-19T20:27:15.468Z"
+    },
+    {
+      "source": "Plan ogólny – GIS UM Wrocławia",
+      "status": "ok",
+      "ms": 168,
+      "fetchedAt": "2026-10-19T20:27:15.267Z"
+    },
+    {
+      "source": "Plan ogólny – Rejestr Urbanistyczny",
+      "status": "ok",
+      "ms": 193,
+      "fetchedAt": "2026-10-19T20:26:27.033Z"
+    },
+    {
+      "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+      "status": "ok",
+      "ms": 2266,
+      "fetchedAt": "2026-10-19T20:27:17.366Z"
+    },
+    {
+      "source": "Ochrona przyrody – GDOŚ",
+      "status": "ok",
+      "ms": 384,
+      "fetchedAt": "2026-10-19T20:27:15.487Z"
+    },
+    {
+      "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+      "status": "not_covered",
+      "ms": 918,
+      "fetchedAt": "2026-10-19T20:27:16.028Z"
+    },
+    {
+      "source": "Linie i rurociągi – OpenStreetMap",
+      "status": "error",
+      "error": "Wszystkie instancje Overpass zawiodły: Overpass overpass-api.de: HTTP 502; Overpass maps.mail.ru: HTTP 504; The operation was aborted due to timeout",
+      "ms": 15006,
+      "fetchedAt": "2026-10-19T20:27:30.117Z"
+    }
+  ],
+  "utilityMap": "osadzona w HTML",
+  "ai": {
+    "rekomendacje": [
+      "Skontaktuj się z PGW Wody Polskie w celu uzyskania szczegółowych warunków zabudowy w obszarze szczególnego zagrożenia powodzią (Q1%). Dowiedz się, jakie ograniczenia i uzgodnienia będą obowiązkowe oraz jak wpłyną na koszt ubezpieczenia.",
+      "Poproś RDOŚ o wstępną ocenę, czy planowana na działce inwestycja będzie wymagać oceny oddziaływania na środowisko ze względu na położenie w Natura 2000 — specjalnym obszarze ochrony siedlisk Las Pilczycki. Ustal wymogi uzgodnień.",
+      "Skontaktuj się z urzędem gminy, aby potwierdzić stan prac planistycznych dla Dzielnicy urbanistycznej E – Zachód i czy mogą one wpłynąć na warunki zabudowy działki w przyszłości."
+    ],
+    "ryzyka": [
+      "Działka leży w obszarze szczególnego zagrożenia powodzią Q1% (raz na 100 lat). Zabudowa będzie podlegać ograniczeniom z ustawy Prawo wodne, ubezpieczenie będzie droższe, a niektóre prace mogą być niemożliwe bez specjalnych uzgodnień.",
+      "Inwestycja na terenie Natura 2000 (SOO Las Pilczycki) może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ, co wydłuży procedury i zwiększy koszty.",
+      "Dla uzbrojenia działki brak danych w dostępnych źródłach (KIUT niedostępne, linie energetyczne nieznane). Przed zakupem sprawdź u operatorów sieci warunki przyłączenia do mediów."
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "odrzucone": 2
+  }
+}

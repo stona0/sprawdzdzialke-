@@ -19,7 +19,17 @@ export interface AiInsights {
 
 const BRAK = 'brak danych (źródło niedostępne lub nie obejmuje obszaru)'
 
+// Model zamyka typograficzny cudzysłów „…” znakiem ASCII, co przy structured outputs
+// kończy string JSON w pół zdania — usuwamy cudzysłowy z faktów.
+function unquote<T>(v: T): T {
+  return JSON.parse(JSON.stringify(v).replace(/[„”“]/g, '')) as T
+}
+
 export function buildFacts(d: ReportData): Record<FactKey, unknown> {
+  return unquote(rawFacts(d))
+}
+
+function rawFacts(d: ReportData): Record<FactKey, unknown> {
   const w = d.mpzp.wroclaw
   const mpzp =
     d.mpzp.covered === false ? 'działka nie jest objęta MPZP'
@@ -44,18 +54,27 @@ export function buildFacts(d: ReportData): Record<FactKey, unknown> {
       : { obowiazuje: d.pog.inForce, status_w_rejestrze: d.pog.ru?.entry?.status ?? 'brak wpisu' }
 
   const powodz = d.flood
-    ? d.flood.scenarios.length ? d.flood.scenarios.map(s => SCENARIO_LABEL[s]) : 'brak stref zagrożenia na mapach ISOK'
+    ? d.flood.scenarios.length
+      ? {
+        scenariusze: d.flood.scenarios.map(s => SCENARIO_LABEL[s]),
+        poziom_ryzyka: d.flood.risk.map(r => `${r.level} (${SCENARIO_LABEL[r.scenario].split(' –')[0]})`),
+        obszar_szczegolnego_zagrozenia_powodzia: d.flood.oszp,
+      }
+      : 'brak stref zagrożenia na mapach ISOK'
     : BRAK
 
   const przyroda = d.nature
-    ? { na_dzialce: d.nature.onParcel.map(a => `${a.type}: ${a.name}`), do_300_m: d.nature.nearby.map(a => `${a.type}: ${a.name}`) }
+    ? {
+      co_najmniej_czesc_dzialki_lezy_w: d.nature.onParcel.map(a => `${a.type}: ${a.name}`),
+      w_odleglosci_do_300_m_od_dzialki: d.nature.nearby.map(a => `${a.type}: ${a.name}`),
+    }
     : BRAK
 
   const kiut = d.gesut
     ? Object.fromEntries((Object.keys(NETWORKS) as Network[]).map(n => [
       NETWORKS[n].label,
       d.gesut![n].crosses ? 'przebiega przez działkę'
-        : d.gesut![n].distanceM === null ? 'brak w promieniu ok. 100 m' : `${d.gesut![n].distanceM} m od granicy`,
+        : d.gesut![n].distanceM === null ? 'nie stwierdzono w promieniu 100 m od działki' : `${d.gesut![n].distanceM} m od granicy działki`,
     ]))
     : d.gesutStatus === 'not_covered' ? 'brak danych w KIUT dla tego obszaru' : BRAK
 
@@ -101,6 +120,8 @@ Zasady:
 - Nie twórz własnych interpretacji prawnych ani nazw dokumentów urzędowych. Z dokumentów wymieniaj tylko: wypis i wyrys z MPZP lub planu ogólnego, decyzja o warunkach zabudowy, warunki przyłączenia, księga wieczysta, wypis z rejestru gruntów.
 - Ocena zabudowy („ocena_zabudowy”) jest już rozstrzygnięta — nie podważaj jej i nie dopisuj nowych warunków prawnych.
 - Gdy fakt to „brak danych”, zalecaj konkretną weryfikację (gdzie i co sprawdzić) zamiast zgadywać.
+- Kierując do instytucji, wybieraj tylko spośród: urząd gminy, starostwo powiatowe (geodezja), PGW Wody Polskie (powódź), regionalna dyrekcja ochrony środowiska (przyroda), wojewódzki konserwator zabytków, operator sieci (warunki przyłączenia), notariusz, geodeta.
+- Nie używaj cudzysłowów. Nie uogólniaj: jeśli fakt mówi o części działki, nie pisz o całej.
 - Każdy punkt ma pole „podstawa”: klucze faktów, z których wynika.
 - Do 4 rekomendacji (konkretne działania przed zakupem) i do 4 ryzyk. Każdy punkt maks. 2 zdania, po polsku.`
 

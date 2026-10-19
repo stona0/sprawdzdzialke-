@@ -1,0 +1,164 @@
+{
+  "version": 2,
+  "parcelId": "020802_1.0010.AR_3.27/16",
+  "generatedAt": "2026-10-19T20:27:39.201Z",
+  "parcel": {
+    "parcelId": "020802_1.0010.AR_3.27/16",
+    "numer": "27/16",
+    "powierzchnia": 2676,
+    "obreb": "Centrum",
+    "gmina": "Kłodzko (miasto)",
+    "teryt": "020802_1",
+    "terc": "020802",
+    "powiat": "powiat kłodzki",
+    "wojewodztwo": "dolnośląskie",
+    "wspolrzedne": {
+      "lat": 50.435035,
+      "lng": 16.654221
+    },
+    "geomWkt": "SRID=2180;POLYGON((333427.896324783 287958.793176085,333432.099266144 287959.106485891,333437.263087365 287959.506830451,333437.613014047 287955.053472199,333437.969975829 287950.380086103,333433.759750325 287942.099296177,333431.96021967 287942.093529562,333442.418996702 287899.165745871,333446.480352683 287900.100773622,333444.801262617 287906.071568297,333454.419229407 287909.850908945,333466.259212399 287924.227107249,333476.521942816 287929.1174276,333475.943588597 287931.454504864,333472.893911806 287964.085649288,333487.498631506 287965.508555779,333512.406523062 287968.142355843,333517.86420118 287964.380009251,333520.839949319 287961.160918099,333522.647841186 287958.817286568,333523.487779752 287957.346423649,333524.578673425 287955.952158194,333527.864944384 287947.580452835,333529.14151735 287944.384235171,333531.04630322 287956.664851218,333526.419452506 287962.735308127,333524.012620568 287965.886759046,333520.298673045 287969.965529041,333515.374332227 287974.730389098,333513.40965114 287976.566286373,333512.668626172 287977.216067109,333510.45783376 287979.335192305,333508.245734318 287980.61459048,333505.280192855 287982.363991288,333502.42652018 287983.512068586,333498.681126448 287984.512198451,333495.068937287 287985.010687184,333473.337368926 287979.205081021,333458.159177262 287974.54088237,333449.305031663 287973.290488753,333440.017115589 287973.235572672,333423.85120971 287975.402597385,333427.896324783 287958.793176085),(333466.259212399 287924.227107249,333450.644174823 287922.757818187,333449.218057191 287939.351977039,333447.705251372 287955.447454871,333446.194234613 287955.337834872,333445.645846492 287960.643606331,333455.013416083 287961.417231546,333464.300620677 287962.161947686,333464.708942127 287956.848064942,333463.277617511 287956.717378256,333464.755324947 287940.242488825,333466.259212399 287924.227107249))",
+    "found": true
+  },
+  "mpzp": {
+    "covered": false,
+    "wroclaw": null,
+    "kimpzp": [],
+    "status": "no_data"
+  },
+  "pog": {
+    "wroclaw": null,
+    "ru": {
+      "entry": null,
+      "inForce": false
+    },
+    "inForce": false,
+    "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+    "verdict": "wz_niemozliwe_brak_pog",
+    "title": "Brak obowiązującego planu ogólnego gminy",
+    "text": "Według Rejestru Urbanistycznego (stan na 2026-10-19) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+    "confidence": "srednia"
+  },
+  "flood": {
+    "scenarios": [
+      "Q1",
+      "Q0.2"
+    ],
+    "oszp": true,
+    "risk": [
+      {
+        "scenario": "Q1",
+        "level": "wysokie ryzyko"
+      },
+      {
+        "scenario": "Q0.2",
+        "level": "wysokie ryzyko"
+      }
+    ],
+    "validTo": "2025-12-21"
+  },
+  "nature": {
+    "onParcel": [],
+    "nearby": [
+      {
+        "type": "Obszar chronionego krajobrazu",
+        "name": "Góry Bardzkie i Sowie"
+      }
+    ]
+  },
+  "gesut": {
+    "energia": {
+      "distanceM": 0,
+      "crosses": true
+    },
+    "woda": {
+      "distanceM": 0,
+      "crosses": true
+    },
+    "kanalizacja": {
+      "distanceM": 0,
+      "crosses": true
+    },
+    "gaz": {
+      "distanceM": 0,
+      "crosses": true
+    }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "sip": null,
+  "findings": [
+    {
+      "level": "ryzyko",
+      "basis": "powodz",
+      "text": "Działka leży w obszarze szczególnego zagrożenia powodzią (Q1%). Obowiązują ograniczenia z ustawy Prawo wodne; zabudowa wymaga uzgodnień z PGW Wody Polskie, a ubezpieczenie może być droższe."
+    },
+    {
+      "level": "uwaga",
+      "basis": "przyroda",
+      "text": "W odległości do 300 m: Obszar chronionego krajobrazu „Góry Bardzkie i Sowie”."
+    },
+    {
+      "level": "uwaga",
+      "basis": "uzbrojenie",
+      "text": "Przez działkę przebiega: sieć elektroenergetyczna, wodociąg, kanalizacja, sieć gazowa (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+    }
+  ],
+  "sources": [
+    {
+      "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+      "status": "no_data",
+      "ms": 102,
+      "fetchedAt": "2026-10-19T20:27:39.707Z"
+    },
+    {
+      "source": "Plan ogólny – Rejestr Urbanistyczny",
+      "status": "no_data",
+      "ms": 140,
+      "fetchedAt": "2026-10-19T20:27:39.746Z"
+    },
+    {
+      "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+      "status": "ok",
+      "ms": 814,
+      "fetchedAt": "2026-10-19T20:27:40.421Z"
+    },
+    {
+      "source": "Ochrona przyrody – GDOŚ",
+      "status": "ok",
+      "ms": 311,
+      "fetchedAt": "2026-10-19T20:27:39.921Z"
+    },
+    {
+      "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+      "status": "ok",
+      "ms": 772,
+      "fetchedAt": "2026-10-19T20:27:40.389Z"
+    },
+    {
+      "source": "Linie i rurociągi – OpenStreetMap",
+      "status": "error",
+      "error": "Wszystkie instancje Overpass zawiodły: The operation was aborted due to timeout; Overpass maps.mail.ru: HTTP 504; The operation was aborted due to timeout",
+      "ms": 15007,
+      "fetchedAt": "2026-10-19T20:27:54.626Z"
+    }
+  ],
+  "utilityMap": "osadzona w HTML",
+  "ai": {
+    "rekomendacje": [
+      "Potwierdź aktualny stan planowania przestrzennego w urzędzie gminy Kłodzko. Rejestr Urbanistyczny wykazuje brak obowiązującego planu ogólnego, co od 1.09.2026 uniemożliwia wydanie nowej decyzji o warunkach zabudowy — koniecznie sprawdź, czy gmina uchwaliła plan w ostatnich miesiącach.",
+      "Uzyskaj od operatorów (lub przez urzęd gminy) dokumenty dotyczące przebiegających przez działkę sieci: elektroenergetycznej, wodociągu, kanalizacji i sieci gazowej. Ustal zakres pasa ochronnego i ewentualnych służebności, które mogą ograniczyć możliwość zabudowy.",
+      "Skontaktuj się z PGW Wody Polskie w celu uzyskania warunków zabudowy w obszarze szczególnego zagrożenia powodzią Q1%. Uzgodnienia są obowiązkowe, a ich brak uniemożliwi realizację inwestycji.",
+      "Sprawdź w regionalnej dyrekcji ochrony środowiska, jakie ograniczenia wynikają z położenia w odległości do 300 m od Obszaru chronionego krajobrazu Góry Bardzkie i Sowie. Ustal, czy przewidziana zabudowa wymaga dodatkowych uzgodnień."
+    ],
+    "ryzyka": [
+      "Działka położona w obszarze szczególnego zagrożenia powodzią o wysokim ryzyku (zarówno dla scenariusza Q1%, jak i Q0,2%) znacznie zwiększa koszty ubezpieczenia i może ograniczyć dostęp do finansowania. Inwestycja w zabudowę niesie poważne ryzyko strat materialnych.",
+      "Brak obowiązującego planu ogólnego lub MPZP oznacza, że zabudowa terenu jest niemożliwa bez uchwalenia planu przez gminę — proces ten trwa miesiące lub lata i nie gwarantuje pozytywnego wyniku.",
+      "Przebieg czterech sieci infrastrukturalnych przez działkę powoduje, że pasy ochronne i służebności mogą istotnie ograniczyć użyteczną powierzchnię do zabudowy lub całkowicie ją uniemożliwić.",
+      "Brak danych z otwartych źródeł georeferencyjnych dot. linii energetycznych nie pozwala w pełni ocenić ryzyka radiacyjnego lub promieniowania elektromagnetycznego — koniecznie uzupełnij tę informację poprzez badania dodatkowe."
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "odrzucone": 0
+  }
+}

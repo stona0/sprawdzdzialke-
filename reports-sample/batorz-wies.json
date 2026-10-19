@@ -1,0 +1,159 @@
+{
+  "version": 2,
+  "parcelId": "060501_2.0004.273/4",
+  "generatedAt": "2026-10-19T20:28:28.396Z",
+  "parcel": {
+    "parcelId": "060501_2.0004.273/4",
+    "numer": "273/4",
+    "powierzchnia": 7480,
+    "obreb": "Batorz Pierwszy",
+    "gmina": "Batorz",
+    "teryt": "060501_2",
+    "terc": "060501",
+    "powiat": "powiat janowski",
+    "wojewodztwo": "lubelskie",
+    "wspolrzedne": {
+      "lat": 50.854059,
+      "lng": 22.492249
+    },
+    "geomWkt": "SRID=2180;POLYGON((745639.894064693 337670.952654199,745663.430798055 337677.652612488,745681.149604282 337682.724393192,745698.421564068 337687.674026588,745731.883760666 337697.253879149,745771.43162045 337708.549197138,745791.036700965 337714.152267478,745793.813486721 337762.294361637,745791.729191496 337761.687684538,745675.588159993 337728.109618201,745627.201460076 337714.073895608,745639.894064693 337670.952654199))",
+    "found": true
+  },
+  "mpzp": {
+    "covered": false,
+    "wroclaw": null,
+    "kimpzp": [],
+    "status": "no_data"
+  },
+  "pog": {
+    "wroclaw": null,
+    "ru": {
+      "entry": {
+        "tytul": "Plan ogólny gminy Batorz",
+        "status": "w opracowaniu",
+        "obowiazujeOd": "2026-10-15",
+        "dataPublikacji": "2026-10-19",
+        "terc": "060501",
+        "gmina": "Batorz"
+      },
+      "inForce": false
+    },
+    "inForce": false,
+    "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+    "verdict": "wz_niemozliwe_brak_pog",
+    "title": "Brak obowiązującego planu ogólnego gminy",
+    "text": "Według Rejestru Urbanistycznego (stan na 2026-10-19) gmina nie ma obowiązującego planu ogólnego (status: w opracowaniu). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+    "confidence": "srednia"
+  },
+  "flood": {
+    "scenarios": [],
+    "oszp": false,
+    "risk": [],
+    "validTo": null
+  },
+  "nature": {
+    "onParcel": [
+      {
+        "type": "Obszar chronionego krajobrazu",
+        "name": "Roztoczański (woj.lubelskie)"
+      }
+    ],
+    "nearby": []
+  },
+  "gesut": {
+    "energia": {
+      "distanceM": 0,
+      "crosses": true
+    },
+    "woda": {
+      "distanceM": 0,
+      "crosses": true
+    },
+    "kanalizacja": {
+      "distanceM": 0,
+      "crosses": true
+    },
+    "gaz": {
+      "distanceM": null,
+      "crosses": false
+    }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "sip": null,
+  "findings": [
+    {
+      "level": "ryzyko",
+      "basis": "przyroda",
+      "text": "Działka leży w obszarze chronionym: Obszar chronionego krajobrazu „Roztoczański (woj.lubelskie)”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+    },
+    {
+      "level": "uwaga",
+      "basis": "uzbrojenie",
+      "text": "Przez działkę przebiega: sieć elektroenergetyczna, wodociąg, kanalizacja (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+    },
+    {
+      "level": "uwaga",
+      "basis": "pog",
+      "text": "Plan ogólny gminy w Rejestrze Urbanistycznym: „w opracowaniu”."
+    }
+  ],
+  "sources": [
+    {
+      "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+      "status": "no_data",
+      "ms": 150,
+      "fetchedAt": "2026-10-19T20:28:28.747Z"
+    },
+    {
+      "source": "Plan ogólny – Rejestr Urbanistyczny",
+      "status": "ok",
+      "ms": 158,
+      "fetchedAt": "2026-10-19T20:28:28.757Z"
+    },
+    {
+      "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+      "status": "no_data",
+      "ms": 231,
+      "fetchedAt": "2026-10-19T20:28:28.831Z"
+    },
+    {
+      "source": "Ochrona przyrody – GDOŚ",
+      "status": "ok",
+      "ms": 374,
+      "fetchedAt": "2026-10-19T20:28:28.976Z"
+    },
+    {
+      "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+      "status": "ok",
+      "ms": 449,
+      "fetchedAt": "2026-10-19T20:28:29.060Z"
+    },
+    {
+      "source": "Linie i rurociągi – OpenStreetMap",
+      "status": "error",
+      "error": "Wszystkie instancje Overpass zawiodły: Overpass overpass-api.de: HTTP 502; Overpass maps.mail.ru: HTTP 504; The operation was aborted due to timeout",
+      "ms": 15006,
+      "fetchedAt": "2026-10-19T20:28:43.619Z"
+    }
+  ],
+  "utilityMap": "osadzona w HTML",
+  "ai": {
+    "rekomendacje": [
+      "Potwierdź pilnie w urzędzie gminy Batorz aktualny status planu ogólnego — Rejestr Urbanistyczny podaje, że jest w opracowaniu, ale może być już uchwalony. Od tego zależy, czy możesz w ogóle ubiegać się o decyzję o warunkach zabudowy.",
+      "Sprawdź w starostwie powiatowym (wydział geodezji) przebieg sieci elektroenergetycznej, wodociągu i kanalizacji przechodzących przez działkę — ustal zakres pasa ochronnego i czy służebności ograniczają możliwość zabudowy wybranej części.",
+      "Skontaktuj się z regionalną dyrekcją ochrony środowiska — działka leży w Obszarze chronionego krajobrazu Roztoczański, więc inwestycja może wymagać oceny oddziaływania na środowisko i innych uzgodnień.",
+      "Uzyskaj od operatora sieci elektroenergetycznej i wodociągu dokumenty warunków przyłączenia oraz informacje o służebnościach — to niezbędne do oceny faktycznych możliwości zabudowy."
+    ],
+    "ryzyka": [
+      "Brak obowiązującego planu ogólnego może uniemożliwić uzyskanie decyzji o warunkach zabudowy — przepisy uniemożliwiają takie decyzje bez planu od września 2026 r., a zabudowa bez MPZP wymaga jego uchwalenia.",
+      "Sieci uzbrojenia przechodzące przez działkę (elektroenergetyka, wodociąg, kanalizacja) mogą mieć pasy ochronne lub służebności istotnie zmniejszające powierzchnię dostępną do zabudowy.",
+      "Położenie w Obszarze chronionego krajobrazu Roztoczańskiego może wiązać się z dodatkowymi wymogami ochrony przyrody — inwestycja może wymagać opinii czy oceny, co wydłuża procedury i zwiększa koszty.",
+      "Rejestr Urbanistyczny może być opóźniony względem faktycznych uchwał gminy — bez potwierdzenia w urzędzie ryzykujesz podjęcie decyzji na podstawie niepełnych informacji."
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "odrzucone": 0
+  }
+}

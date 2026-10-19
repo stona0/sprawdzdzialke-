@@ -1,0 +1,191 @@
+{
+  "version": 2,
+  "parcelId": "026401_1.0001.2395",
+  "generatedAt": "2026-10-19T20:26:26.078Z",
+  "parcel": {
+    "parcelId": "026401_1.0001.2395",
+    "numer": "2395",
+    "powierzchnia": 617,
+    "obreb": "Stare Miasto",
+    "gmina": "Wrocław (miasto)",
+    "teryt": "026401_1",
+    "terc": "026401",
+    "powiat": "powiat Wrocław",
+    "wojewodztwo": "dolnośląskie",
+    "wspolrzedne": {
+      "lat": 51.110104,
+      "lng": 17.031836
+    },
+    "geomWkt": "SRID=2180;POLYGON((362255.704471704 362226.773401869,362248.643857016 362211.537782151,362273.736096804 362200.071736079,362273.364949761 362199.242075433,362281.547652733 362195.461178068,362286.136864433 362204.791486001,362288.631005879 362211.340260029,362279.044879079 362215.788999358,362255.704471704 362226.773401869))",
+    "found": true
+  },
+  "mpzp": {
+    "covered": true,
+    "wroclaw": {
+      "zones": [
+        {
+          "symbol": "12UA*UC",
+          "symbolLiterowy": "UA*UC",
+          "przeznaczenie": "Tereny usług administracji, tereny usług centrotwórczych",
+          "klasyfikacja": "usługi",
+          "nrPlanu": "196",
+          "sharePct": 100
+        }
+      ],
+      "plans": [
+        {
+          "nr": "196",
+          "tytul": "Rynek i Plac Solny (cz. A)",
+          "uchwalaUrl": "<a href=\"https://geoportal.wroclaw.pl/akty_prawne/?numer=X/202/03\" title=\"Treść uchwały RM\" target=\"_blank\">X/202/03</a>",
+          "stan": "plan obowiazujacy"
+        }
+      ],
+      "plansPending": [],
+      "heritage": [
+        "strefa ochrony konserwatorskiej",
+        "strefa ochrony konserwatorskiej zabytków archeologicznych"
+      ],
+      "archeologia": false
+    },
+    "kimpzp": null,
+    "status": "ok"
+  },
+  "pog": {
+    "wroclaw": {
+      "strefy": [
+        {
+          "oznaczenie": "2460SW",
+          "symbol": "SW",
+          "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową wielorodzinną",
+          "maks_intensywnosc": 5,
+          "maks_udzial_zabudowy": 100,
+          "maks_wysokosc": 25,
+          "min_pbc": 30,
+          "profil_podstawowy": [
+            "teren zabudowy mieszkaniowej wielorodzinnej",
+            "teren usług",
+            "teren komunikacji",
+            "teren zieleni urządzonej",
+            "teren ogrodów działkowych",
+            "teren infrastruktury technicznej"
+          ],
+          "profil_dodatkowy": [
+            "teren handlu wielkopowierzchniowego",
+            "teren zieleni naturalnej",
+            "teren lasu",
+            "teren wód"
+          ],
+          "sharePct": 100
+        }
+      ],
+      "obszar_uzupelnienia_zabudowy": null,
+      "ouzSharePct": 0,
+      "obszar_zabudowy_srodmiejskiej": "1OZS",
+      "obowiazuje_od": "2026-09-19",
+      "uchwala": "XXXVI/872/26",
+      "zrodlo": "GIS Urzędu Miejskiego Wrocławia"
+    },
+    "ru": {
+      "entry": {
+        "tytul": "Plan ogólny gminy Wrocław",
+        "status": "w opracowaniu",
+        "obowiazujeOd": "2025-10-23",
+        "dataPublikacji": "2026-09-15",
+        "terc": "026401",
+        "gmina": "Wrocław"
+      },
+      "inForce": false
+    },
+    "inForce": true,
+    "source": "GIS Urzędu Miejskiego Wrocławia"
+  },
+  "assessment": {
+    "verdict": "mpzp",
+    "title": "Działka objęta miejscowym planem (MPZP)",
+    "text": "O tym, co i jak można zbudować, decydują ustalenia obowiązującego MPZP — dla terenów objętych planem nie wydaje się decyzji o warunkach zabudowy. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+    "confidence": "wysoka"
+  },
+  "flood": {
+    "scenarios": [],
+    "oszp": false,
+    "risk": [],
+    "validTo": null
+  },
+  "nature": {
+    "onParcel": [],
+    "nearby": []
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "sip": null,
+  "findings": [
+    {
+      "level": "uwaga",
+      "basis": "mpzp",
+      "text": "Działka w strefie ochrony: strefa ochrony konserwatorskiej; strefa ochrony konserwatorskiej zabytków archeologicznych — projekt może wymagać uzgodnień konserwatorskich."
+    }
+  ],
+  "sources": [
+    {
+      "source": "MPZP – GIS UM Wrocławia",
+      "status": "ok",
+      "ms": 284,
+      "fetchedAt": "2026-10-19T20:26:27.112Z"
+    },
+    {
+      "source": "Plan ogólny – GIS UM Wrocławia",
+      "status": "ok",
+      "ms": 334,
+      "fetchedAt": "2026-10-19T20:26:27.170Z"
+    },
+    {
+      "source": "Plan ogólny – Rejestr Urbanistyczny",
+      "status": "ok",
+      "ms": 193,
+      "fetchedAt": "2026-10-19T20:26:27.033Z"
+    },
+    {
+      "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+      "status": "no_data",
+      "ms": 1069,
+      "fetchedAt": "2026-10-19T20:26:27.910Z"
+    },
+    {
+      "source": "Ochrona przyrody – GDOŚ",
+      "status": "no_data",
+      "ms": 337,
+      "fetchedAt": "2026-10-19T20:26:27.182Z"
+    },
+    {
+      "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+      "status": "not_covered",
+      "ms": 735,
+      "fetchedAt": "2026-10-19T20:26:27.588Z"
+    },
+    {
+      "source": "Linie i rurociągi – OpenStreetMap",
+      "status": "error",
+      "error": "Wszystkie instancje Overpass zawiodły: The operation was aborted due to timeout; Overpass maps.mail.ru: HTTP 504; The operation was aborted due to timeout",
+      "ms": 15008,
+      "fetchedAt": "2026-10-19T20:26:41.862Z"
+    }
+  ],
+  "utilityMap": "osadzona w HTML",
+  "ai": {
+    "rekomendacje": [
+      "Przed zakupem uzyskaj w urzędzie gminy wypis i wyrys z MPZP Rynek i Plac Solny (cz. A), aby potwierdzić szczegółowe ustalenia dla terenu 12UA*UC dotyczące warunków zabudowy, gabarytów i funkcji usług.",
+      "Skontaktuj się z wojewódzkim konserwatorem zabytków w celu ustalenia, jakie uzgodnienia konserwatorskie mogą być wymagane dla projektów na działce z uwagi na strefę ochrony konserwatorskiej i strefę ochrony zabytków archeologicznych.",
+      "Sprawdź u operatora sieci (energetyczną, wodno-kanalizacyjną, telekomunikacyjną) warunki przyłączenia i dostępność uzbrojenia, ponieważ w KIUT brak danych dla tego obszaru.",
+      "Zlecenie geodecie weryfikację granic działki i jej stanu prawnego (księga wieczysta, wypis z rejestru gruntów), aby upewnić się co do rzeczywistych możliwości zagospodarowania powierzchni 617 m²."
+    ],
+    "ryzyka": [
+      "Działka o powierzchni 617 m² w strefie wielofunkcyjnej z maksymalnym udziałem zabudowy do 100% i intensywnością 5 może wiążąc się z wymogiem 30% minimum powierzchni biologicznie czynnej, co zmniejsza potencjał zabudowy.",
+      "Usytuowanie w dwóch strefach ochrony konserwatorskiej (zabytkowej i archeologicznej) może wydłużyć proces projektowania i budowy, wymagając uzgodnień i ekspertyz archeologicznych.",
+      "Przeznaczenie terenu 12UA*UC na usługi administracji i usługi centrotwórcze ogranicza możliwość zabudowy mieszkaniowej lub innych funkcji niż te określone w MPZP.",
+      "Brak danych o sieciach energetycznych i uzbrojeniu w KIUT utrudnia oszacowanie kosztów przyłączenia infrastruktury niezbędnej do zagospodarowania działki."
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "odrzucone": 0
+  }
+}
