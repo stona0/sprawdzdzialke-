@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "scrape-mpzp": "npx tsx scripts/scrape-mpzp/scraper.ts",
-    "scrape-mpzp:gmina": "npx tsx scripts/scrape-mpzp/scraper.ts"
+    "scrape-mpzp:gmina": "npx tsx scripts/scrape-mpzp/scraper.ts",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run tests/unit",
+    "test:live": "vitest run tests/live",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.94.0",
@@ -29,6 +33,8 @@
     "next-themes": "^0.4.6",
     "playwright": "^1.60.0",
     "playwright-core": "^1.60.0",
+    "polygon-clipping": "^0.15.7",
+    "proj4": "^2.22.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "sharp": "^0.34.5",
@@ -37,14 +43,16 @@
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
     "@types/cheerio": "^0.22.35",
-    "@types/node": "^20",
+    "@types/node": "^22.20.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "cheerio": "^1.2.0",
     "node-fetch": "^2.7.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.5"
   }
 }

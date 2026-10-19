@@ -13,6 +13,8 @@
  * Wersja v2: CartoDB Positron + SLD styling + granica działki + legenda
  */
 
+import { parseWkt, polygonArea, toWgs84 } from './geo'
+
 const GESUT_WMS =
   'https://integracja02.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu'
 
@@ -113,21 +115,12 @@ function lngLatTo3857(lat: number, lng: number) {
   return { x, y }
 }
 
-/** EPSG:2180 (CS92) → przybliżone WGS84 — dokładność ~50-100m, OK dla wizualizacji */
-function epsg2180ToWgs84(x: number, y: number): { lat: number; lng: number } {
-  const lat = (y + 5_300_000) / (111_320 * 0.9993)
-  const lng = 19.0 + (x - 500_000) / (111_320 * 0.9993 * Math.cos(toRad(lat)))
-  return { lat, lng }
-}
-
-/** Parsuje WKT POLYGON (SRID=2180;POLYGON (...)) → tablica punktów WGS84 */
+/** Zewnętrzny pierścień największego poligonu działki (WKT EPSG:2180) → punkty WGS84 */
 function parseWktToWgs84(wkt: string): Array<{ lat: number; lng: number }> {
-  const pairs = wkt.match(/-?\d+(?:\.\d+)?\s+-?\d+(?:\.\d+)?/g)
-  if (!pairs || pairs.length < 3) return []
-  return pairs.map(p => {
-    const [x, y] = p.trim().split(/\s+/).map(Number)
-    return epsg2180ToWgs84(x, y)
-  })
+  const mp = parseWkt(wkt)
+  if (!mp.length) return []
+  const largest = [...mp].sort((a, b) => polygonArea(b) - polygonArea(a))[0]
+  return largest[0].map(toWgs84)
 }
 
 // ─── SLD Builder ─────────────────────────────────────────────────────────────

@@ -188,7 +188,7 @@ export async function generateReport(
 
   // 5. Rekomendacje Claude
   const { rekomendacje, ryzyka } = await generateRekomendacje({
-    parcel: parcel ?? { parcelId, numer: parcelId, gmina, found: false as const, obreb: null, powiat: null, wojewodztwo: null, powierzchnia: null, wspolrzedne: null, geomWkt: null },
+    parcel: parcel ?? { numer: parcelId, gmina, found: false },
     mpzp,
     pog,
     media,
