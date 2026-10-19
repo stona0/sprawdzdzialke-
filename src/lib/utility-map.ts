@@ -8,7 +8,7 @@
  */
 import { parseWkt, toWgs84 } from './geo'
 
-const ORTO_WMS = 'https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/StandardResolution'
+const ORTO_BASE = 'https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS'
 const KIEG_WMS = 'https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaEwidencjiGruntow'
 const GESUT_WMS = 'https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu'
 
@@ -86,10 +86,28 @@ async function wmsPng(base: string, params: Record<string, string>, timeoutMs: n
     const buf = Buffer.from(await res.arrayBuffer())
     const isPng = buf[0] === 0x89 && buf[1] === 0x50
     const isJpg = buf[0] === 0xff && buf[1] === 0xd8
-    return res.ok && (isPng || isJpg) ? buf : null
-  } catch {
+    if (res.ok && (isPng || isJpg)) return buf
+    console.warn(`[utility-map] ${new URL(base).host}: HTTP ${res.status}, ${buf.toString('utf8', 0, 120)}`)
+    return null
+  } catch (e) {
+    console.warn(`[utility-map] ${new URL(base).host}: ${e instanceof Error ? e.message : e}`)
     return null
   }
+}
+
+/**
+ * Ortofotomapa GUGiK. Usługi bywają niestabilne: StandardResolution potrafi zwracać 404,
+ * a HighResolution poza obszarami zdjęć wysokiej rozdzielczości oddaje biały obraz.
+ */
+async function ortho(bbox: string): Promise<Buffer | null> {
+  const sharp = (await import('sharp')).default
+  for (const variant of ['StandardResolution', 'HighResolution']) {
+    const img = await wmsPng(`${ORTO_BASE}/${variant}`, { LAYERS: 'Raster', BBOX: bbox, FORMAT: 'image/jpeg' }, 15_000)
+    if (!img) continue
+    const { channels } = await sharp(img).stats()
+    if (channels.some(c => c.stdev > 3)) return img
+  }
+  return null
 }
 
 /** Poszerza linie na przezroczystym PNG (rozmycie + wzmocnienie alfy); halo = biała obwódka. */
@@ -133,15 +151,14 @@ async function renderMap(lat: number, lng: number, geomWkt?: string | null): Pro
     const [x0, y0, x1, y1] = [c.x - halfW, c.y - halfH, c.x + halfW, c.y + halfH]
     const bbox = `${x0.toFixed(1)},${y0.toFixed(1)},${x1.toFixed(1)},${y1.toFixed(1)}`
 
-    const [orto, kieg, gesut] = await Promise.all([
-      wmsPng(ORTO_WMS, { LAYERS: 'Raster', BBOX: bbox, FORMAT: 'image/jpeg' }, 15_000),
+    const [ortoFetched, kieg, gesut] = await Promise.all([
+      ortho(bbox),
       wmsPng(KIEG_WMS, { LAYERS: 'dzialki,numery_dzialek', BBOX: bbox, FORMAT: 'image/png', TRANSPARENT: 'TRUE' }, 12_000),
       wmsPng(GESUT_WMS, { LAYERS: NETWORK_STYLES.map(s => s.layer).join(','), BBOX: bbox, FORMAT: 'image/png', TRANSPARENT: 'TRUE' }, 15_000),
     ])
-    if (!orto) {
-      console.error('[utility-map] Brak podkładu (ortofotomapa GUGiK)')
-      return null
-    }
+    // Bez ortofotomapy mapa nadal ma sens (działki, sieci, granica) — jasne tło zamiast zdjęcia.
+    const orto = ortoFetched ?? await sharp({ create: { width: W, height: H, channels: 3, background: { r: 246, g: 246, b: 244 } } }).jpeg().toBuffer()
+    if (!ortoFetched) console.warn('[utility-map] Ortofotomapa niedostępna — mapa na neutralnym tle')
 
     const toPx = (la: number, ln: number): [number, number] => {
       const p = to3857(la, ln)
