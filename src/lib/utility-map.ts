@@ -1,51 +1,36 @@
 /**
- * Utility map generator — CartoDB Positron + GESUT WMS (SLD-styled) → Supabase Storage cache
+ * Mapa uzbrojenia terenu: ortofotomapa GUGiK + działki KIEG + sieci KIUT/GESUT + granica działki.
+ * Wszystkie warstwy pobierane jako WMS w EPSG:3857 dla tego samego BBOX, więc nakładają się 1:1.
+ * Wynik trafia do Supabase Storage (cache) albo — w trybie bez Storage — wraca jako data URI.
  *
- * Pipeline:
- *  1. Sprawdź bucket utility-maps w Supabase Storage (klucz ~100m siatka, wersja v2)
- *  2. Cache hit → zwróć publiczny CDN URL natychmiast
- *  3. Cache miss → sharp tile-stitch:
- *       - CartoDB Positron base tiles (jasne, czyste — nie zasłaniają sieci)
- *       - GESUT WMS z SLD_BODY (grube, kolorowe linie per typ sieci)
- *       - SVG overlays: granica działki, okrąg analizy, legenda, marker
- *     → upload do Storage → CDN URL
- *
- * Wersja v2: CartoDB Positron + SLD styling + granica działki + legenda
+ * Wcześniej podkładem były kafelki CARTO Positron, które dziś zwracają obraz ze znakiem
+ * „API KEY REQUIRED”, a GESUT był pobierany z integracja02.gugik.gov.pl (puste odpowiedzi).
  */
+import { parseWkt, toWgs84 } from './geo'
 
-import { parseWkt, polygonArea, toWgs84 } from './geo'
-
-const GESUT_WMS =
-  'https://integracja02.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu'
-
-const GESUT_LAYERS = [
-  'przewod_wodociagowy',
-  'przewod_kanalizacyjny',
-  'przewod_gazowy',
-  'przewod_elektroenergetyczny',
-  'przewod_telekomunikacyjny',
-  'przewod_cieplowniczy',
-].join(',')
+const ORTO_WMS = 'https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS/StandardResolution'
+const KIEG_WMS = 'https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaEwidencjiGruntow'
+const GESUT_WMS = 'https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu'
 
 const STORAGE_BUCKET = 'utility-maps'
+const W = 1200
+const H = 750
 
-// Kolory per typ sieci (zgodne z map_prompt.md)
-const NETWORK_STYLES = [
-  { layer: 'przewod_elektroenergetyczny', color: '#DC2626', width: 4 },
-  { layer: 'przewod_wodociagowy',         color: '#2563EB', width: 4 },
-  { layer: 'przewod_kanalizacyjny',       color: '#D97706', width: 4 },
-  { layer: 'przewod_gazowy',             color: '#F59E0B', width: 4 },
-  { layer: 'przewod_telekomunikacyjny',  color: '#4B5563', width: 3 },
-  { layer: 'przewod_cieplowniczy',       color: '#7C3AED', width: 3 },
+// Kolory legendy = kolory, którymi rysuje serwer KIUT (usługa ignoruje SLD_BODY).
+export const NETWORK_STYLES = [
+  { layer: 'przewod_elektroenergetyczny', color: '#E00000', label: 'Sieć elektroenergetyczna' },
+  { layer: 'przewod_wodociagowy', color: '#0000E0', label: 'Wodociąg' },
+  { layer: 'przewod_kanalizacyjny', color: '#7A3A00', label: 'Kanalizacja' },
+  { layer: 'przewod_gazowy', color: '#B8B000', label: 'Sieć gazowa' },
+  { layer: 'przewod_cieplowniczy', color: '#C000C0', label: 'Sieć ciepłownicza' },
+  { layer: 'przewod_telekomunikacyjny', color: '#E07000', label: 'Telekomunikacja' },
 ]
 
-// ─── Cache helpers ────────────────────────────────────────────────────────────
+// ─── Cache (Supabase Storage) ─────────────────────────────────────────────────
 
-/** Klucz cache v3: zoom18, KIEG cadastral, HTML legenda */
+/** v4: poprawne współrzędne (v3 i starsze były renderowane ~24 km od działki). */
 function cacheKey(lat: number, lng: number): string {
-  const la = Math.round(lat * 1000) / 1000
-  const lo = Math.round(lng * 1000) / 1000
-  return `${la}_${lo}_v3.jpg`
+  return `${Math.round(lat * 1000) / 1000}_${Math.round(lng * 1000) / 1000}_v4.jpg`
 }
 
 async function checkCache(key: string): Promise<string | null> {
@@ -53,408 +38,151 @@ async function checkCache(key: string): Promise<string | null> {
     const { createServiceClient } = await import('./supabase/server')
     const supabase = await createServiceClient()
     const { data } = await supabase.storage.from(STORAGE_BUCKET).list('', { search: key })
-    if (data && data.length > 0) {
-      const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(key)
-      return urlData?.publicUrl ?? null
-    }
+    if (data && data.length > 0) return supabase.storage.from(STORAGE_BUCKET).getPublicUrl(key).data?.publicUrl ?? null
     return null
   } catch {
     return null
   }
 }
 
-async function uploadToStorage(key: string, jpegBuf: Buffer): Promise<string | null> {
+async function uploadToStorage(key: string, jpeg: Buffer): Promise<string | null> {
   try {
     const { createServiceClient } = await import('./supabase/server')
     const supabase = await createServiceClient()
-    const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(key, jpegBuf, {
-      contentType: 'image/jpeg',
-      upsert: true,
-      cacheControl: '604800', // 7 dni
+    const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(key, jpeg, {
+      contentType: 'image/jpeg', upsert: true, cacheControl: '604800',
     })
     if (error) {
       console.error('[utility-map] Storage upload error:', error.message)
       return null
     }
-    const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(key)
-    return urlData?.publicUrl ?? null
+    return supabase.storage.from(STORAGE_BUCKET).getPublicUrl(key).data?.publicUrl ?? null
   } catch (err) {
     console.error('[utility-map] Storage upload exception:', err)
     return null
   }
 }
 
-// ─── Geo helpers ──────────────────────────────────────────────────────────────
+// ─── Geometria ────────────────────────────────────────────────────────────────
 
-function toRad(deg: number) {
-  return (deg * Math.PI) / 180
-}
-
-function lngLatToTile(lat: number, lng: number, zoom: number) {
-  const n = Math.pow(2, zoom)
-  const x = Math.floor(((lng + 180) / 360) * n)
-  const y = Math.floor(
-    ((1 - Math.log(Math.tan(toRad(lat)) + 1 / Math.cos(toRad(lat))) / Math.PI) / 2) * n
-  )
+function to3857(lat: number, lng: number) {
+  const x = (lng * 20037508.34) / 180
+  const y = ((Math.log(Math.tan(((90 + lat) * Math.PI) / 360)) / (Math.PI / 180)) * 20037508.34) / 180
   return { x, y }
 }
 
-function lngLatToPixel(lat: number, lng: number, zoom: number, tx0: number, ty0: number) {
-  const n = Math.pow(2, zoom)
-  const px = ((lng + 180) / 360) * n * 256 - tx0 * 256
-  const py =
-    ((1 - Math.log(Math.tan(toRad(lat)) + 1 / Math.cos(toRad(lat))) / Math.PI) / 2) *
-      n * 256 - ty0 * 256
-  return { px, py }
-}
-
-function lngLatTo3857(lat: number, lng: number) {
-  const x = lng * 20037508.34 / 180
-  let y = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180)
-  y = y * 20037508.34 / 180
-  return { x, y }
-}
-
-/** Zewnętrzny pierścień największego poligonu działki (WKT EPSG:2180) → punkty WGS84 */
-function parseWktToWgs84(wkt: string): Array<{ lat: number; lng: number }> {
+function parcelRingsWgs84(wkt: string): Array<Array<{ lat: number; lng: number }>> {
   const mp = parseWkt(wkt)
   if (!mp.length) return []
-  const largest = [...mp].sort((a, b) => polygonArea(b) - polygonArea(a))[0]
-  return largest[0].map(toWgs84)
+  return mp.flatMap(poly => poly).filter(r => r.length >= 3).map(r => r.map(toWgs84))
 }
 
-// ─── SLD Builder ─────────────────────────────────────────────────────────────
+// ─── Warstwy ──────────────────────────────────────────────────────────────────
 
-function buildSLD(): string {
-  const namedLayers = NETWORK_STYLES.map(({ layer, color, width }) => `  <NamedLayer>
-    <Name>${layer}</Name>
-    <UserStyle>
-      <FeatureTypeStyle>
-        <Rule>
-          <LineSymbolizer>
-            <Stroke>
-              <CssParameter name="stroke">${color}</CssParameter>
-              <CssParameter name="stroke-width">${width}</CssParameter>
-              <CssParameter name="stroke-linecap">round</CssParameter>
-              <CssParameter name="stroke-linejoin">round</CssParameter>
-            </Stroke>
-          </LineSymbolizer>
-        </Rule>
-      </FeatureTypeStyle>
-    </UserStyle>
-  </NamedLayer>`).join('\n')
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor version="1.0.0"
-  xmlns="http://www.opengis.net/sld"
-  xmlns:ogc="http://www.opengis.net/ogc"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-${namedLayers}
-</StyledLayerDescriptor>`
+async function wmsPng(base: string, params: Record<string, string>, timeoutMs: number): Promise<Buffer | null> {
+  const q = new URLSearchParams({ SERVICE: 'WMS', VERSION: '1.3.0', REQUEST: 'GetMap', STYLES: '', CRS: 'EPSG:3857', WIDTH: String(W), HEIGHT: String(H), ...params })
+  try {
+    const res = await fetch(`${base}?${q}`, { signal: AbortSignal.timeout(timeoutMs), cache: 'no-store' })
+    const buf = Buffer.from(await res.arrayBuffer())
+    const isPng = buf[0] === 0x89 && buf[1] === 0x50
+    const isJpg = buf[0] === 0xff && buf[1] === 0xd8
+    return res.ok && (isPng || isJpg) ? buf : null
+  } catch {
+    return null
+  }
 }
 
-// ─── SVG Overlays ─────────────────────────────────────────────────────────────
-
-/** Granica działki — niebieski dashed polygon */
-function buildParcelBoundarySvg(
-  W: number, H: number,
-  polygon: Array<{ lat: number; lng: number }>,
-  zoom: number, tx0: number, ty0: number,
-  cropX0: number, cropY0: number,
-  origW: number, origH: number
-): Buffer | null {
-  if (polygon.length < 3) return null
-
-  const points = polygon.map(pt => {
-    const { px, py } = lngLatToPixel(pt.lat, pt.lng, zoom, tx0, ty0)
-    const ox = ((px - cropX0) / origW) * W
-    const oy = ((py - cropY0) / origH) * H
-    return `${ox.toFixed(1)},${oy.toFixed(1)}`
-  }).join(' ')
-
-  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-  <polygon points="${points}"
-    fill="rgba(37,99,235,0.06)"
-    stroke="#2563EB"
-    stroke-width="3"
-    stroke-dasharray="10 6"
-    stroke-linejoin="round"/>
-</svg>`
-  return Buffer.from(svg)
+/** Poszerza linie na przezroczystym PNG (rozmycie + wzmocnienie alfy); halo = biała obwódka. */
+async function thicken(png: Buffer, sigma: number, halo: boolean): Promise<Buffer> {
+  const sharp = (await import('sharp')).default
+  const { data, info } = await sharp(png).ensureAlpha().blur(sigma).raw().toBuffer({ resolveWithObject: true })
+  for (let i = 0; i < data.length; i += 4) {
+    const a = data[i + 3]
+    if (a === 0) continue
+    if (halo) {
+      data[i] = data[i + 1] = data[i + 2] = 255
+      data[i + 3] = Math.min(255, a * 6) * 0.85
+    } else {
+      // kolor rozmyty z przezroczystym tłem jest przyciemniony — przywracamy nasycenie
+      const k = 255 / a
+      data[i] = Math.min(255, data[i] * k)
+      data[i + 1] = Math.min(255, data[i + 1] * k)
+      data[i + 2] = Math.min(255, data[i + 2] * k)
+      data[i + 3] = Math.min(255, a * 5)
+    }
+  }
+  return sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } }).png().toBuffer()
 }
 
-/** Okrąg analizy 200m — szary dashed circle */
-function buildAnalysisCircleSvg(
-  W: number, H: number,
-  lat: number, lng: number,
-  zoom: number, tx0: number, ty0: number,
-  cropX0: number, cropY0: number,
-  origW: number, origH: number
-): Buffer {
-  const { px, py } = lngLatToPixel(lat, lng, zoom, tx0, ty0)
-  const ocx = ((px - cropX0) / origW) * W
-  const ocy = ((py - cropY0) / origH) * H
-
-  // Piksele na metr w płaszczyźnie mapy przy danym zoomie
-  const pixelsPerMeter =
-    256 * Math.pow(2, zoom) / (2 * Math.PI * 6378137 * Math.cos(toRad(lat)))
-  // Przelicz przez skalę resize
-  const r = 200 * pixelsPerMeter * (W / origW)
-
-  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="${ocx.toFixed(1)}" cy="${ocy.toFixed(1)}" r="${r.toFixed(1)}"
-    fill="none" stroke="#D1D5DB" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.9"/>
-</svg>`
-  return Buffer.from(svg)
+function overlaySvg(rings: Array<Array<{ lat: number; lng: number }>>, toPx: (lat: number, lng: number) => [number, number]): Buffer {
+  const polys = rings.map(r => {
+    const pts = r.map(p => toPx(p.lat, p.lng).map(v => v.toFixed(1)).join(',')).join(' ')
+    return `<polygon points="${pts}" fill="rgba(250,204,21,0.12)" stroke="#111827" stroke-width="6" stroke-linejoin="round" opacity="0.55"/>
+<polygon points="${pts}" fill="none" stroke="#FACC15" stroke-width="3" stroke-dasharray="12 6" stroke-linejoin="round"/>`
+  }).join('')
+  return Buffer.from(`<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${polys}</svg>`)
 }
 
-// Legenda przeniesiona do HTML raportu — SVG text nie renderuje się
-// poprawnie przez librsvg bez systemowych fontów na serwerze.
-
-/** Marker centralny (okrąg + krzyżyk) */
-function buildMarkerSvg(W: number, H: number): Buffer {
-  const cx = W / 2
-  const cy = H / 2
-  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="${cx}" cy="${cy}" r="10" fill="none" stroke="#DC2626" stroke-width="3" opacity="0.9"/>
-  <circle cx="${cx}" cy="${cy}" r="3" fill="#DC2626" opacity="0.9"/>
-  <line x1="${cx - 16}" y1="${cy}" x2="${cx + 16}" y2="${cy}" stroke="#DC2626" stroke-width="2" opacity="0.7"/>
-  <line x1="${cx}" y1="${cy - 16}" x2="${cx}" y2="${cy + 16}" stroke="#DC2626" stroke-width="2" opacity="0.7"/>
-</svg>`
-  return Buffer.from(svg)
-}
-
-// ─── Renderer ─────────────────────────────────────────────────────────────────
-
-async function renderMap(
-  lat: number,
-  lng: number,
-  geomWkt?: string | null
-): Promise<Buffer | null> {
+async function renderMap(lat: number, lng: number, geomWkt?: string | null): Promise<Buffer | null> {
   try {
     const sharp = (await import('sharp')).default
-    const W = 1200
-    const H = 750
-    const ZOOM = 18   // zoom 18 = bardzo dobre detale, widać drogi, działki, zabudowania
+    // ~840 × 520 m wokół działki (proporcje 1200×750)
+    const c = to3857(lat, lng)
+    const k = 1 / Math.cos((lat * Math.PI) / 180) // skala Mercatora
+    const halfW = 420 * k, halfH = 262.5 * k
+    const [x0, y0, x1, y1] = [c.x - halfW, c.y - halfH, c.x + halfW, c.y + halfH]
+    const bbox = `${x0.toFixed(1)},${y0.toFixed(1)},${x1.toFixed(1)},${y1.toFixed(1)}`
 
-    // Bbox ~520×840m wokół punktu — dobry balans: widać okolice ale działka dominuje
-    const degPerM_lat = 1 / 111320
-    const degPerM_lng = 1 / (111320 * Math.cos(toRad(lat)))
-    const padLat = 260 * degPerM_lat
-    const padLng = 420 * degPerM_lng
-
-    const latMin = lat - padLat
-    const latMax = lat + padLat
-    const lngMin = lng - padLng
-    const lngMax = lng + padLng
-
-    // Tile range
-    const tNW = lngLatToTile(latMax, lngMin, ZOOM)
-    const tSE = lngLatToTile(latMin, lngMax, ZOOM)
-    const tx0 = tNW.x, ty0 = tNW.y
-    const tx1 = tSE.x, ty1 = tSE.y
-
-    // Pobierz kafelki CartoDB Positron równolegle
-    const tilePromises: Promise<{ tx: number; ty: number; buf: Buffer } | null>[] = []
-    for (let ty = ty0; ty <= ty1; ty++) {
-      for (let tx = tx0; tx <= tx1; tx++) {
-        const subdomain = ['a', 'b', 'c', 'd'][(tx + ty) % 4]
-        const url = `https://${subdomain}.basemaps.cartocdn.com/light_all/${ZOOM}/${tx}/${ty}.png`
-        tilePromises.push(
-          fetch(url, {
-            headers: {
-              'User-Agent': 'SprawdzDzialke/2.0 (+https://sprawdzdzialke.com)',
-              'Referer':    'https://sprawdzdzialke.com',
-              'Accept':     'image/png,image/*',
-            },
-            signal: AbortSignal.timeout(8000),
-          })
-            .then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error(`HTTP ${r.status}`)))
-            .then(ab => ({ tx, ty, buf: Buffer.from(ab) }))
-            .catch(() => null)
-        )
-      }
-    }
-
-    const tilesRaw = await Promise.all(tilePromises)
-    const tiles = tilesRaw.filter((t): t is { tx: number; ty: number; buf: Buffer } => t !== null)
-
-    if (tiles.length === 0) {
-      console.error('[utility-map] No tiles fetched')
+    const [orto, kieg, gesut] = await Promise.all([
+      wmsPng(ORTO_WMS, { LAYERS: 'Raster', BBOX: bbox, FORMAT: 'image/jpeg' }, 15_000),
+      wmsPng(KIEG_WMS, { LAYERS: 'dzialki,numery_dzialek', BBOX: bbox, FORMAT: 'image/png', TRANSPARENT: 'TRUE' }, 12_000),
+      wmsPng(GESUT_WMS, { LAYERS: NETWORK_STYLES.map(s => s.layer).join(','), BBOX: bbox, FORMAT: 'image/png', TRANSPARENT: 'TRUE' }, 15_000),
+    ])
+    if (!orto) {
+      console.error('[utility-map] Brak podkładu (ortofotomapa GUGiK)')
       return null
     }
 
-    // Sklej kafelki na canvas
-    const canvasW = (tx1 - tx0 + 1) * 256
-    const canvasH = (ty1 - ty0 + 1) * 256
-
-    const composites = tiles.map(({ tx, ty, buf }) => ({
-      input: buf,
-      left: (tx - tx0) * 256,
-      top: (ty - ty0) * 256,
-    }))
-
-    // Jasne tło CartoDB (białawo-szare) na wypadek brakujących kafelków
-    const canvasBuf = await sharp({
-      create: { width: canvasW, height: canvasH, channels: 4, background: { r: 246, g: 246, b: 244, alpha: 1 } },
-    })
-      .composite(composites)
-      .png()
-      .toBuffer()
-
-    // Wyznacz współrzędne crop (NW corner i SE corner w przestrzeni canvas)
-    const { px: cropX0, py: cropY0 } = lngLatToPixel(latMax, lngMin, ZOOM, tx0, ty0)
-    const { px: cropX1, py: cropY1 } = lngLatToPixel(latMin, lngMax, ZOOM, tx0, ty0)
-    const origW = cropX1 - cropX0
-    const origH = cropY1 - cropY0
-
-    // Crop do bbox i resize do 1200×750
-    const baseBuf = await sharp(canvasBuf)
-      .extract({
-        left:   Math.max(0, Math.round(cropX0)),
-        top:    Math.max(0, Math.round(cropY0)),
-        width:  Math.max(Math.round(origW), 1),
-        height: Math.max(Math.round(origH), 1),
-      })
-      .resize(W, H)
-      .png()
-      .toBuffer()
-
-    // Pobierz GESUT overlay z SLD_BODY (kolorowe, grube linie)
-    const sw = lngLatTo3857(latMin, lngMin)
-    const ne = lngLatTo3857(latMax, lngMax)
-    const bbox = `${sw.x.toFixed(0)},${sw.y.toFixed(0)},${ne.x.toFixed(0)},${ne.y.toFixed(0)}`
-    const sldBody = buildSLD()
-
-    const gesutUrl =
-      `${GESUT_WMS}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap` +
-      `&LAYERS=${GESUT_LAYERS}&STYLES=` +
-      `&CRS=EPSG:3857&BBOX=${bbox}` +
-      `&WIDTH=${W}&HEIGHT=${H}&FORMAT=image/png&TRANSPARENT=TRUE` +
-      `&SLD_BODY=${encodeURIComponent(sldBody)}`
-
-    let gesutBuf: Buffer | null = null
-    try {
-      const gesutResp = await fetch(gesutUrl, { signal: AbortSignal.timeout(12000) })
-      const raw = Buffer.from(await gesutResp.arrayBuffer())
-      // Sprawdź czy to PNG (nie błąd XML)
-      if (raw[0] === 0x89 && raw[1] === 0x50) {
-        gesutBuf = raw
-        console.log(`[utility-map] GESUT SLD OK: ${raw.length} bytes`)
-      } else {
-        // Fallback bez SLD (oryginalny styl GESUT)
-        const fallbackUrl =
-          `${GESUT_WMS}?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap` +
-          `&LAYERS=${GESUT_LAYERS}&STYLES=` +
-          `&CRS=EPSG:3857&BBOX=${bbox}` +
-          `&WIDTH=${W}&HEIGHT=${H}&FORMAT=image/png&TRANSPARENT=TRUE`
-        const fallbackResp = await fetch(fallbackUrl, { signal: AbortSignal.timeout(10000) })
-        const fallbackRaw = Buffer.from(await fallbackResp.arrayBuffer())
-        if (fallbackRaw[0] === 0x89 && fallbackRaw[1] === 0x50) gesutBuf = fallbackRaw
-      }
-    } catch {
-      // GESUT opcjonalne — mapa bez overlay też jest użyteczna
-      console.warn('[utility-map] GESUT fetch failed')
+    const toPx = (la: number, ln: number): [number, number] => {
+      const p = to3857(la, ln)
+      return [((p.x - x0) / (x1 - x0)) * W, ((y1 - p.y) / (y1 - y0)) * H]
     }
-
-    // Pobierz warstwę katastralną KIEG (granice działek + budynki)
-    let kiegBuf: Buffer | null = null
-    try {
-      const kiegUrl =
-        `https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaEwidencjiGruntow` +
-        `?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap` +
-        `&LAYERS=Dzialki,Budynki&STYLES=` +
-        `&CRS=EPSG:3857&BBOX=${bbox}` +
-        `&WIDTH=${W}&HEIGHT=${H}&FORMAT=image/png&TRANSPARENT=TRUE`
-      const kiegResp = await fetch(kiegUrl, { signal: AbortSignal.timeout(10000) })
-      const kiegRaw = Buffer.from(await kiegResp.arrayBuffer())
-      if (kiegRaw[0] === 0x89 && kiegRaw[1] === 0x50) {
-        kiegBuf = kiegRaw
-        console.log(`[utility-map] KIEG OK: ${kiegRaw.length} bytes`)
-      } else {
-        console.warn('[utility-map] KIEG returned non-PNG')
-      }
-    } catch {
-      console.warn('[utility-map] KIEG fetch failed (optional)')
+    const layers: { input: Buffer }[] = []
+    if (kieg) layers.push({ input: kieg })
+    if (gesut) {
+      // Serwer KIUT ignoruje SLD i rysuje linie o szerokości 1 px — na ortofotomapie są
+      // niewidoczne. Pogrubiamy je i podkładamy białą obwódkę.
+      layers.push({ input: await thicken(gesut, 3, true) })
+      layers.push({ input: await thicken(gesut, 1.2, false) })
     }
+    if (geomWkt) layers.push({ input: overlaySvg(parcelRingsWgs84(geomWkt), toPx) })
 
-    // ── Buduj listę composites ────────────────────────────────────────────────
-    const compositeInputs: Parameters<ReturnType<typeof sharp>['composite']>[0] = []
-
-    // 1. Warstwa katastralna KIEG (działki + budynki) — pod liniami GESUT
-    if (kiegBuf) {
-      compositeInputs.push({ input: kiegBuf, blend: 'over' })
-    }
-
-    // 2. GESUT overlay (linie mediów — na wierzchu działek)
-    if (gesutBuf) {
-      compositeInputs.push({ input: gesutBuf, blend: 'over' })
-    }
-
-    // 3. Granica wybranej działki (niebieski dashed polygon)
-    if (geomWkt) {
-      const polygon = parseWktToWgs84(geomWkt)
-      const boundarySvg = buildParcelBoundarySvg(
-        W, H, polygon, ZOOM, tx0, ty0, cropX0, cropY0, origW, origH
-      )
-      if (boundarySvg) {
-        compositeInputs.push({ input: boundarySvg, blend: 'over' })
-      }
-    }
-
-    // 4. Okrąg analizy 200m
-    const circleSvg = buildAnalysisCircleSvg(
-      W, H, lat, lng, ZOOM, tx0, ty0, cropX0, cropY0, origW, origH
-    )
-    compositeInputs.push({ input: circleSvg, blend: 'over' })
-
-    // 5. Marker centralny (legenda jest w HTML raportu, nie w obrazku)
-    compositeInputs.push({ input: buildMarkerSvg(W, H), blend: 'over' })
-
-    return await sharp(baseBuf)
-      .composite(compositeInputs)
-      .jpeg({ quality: 90 })
-      .toBuffer()
+    return await sharp(orto).resize(W, H).composite(layers).jpeg({ quality: 85 }).toBuffer()
   } catch (err) {
     console.error('[utility-map] Render error:', err)
     return null
   }
 }
 
-// ─── Main export ──────────────────────────────────────────────────────────────
-
 /**
- * Generuje mapę uzbrojenia terenu 1200×750 px dla podanych współrzędnych.
- *
- * @param lat       - szerokość geograficzna centrum (WGS84)
- * @param lng       - długość geograficzna centrum (WGS84)
- * @param geomWkt   - WKT polygon działki w EPSG:2180 (opcjonalnie — rysuje granicę)
- *
- * Zwraca CDN URL (Supabase Storage), base64 jako fallback, lub null przy błędzie.
+ * Zwraca URL mapy (Supabase Storage), a przy storage=false lub błędzie uploadu — data URI.
  */
 export async function generateUtilityMap(
   lat: number,
   lng: number,
-  geomWkt?: string | null
+  geomWkt?: string | null,
+  { storage = true }: { storage?: boolean } = {},
 ): Promise<string | null> {
   const key = cacheKey(lat, lng)
-
-  // 1. Cache hit → CDN URL natychmiast
-  const cached = await checkCache(key)
-  if (cached) {
-    console.log('[utility-map] Cache hit:', key)
-    return cached
+  if (storage) {
+    const cachedUrl = await checkCache(key)
+    if (cachedUrl) return cachedUrl
   }
-
-  // 2. Renderuj mapę
-  const jpegBuf = await renderMap(lat, lng, geomWkt)
-  if (!jpegBuf) return null
-
-  // 3. Wgraj do Storage → CDN URL
-  const cdnUrl = await uploadToStorage(key, jpegBuf)
-  if (cdnUrl) return cdnUrl
-
-  // 4. Ostatni fallback: base64
-  console.warn('[utility-map] Storage upload failed, returning base64')
-  return `data:image/jpeg;base64,${jpegBuf.toString('base64')}`
+  const jpeg = await renderMap(lat, lng, geomWkt)
+  if (!jpeg) return null
+  if (storage) {
+    const url = await uploadToStorage(key, jpeg)
+    if (url) return url
+  }
+  return `data:image/jpeg;base64,${jpeg.toString('base64')}`
 }
