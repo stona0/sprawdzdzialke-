@@ -7,6 +7,7 @@ export const article: BlogArticle = {
   metaDescription: 'Decyzja o warunkach zabudowy — kiedy jest wymagana, jak złożyć wniosek, ile kosztuje i jak długo trwa. Praktyczny przewodnik po WZ.',
   excerpt: 'Decyzja o warunkach zabudowy jest wymagana gdy brak MPZP. Dowiedz się kiedy jest potrzebna, jak złożyć wniosek i czego się spodziewać.',
   publishedAt: '2025-06-01',
+  updatedAt: '2026-10-19',
   readingTime: 8,
   keywords: ['warunki zabudowy', 'decyzja o warunkach zabudowy', 'WZ', 'kiedy warunki zabudowy', 'wniosek o warunki zabudowy'],
   relatedSlugs: ['jak-sprawdzic-mpzp-dzialki', 'co-to-jest-plan-zagospodarowania-przestrzennego', 'jak-sprawdzic-czy-dzialka-jest-budowlana'],
@@ -17,7 +18,7 @@ export const article: BlogArticle = {
     },
     {
       question: 'Jak długo jest ważna decyzja WZ?',
-      answer: 'Po nowelizacji z 2023 roku decyzja WZ jest ważna 5 lat od daty uprawomocnienia. Wcześniej wydane decyzje (przed 2024 r.) nie mają terminu ważności. W trakcie ważności WZ musisz uzyskać pozwolenie na budowę.'
+      answer: 'Decyzja WZ, która stała się prawomocna od 1 stycznia 2026 r., wygasa po 5 latach. Decyzje wcześniejsze co do zasady nie mają terminu ważności. W trakcie ważności WZ trzeba uzyskać pozwolenie na budowę.'
     },
     {
       question: 'Czy mogę uzyskać WZ nie będąc właścicielem działki?',
@@ -29,6 +30,8 @@ export const article: BlogArticle = {
     }
   ],
   content: `
+<div class="not-prose rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900"><strong>Aktualizacja (październik 2026):</strong> od 1 września 2026 r. studia uwarunkowań straciły moc, a nową decyzję o warunkach zabudowy można co do zasady wydać tylko w gminie, która ma obowiązujący <strong>plan ogólny</strong>, i tylko dla działki położonej w wyznaczonym w nim <strong>obszarze uzupełnienia zabudowy</strong>. W gminach bez planu ogólnego nowych decyzji WZ się nie wydaje (wyjątki dotyczą m.in. postępowań wszczętych wcześniej). Zasady opisane niżej (dobre sąsiedztwo, dostęp do drogi, uzbrojenie) nadal obowiązują, ale dopiero po spełnieniu tego warunku.</div>
+
 <p>Chcesz budować dom, a Twoja działka nie jest objęta planem miejscowym? Potrzebujesz <strong>decyzji o warunkach zabudowy (WZ)</strong>. To dokument, który zastępuje MPZP na terenach bez planu — i bez niego nie dostaniesz pozwolenia na budowę.</p>
 
 <h2>Czym jest decyzja o warunkach zabudowy?</h2>
@@ -117,8 +120,9 @@ export const article: BlogArticle = {
 <h2>WZ po nowelizacji 2023 — co się zmieniło?</h2>
 
 <ul>
-<li><strong>Termin ważności 5 lat</strong> — nowe WZ wygasają po 5 latach</li>
-<li><strong>Zgodność z planem ogólnym</strong> — po uchwaleniu planu ogólnego przez gminę, WZ musi być z nim zgodna</li>
+<li><strong>Termin ważności 5 lat</strong> — decyzje WZ, które stały się prawomocne od 1 stycznia 2026 r., wygasają po 5 latach</li>
+<li><strong>Tylko w obszarze uzupełnienia zabudowy</strong> — od 1 września 2026 r. nową WZ można co do zasady uzyskać wyłącznie w gminie z obowiązującym planem ogólnym i wyłącznie w wyznaczonym w nim obszarze uzupełnienia zabudowy</li>
+<li><strong>Zgodność z planem ogólnym</strong> — ustalenia WZ muszą być zgodne ze strefą planistyczną i parametrami planu ogólnego</li>
 <li><strong>Obszar analizy urbanistycznej</strong> — zmienione zasady wyznaczania obszaru sąsiedztwa</li>
 </ul>
 
