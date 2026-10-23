@@ -159,7 +159,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 - Klucze **live** Stripe w lokalnym `.env.local`. Development powinien używać kluczy testowych.
 - **Klucz API Anthropic jawnym tekstem w `.claude/launch.json`** (konfiguracja podglądu dev serwera). Plik jest w `.gitignore` i nie ma go w historii gita, ale klucz powinien być tylko w `.env.local`.
 - **Bucket `utility-maps` pozwalał na zapis każdemu z kluczem anon** (polityki insert/update bez klauzuli TO w migracji 20260529). Każdy mógł podmienić obraz mapy w płatnych raportach. Poprawka: migracja `20261024_utility_maps_write_policies.sql` (`6568008`) — **do uruchomienia na produkcji**.
-- **Funkcja `increment_free_reports(uid)` była wywoływalna z publicznym kluczem anon** (`/rest/v1/rpc/…`, SECURITY DEFINER, ze `schema.sql`). Kto znał UUID użytkownika, mógł mu odebrać darmowy raport. Aplikacja jej nie używa. Tak samo wystawiona była funkcja triggera `handle_new_user()`. Wykrył to doradca bezpieczeństwa Supabase na stagingu. Poprawka: migracja `20261025_security_definer_functions.sql` (sekcja 14) — **do uruchomienia na produkcji** po udanej rejestracji na stagingu.
+- **Funkcja `increment_free_reports(uid)` była wywoływalna z publicznym kluczem anon** (`/rest/v1/rpc/…`, SECURITY DEFINER, ze `schema.sql`). Kto znał UUID użytkownika, mógł mu odebrać darmowy raport. Aplikacja jej nie używa. Tak samo wystawiona była funkcja triggera `handle_new_user()`. Wykrył to doradca bezpieczeństwa Supabase na stagingu. Poprawka: migracja `20261025_security_definer_functions.sql` (sekcja 14) — **do uruchomienia na produkcji** (rejestracja na stagingu po tej migracji działa).
 - Rate limiter jest w pamięci i nie jest współdzielony między instancjami serverless (cache źródeł już jest — sekcja 10).
 - Pozostały 2 umiarkowane podatności (`postcss-selector-parser` przez `@tailwindcss/typography`; tylko czas budowania).
 
@@ -505,11 +505,11 @@ Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia
   - `tests/unit/staging.test.ts`: na bazie „jak produkcja” kontrola schematu wskazuje 4 brakujące pliki.
 
 **Niesprawdzone**
-- **Trigger rejestracji po odebraniu uprawnień na prawdziwym Supabase.**
+- **Trigger rejestracji po odebraniu uprawnień na prawdziwym Supabase** (sprawdzone, patrz niżej).
   - Supabase nie pozwala z SQL wstawić użytkownika jako `supabase_auth_admin` ani dać tymczasowej roli dostępu do schematu `auth`. Obie próby zostały odrzucone i nic nie zmieniły.
   - Postgres sprawdza `EXECUTE` przy `CREATE TRIGGER`, a nie przy wyzwoleniu. Test lokalny potwierdza to na roli bez uprawnień.
-  - Ostatecznie potwierdzi to pierwsza rejestracja na stagingu (`docs/STAGING.md`, sekcja 6, krok 1).
-- **Stripe w trybie testowym, witryna Netlify, cron, smoke:** po stronie właściciela.
+  - **Potwierdzone 23.10.2026:** pierwsza rejestracja e-mailem na stagingu (`testdzialki.netlify.app`) założyła profil (rola `user`, `free_reports_used = 0`, e-mail zgodny z `auth.users`). Migracja `20261025` jest bezpieczna dla produkcji.
+- **Witryna Netlify `testdzialki.netlify.app`:** smoke 7/7 (strony, przekierowania, 404, cron 401/200). Stripe i scenariusz raportów w toku.
 - **Dane startowe `mpzp_plans`:** plan #40 ma URL mapy i PDF w Storage **produkcji**. Staging pokaże te publiczne pliki z produkcji (tylko odczyt), o ile produkcja działa.
 
 **Stan produkcji (obserwacja, nic nie zmieniałem)**
