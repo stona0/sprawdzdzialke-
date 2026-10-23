@@ -144,7 +144,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 | B2 | Stripe Checkout nieprzetestowany | W `.env.local` są tylko klucze live; tworzenie sesji live w ramach testu = efekt uboczny na produkcji | Przetestowany webhook (podpis, idempotencja, generowanie); dialog płatności w e2e | Dodać klucze testowe Stripe (`sk_test_…`) do środowiska dev/staging i dopisać krok checkout do e2e |
 | B3 | Zachowanie na hostingu niezweryfikowane | Brak dostępu do Netlify/Vercel i logów. Netlify: limit czasu funkcji synchronicznych jest krótki (zależnie od planu); wsparcie `after()`/`waitUntil` trzeba potwierdzić. Generowanie trwa ~25 s | `after()` + `maxDuration = 60`; od `73e73f2` kolejka z ponowieniami i wznawianiem przerwanych zadań (sekcja 10) | Wdrożyć branch na staging i sprawdzić `after()`, funkcję zaplanowaną Netlify i limity czasu |
 | B4 | ~~Geometria OUZ poza Wrocławiem~~ — rozwiązane w `c311e4f` (geometria z API Rejestru Urbanistycznego, sekcja 11) | Krajowa usługa GUGiK `PlanyOgolneGmin` nie zwraca nic nawet dla gmin z POG w mocy (Siechnice, Przemęt, Radlin, Strzeleczki), a na skali kraju nic nie rysuje | GetFeatureInfo HTML/JSON/text, GetMap całej Polski | Pobierać GML planów ogólnych z Rejestru Urbanistycznego (API ma download) do własnej bazy, analogicznie do Wrocławia |
-| B5 | Brak stagingu i trwałego cache | Jedyny projekt Supabase = produkcja; zakaz modyfikacji bazy | Cache w pamięci procesu; od `f075f61` tabela `source_cache` (kod gotowy, migracja nieuruchomiona) | Osobny projekt Supabase na staging; tam najpierw migracja `20261020` |
+| B5 | Brak stagingu i trwałego cache | Jedyny projekt Supabase = produkcja; zakaz modyfikacji bazy | Cache w pamięci procesu; od `f075f61` tabela `source_cache`. 23.10.2026 założony projekt Supabase `sprawdzdzialke-staging` ze wszystkimi migracjami (sekcja 14) | Dokończyć staging: Stripe test, witryna Netlify, scenariusz ręczny (`docs/STAGING.md`) |
 
 **Ryzyka danych**
 - **Rejestr Urbanistyczny bywa opóźniony.** 19.10.2026 POG Wrocławia był w nim „w opracowaniu”, choć obowiązuje od 19.09.2026. Raport mówi to wprost i każe potwierdzić w urzędzie.
@@ -219,7 +219,7 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 
 ## 9. Top 5 kolejnych kroków
 
-1. **Staging i sekrety (1–2 dni).** Unieważnić PAT z `.git/config`, osobny projekt Supabase i klucze testowe Stripe dla dev/staging, wdrożyć ten branch na staging i sprawdzić `after()` i limity czasu na docelowym hostingu (B2, B3). Bez tego nie da się bezpiecznie wypuścić żadnej poprawki.
+1. **Staging i sekrety (1–2 dni).** Unieważnić PAT z `.git/config`, osobny projekt Supabase i klucze testowe Stripe dla dev/staging, wdrożyć ten branch na staging i sprawdzić `after()` i limity czasu na docelowym hostingu (B2, B3). Bez tego nie da się bezpiecznie wypuścić żadnej poprawki. **23.10.2026:** narzędzia stagingu i projekt Supabase gotowe (sekcja 14); zostały Stripe test, Netlify, scenariusz ręczny i sekrety.
 2. ~~**Trwały cache i kolejka (2–3 dni).**~~ Zrobione w kodzie 20–23.10.2026 (sekcja 10). Do zrobienia: migracja na stagingu i produkcji, `CRON_SECRET` na hostingu, weryfikacja funkcji zaplanowanej.
 3. ~~**Geometria planów ogólnych z Rejestru Urbanistycznego (3–5 dni).**~~ Zrobione 23.10.2026 (sekcja 11).
 4. ~~**Własny ETL linii energetycznych (3–5 dni).**~~ Zrobione 23.10.2026 z BDOT10k (sekcja 12). Do zrobienia: pierwszy pełny przebieg ETL i upload na stagingu.
@@ -230,7 +230,7 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 ```bash
 npm install
 npm run typecheck
-npm test                 # 107 testów: fixture'y + SQL kolejki, cache i Storage na PGlite (bez sieci)
+npm test                 # 115 testów: fixture'y + SQL kolejki, cache, Storage i stagingu na PGlite (bez sieci)
 npm run test:live        # 14 działek na żywych usługach (~3 min); z POWER_LINES_URL=./data/power-lines także linie BDOT10k
 npm run etl:power-lines -- --powiaty 0223,0264,0208,0213,1261,1463,1014,0605   # kafle BDOT10k dla działek testowych (~30 s); bez --powiaty cały kraj
 npm run test:e2e         # Playwright + mock Supabase na PGlite, 5 testów (~1,5 min; wymaga ANTHROPIC_API_KEY w .env.local, inaczej rekomendacje regułowe)
@@ -279,7 +279,7 @@ Pierwsze dwa zimne starty to ~15 s czekania na Overpass; potem działa bezpieczn
 
 **Czego nie zweryfikowałem**
 - Migracji nie uruchomiłem na żadnym projekcie Supabase. Testowana na PGlite (Postgres 18) ze `schema.sql` z repo. Jeśli produkcyjny schemat odbiega od `schema.sql`, różnica wyjdzie dopiero na stagingu.
-- Uprawnień: w Supabase domyślne uprawnienia dają `EXECUTE` także `anon`/`authenticated`, a migracja je odbiera. Tego zachowania nie sprawdziłem na prawdziwym Supabase.
+- Uprawnień: w Supabase domyślne uprawnienia dają `EXECUTE` także `anon`/`authenticated`, a migracja je odbiera. 23.10.2026 sprawdzone na stagingu: `anon` i `authenticated` nie mają `EXECUTE` na funkcjach kolejki, `service_role` ma (sekcja 14).
 - Hostingu: działanie `after()`, `maxDuration` i funkcji zaplanowanej Netlify (B3). Gdyby hostingiem był Vercel, cron trzeba dodać w `vercel.json`. Trasa przyjmuje nagłówek Vercel Cron, ale plan Hobby pozwala na cron raz na dobę.
 - Mock PostgREST obsługuje tylko podzbiór API używany przez aplikację (filtry eq/neq/lt/gt/ilike/is/in, upsert, rpc). Zapytania z osadzaniem relacji (`profiles(email)` w panelu admina) nie są w e2e.
 
@@ -475,3 +475,44 @@ npx tsx --env-file=.env.local --tsconfig tsconfig.json scripts/eval/insights/jud
 npx tsx --env-file=.env.local scripts/eval/insights/run-eval.mjs --flow .claude/hillclimb/ai-insights --variant v1 --model claude-haiku-5-5 --reps 2   # ~$1,50 za wariant
 ```
 Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia startu, dopóki człowiek nie uruchomi go raz z `--approve-harness`.
+
+## 14. Staging (23.10.2026)
+
+**Narzędzia** (`9516be3`; opis w `docs/STAGING.md`):
+- `supabase/staging/bootstrap.sql`: cały schemat w jednej transakcji, odmawia na bazie z tabelami;
+- `supabase/check-schema.sql`: kontrola tylko do odczytu;
+- `npm run staging:check-env` i `npm run staging:smoke`.
+
+**Projekt Supabase stagingu** (założony przez konektor Supabase za zgodą właściciela; plan Free, $0/mies.)
+- `sprawdzdzialke-staging`, ref `gnpwqwjaehppholjysss`, region eu-central-2 jak produkcja, Postgres 17.
+- SQL wykonywany tylko na tym projekcie; przed pierwszym zapytaniem sprawdzone, że ref różni się od produkcyjnego `dpabcijnuzrkzstpnxlz`. Z produkcji odczytane tylko metadane projektu (nazwa, region, status); żadnego SQL.
+- Wgrany `bootstrap.sql`, potem migracja `20261025`. Rejestr `ops.applied_migrations` ma 7 plików.
+
+**Dowody**
+- **Kontrola schematu:** 33/33 `ok` (31/31 przed migracją `20261025`).
+- **Zgodność z repo:** skróty md5 funkcji, ograniczeń, polityk, kolumn, indeksów, bucketów i danych startowych są identyczne na stagingu i na PGlite zbudowanym z tego samego pliku.
+  - Różnią się tylko uprawnienia: Supabase daje `service_role` również `EXECUTE` na pomocniczej `report_job_failed_effects` (uprawnienia domyślne Supabase). Bez znaczenia, bo service role i tak omija RLS.
+- **Doradca bezpieczeństwa Supabase:**
+  - przed `20261025`: 6 ostrzeżeń (zmienny `search_path` ×2, funkcja SECURITY DEFINER dostępna dla `anon` ×2 i `authenticated` ×2);
+  - po: 0 ostrzeżeń i 2 informacje, że `report_jobs` i `source_cache` mają RLS bez polityk (celowo: dostęp tylko przez service role).
+- **Doradca wydajności:** 7 polityk RLS wywołuje `auth.uid()` dla każdego wiersza, a `payments.user_id` nie ma indeksu. Przy obecnej skali bez znaczenia; nie zmieniałem.
+
+**Migracja `20261025_security_definer_functions.sql`**
+- **Co robi:** odbiera `EXECUTE` rolom `anon`/`authenticated` na `increment_free_reports` i `handle_new_user` oraz ustawia im stały `search_path`.
+- **Uzasadnienie:** sekcja 5, ryzyka bezpieczeństwa.
+- **Testy:**
+  - `tests/unit/queue-sql.test.ts`: uprawnienia i `search_path`; trigger zakłada profil, gdy do `auth.users` wstawia rola bez `EXECUTE` na funkcji, tak jak `supabase_auth_admin`;
+  - `tests/unit/staging.test.ts`: na bazie „jak produkcja” kontrola schematu wskazuje 4 brakujące pliki.
+
+**Niesprawdzone**
+- **Trigger rejestracji po odebraniu uprawnień na prawdziwym Supabase.**
+  - Supabase nie pozwala z SQL wstawić użytkownika jako `supabase_auth_admin` ani dać tymczasowej roli dostępu do schematu `auth`. Obie próby zostały odrzucone i nic nie zmieniły.
+  - Postgres sprawdza `EXECUTE` przy `CREATE TRIGGER`, a nie przy wyzwoleniu. Test lokalny potwierdza to na roli bez uprawnień.
+  - Ostatecznie potwierdzi to pierwsza rejestracja na stagingu (`docs/STAGING.md`, sekcja 6, krok 1).
+- **Stripe w trybie testowym, witryna Netlify, cron, smoke:** po stronie właściciela.
+- **Dane startowe `mpzp_plans`:** plan #40 ma URL mapy i PDF w Storage **produkcji**. Staging pokaże te publiczne pliki z produkcji (tylko odczyt), o ile produkcja działa.
+
+**Stan produkcji (obserwacja, nic nie zmieniałem)**
+- **Projekt Supabase `SprawdzDzialke` jest wstrzymany (status INACTIVE).** Plan Free wstrzymuje projekty po tygodniu bez aktywności. Wstrzymanych było wszystkie 6 projektów organizacji.
+- **Domena `sprawdzdzialke.com` nie rozwiązuje się w DNS** (brak rekordów A i NS). Z tego komputera serwis nie jest dostępny pod tą domeną.
+- **Na planie Free mogą działać naraz 2 projekty.** Staging zajmuje jedno miejsce, więc wznowienie produkcji wykorzysta drugie.

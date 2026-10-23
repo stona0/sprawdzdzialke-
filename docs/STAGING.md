@@ -19,6 +19,8 @@ Przygotowane w repo:
 
 ## 1. Supabase: nowy projekt (ok. 15 min)
 
+> **Stan 23.10.2026:** punkty 1–3 zrobione przez konektor Supabase. Projekt `sprawdzdzialke-staging` (ref `gnpwqwjaehppholjysss`, eu-central-2) ma schemat ze wszystkich 7 plików, a kontrola schematu dała 33/33 `ok`. Zostały punkty 4–7.
+
 1. **Utwórz projekt:** supabase.com → New project.
    - Nazwa: `sprawdzdzialke-staging`.
    - Region: ten sam co produkcja.
