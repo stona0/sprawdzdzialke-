@@ -6,11 +6,13 @@
 
 SprawdzDziałkę.com generuje automatyczne raporty planistyczne dla działek budowlanych w Polsce. Użytkownik podaje identyfikator EGB działki, a system w ciągu 30–60 sekund pobiera dane z oficjalnych rejestrów publicznych i generuje kompletny raport zawierający:
 
-- Dane ewidencyjne działki (powierzchnia, obręb, powiat) z ULDK GUGiK
-- Status MPZP (Miejscowy Plan Zagospodarowania Przestrzennego) — przeznaczenie terenu, parametry zabudowy
-- Ochrona przyrody — strefy Natura 2000, parki krajobrazowe, rezerwaty (GDOŚ WFS)
-- Media i uzbrojenie terenu — wodociąg, kanalizacja, gaz, energia elektryczna
-- Rekomendacje AI — analiza ryzyk inwestycyjnych specyficznych dla działki
+- Ocena możliwości zabudowy według przepisów obowiązujących od 1.09.2026 (MPZP, plan ogólny, obszar uzupełnienia zabudowy)
+- Dane ewidencyjne działki (obręb, powiat, powierzchnia) z ULDK GUGiK
+- MPZP z Krajowej Integracji MPZP: czy plan obejmuje działkę, oznaczenie terenu, uchwała (zakres zależy od gminy)
+- Plan ogólny gminy z Rejestru Urbanistycznego: strefa, parametry zabudowy, obszar uzupełnienia zabudowy
+- Zagrożenie powodziowe (ISOK, Wody Polskie) i ochrona przyrody (GDOŚ)
+- Uzbrojenie terenu: sieci i odległość od działki (Krajowa Integracja Uzbrojenia Terenu), linie energetyczne (BDOT10k)
+- Rekomendacje i ryzyka AI (Claude) z podstawą w danych raportu
 
 ## Dla kogo
 
@@ -27,7 +29,7 @@ SprawdzDziałkę.com generuje automatyczne raporty planistyczne dla działek bud
 
 ## Źródła danych
 
-Dane pobierane z oficjalnych rejestrów: GUGiK (ULDK), Generalna Dyrekcja Ochrony Środowiska (GDOŚ WFS), WFS urzędów gmin (MPZP), OpenStreetMap (media), ISOK KZGW (strefy zalewowe).
+Dane pobierane z rejestrów publicznych: GUGiK (ULDK, Krajowa Integracja MPZP, Krajowa Integracja Uzbrojenia Terenu, BDOT10k), Rejestr Urbanistyczny (plany ogólne), Wody Polskie (ISOK), GDOŚ, GIS Wrocławia, OpenStreetMap. Raport ma charakter informacyjny; nie zastępuje wypisu i wyrysu z planu.
 
 ## Kontakt
 

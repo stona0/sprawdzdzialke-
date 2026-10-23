@@ -33,11 +33,13 @@ export function WebApplicationJsonLd() {
       },
     ],
     featureList: [
-      'Analiza MPZP (plan zagospodarowania przestrzennego)',
-      'Sprawdzenie mediów i uzbrojenia terenu',
+      'Ocena możliwości zabudowy według przepisów od 1.09.2026',
+      'MPZP z Krajowej Integracji MPZP',
+      'Plan ogólny gminy z Rejestru Urbanistycznego',
+      'Sieci uzbrojenia terenu w pobliżu działki',
       'Ochrona przyrody — Natura 2000, parki, rezerwaty',
-      'Strefy zalewowe ISOK',
-      'Rekomendacje AI (Claude)',
+      'Zagrożenie powodziowe ISOK',
+      'Rekomendacje i ryzyka AI (Claude) z podstawą w danych',
       'Raport w 60 sekund',
     ],
     creator: {
