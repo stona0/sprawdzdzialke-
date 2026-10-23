@@ -51,3 +51,8 @@ test('callback z ?next= na obcą domenę zostaje w serwisie', async ({ request }
   expect(location.pathname).toBe('/login')
 })
 
+test('reset hasła bez sesji (link wygasł) → prośba o nowy link', async ({ page }) => {
+  await page.goto('/reset-password')
+  await expect(alert(page)).toContainText('Poproś o nowy link')
+  await expect(page.getByRole('link', { name: 'Wyślij nowy link' })).toHaveAttribute('href', '/forgot-password')
+})
