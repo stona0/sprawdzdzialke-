@@ -1,5 +1,6 @@
 /**
- * Mapa uzbrojenia: warstwa sieci z KIUT (src/lib/kiut-raster.ts, networkLayers w src/lib/utility-map.ts).
+ * Mapa uzbrojenia: warstwa sieci z KIUT (src/lib/kiut-raster.ts → wektoryzacja src/lib/kiut-vector.ts, testy
+ * w kiut-vector.test.ts → networkLines/networksSvg i widok przycięty do działki focusView w src/lib/utility-map.ts).
  * Fixture'y w tests/fixtures/kiut to prawdziwe odpowiedzi serwera (23.10.2026) dla tego samego obszaru
  * w 1200×750 (~1:2500) i 600×375 (~1:5000):
  *   • sobotka   — powiat wrocławski: w 1:5000 sieci bez opisów,
@@ -11,7 +12,7 @@ import path from 'node:path'
 import sharp from 'sharp'
 import { describe, expect, it } from 'vitest'
 import { classifyPixels, components, isLabel, networkMasks, type Rgba, type Rgb } from '../../src/lib/kiut-raster'
-import { NETWORK_STYLES, networkLayers } from '../../src/lib/utility-map'
+import { focusView, NETWORK_STYLES, networkLines, networksSvg } from '../../src/lib/utility-map'
 
 const FIX = path.join(__dirname, '../fixtures/kiut')
 const PALETTE = NETWORK_STYLES.map(s => s.server)
@@ -145,24 +146,32 @@ describe('prawdziwe odpowiedzi KIUT', () => {
   })
 
   it('narysowane linie mają wyłącznie kolory legendy (bez fioletu „sieci ciepłowniczej” z mieszania kolorów)', async () => {
-    const { layers: [casing, ...lineLayers] } = await networkLayers([readFileSync(path.join(FIX, 'sobotka-1200.png'))], [readFileSync(path.join(FIX, 'sobotka-600.png'))])
-    expect(casing).toBeDefined()
+    const { networks } = await networkLines([readFileSync(path.join(FIX, 'sobotka-1200.png'))], [readFileSync(path.join(FIX, 'sobotka-600.png'))])
+    const identity = { x: 0, y: 0, width: 1200, height: 750, zoom: 1 }
     const { data } = await sharp({ create: { width: 1200, height: 750, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-      .composite(lineLayers.map(input => ({ input }))).raw().toBuffer({ resolveWithObject: true })
+      .composite([{ input: networksSvg(networks, identity, [], 0) }]).raw().toBuffer({ resolveWithObject: true })
     const legend = NETWORK_STYLES.map(s => [1, 3, 5].map(i => parseInt(s.color.slice(i, i + 2), 16)))
     const heat = legend[IDX.cieplowniczy]
     const W = 1200, H = 750
-    // 0 = brak linii, 1 = kolor legendy, 2 = kolor pośredni (wygładzona krawędź jednej linii na drugiej)
+    // Odległość od odcinka biały–kolor legendy: krawędź linii na białej obwódce to rozjaśniony kolor tej samej sieci.
+    const tintDistance = (c: number[], l: number[]) => {
+      const d = l.map(v => v - 255), q = c.map(v => v - 255)
+      const t = Math.max(0, Math.min(1, (q[0] * d[0] + q[1] * d[1] + q[2] * d[2]) / (d[0] ** 2 + d[1] ** 2 + d[2] ** 2)))
+      return Math.hypot(q[0] - t * d[0], q[1] - t * d[1], q[2] - t * d[2])
+    }
+    // 0 = brak linii, 1 = kolor legendy (także rozjaśniony na obwódce), 2 = kolor mieszany z dwóch sieci,
+    // 3 = biała obwódka
     const kind = new Uint8Array(W * H)
     let heatLike = 0
     for (let p = 0, i = 0; p < W * H; p++, i += 4) {
-      if (data[i + 3] < 250) continue // krawędzie na przezroczystym tle
+      if (data[i + 3] < 250) continue // krawędzie, obwódka i wyblakłe dalsze sieci są półprzezroczyste
       const [r, g, b] = [data[i], data[i + 1], data[i + 2]]
-      kind[p] = Math.min(...legend.map(([lr, lg, lb]) => Math.hypot(r - lr, g - lg, b - lb))) > 40 ? 2 : 1
+      if (r > 200 && g > 200 && b > 200) { kind[p] = 3; continue }
+      kind[p] = Math.min(...legend.map(l => tintDistance([r, g, b], l))) > 40 ? 2 : 1
       if (Math.hypot(r - heat[0], g - heat[1], b - heat[2]) <= 40) heatLike++
     }
-    const lines = kind.reduce((n, k) => n + (k ? 1 : 0), 0)
-    // kolor spoza legendy tylko jako krawędź: każdy taki piksel sąsiaduje z pikselem w kolorze legendy (żadnych plam)
+    const lines = kind.reduce((n, k) => n + (k === 1 || k === 2 ? 1 : 0), 0)
+    // kolor spoza legendy tylko jako krawędź: każdy taki piksel sąsiaduje z linią w kolorze legendy albo z obwódką (żadnych plam)
     let blobs = 0
     for (let p = 0; p < W * H; p++) {
       if (kind[p] !== 2) continue
@@ -170,12 +179,46 @@ describe('prawdziwe odpowiedzi KIUT', () => {
       let edge = false
       for (let dy = -1; dy <= 1 && !edge; dy++) for (let dx = -1; dx <= 1 && !edge; dx++) {
         const nx = x + dx, ny = y + dy
-        edge = nx >= 0 && ny >= 0 && nx < W && ny < H && kind[ny * W + nx] === 1
+        edge = nx >= 0 && ny >= 0 && nx < W && ny < H && (kind[ny * W + nx] === 1 || kind[ny * W + nx] === 3)
       }
       if (!edge) blobs++
     }
     expect(lines).toBeGreaterThan(50_000)
     expect(blobs).toBe(0)
     expect(heatLike).toBe(0)
+  })
+
+})
+
+describe('widok przycięty do działki (focusView)', () => {
+  const M_PER_PX = 840 / 1200
+  const rect = (x0: number, y0: number, x1: number, y1: number) => [[[x0, y0], [x1, y0], [x1, y1], [x0, y1]]] as Array<Array<[number, number]>>
+
+  it('mała działka → widok o minimalnej szerokości 420 m, wyśrodkowany, proporcje mapy', () => {
+    const v = focusView(rect(580, 360, 620, 390), M_PER_PX)
+    expect(v.width * M_PER_PX).toBeCloseTo(420, 0)
+    expect(v.width / v.height).toBeCloseTo(1200 / 750, 5)
+    expect(v.x + v.width / 2).toBeCloseTo(600, 0)
+    expect(v.zoom).toBeCloseTo(2, 1)
+  })
+
+  it('margines co najmniej 120 m wokół działki', () => {
+    const v = focusView(rect(400, 300, 800, 450), M_PER_PX)
+    expect(v.x).toBeLessThanOrEqual(400 - 120 / M_PER_PX + 1e-6)
+    expect(v.x + v.width).toBeGreaterThanOrEqual(800 + 120 / M_PER_PX - 1e-6)
+  })
+
+  it('duża działka → cały obszar geometrii, bez zbliżenia', () => {
+    expect(focusView(rect(100, 100, 1100, 650), M_PER_PX)).toEqual({ x: 0, y: 0, width: 1200, height: 750, zoom: 1 })
+  })
+
+  it('działka przy krawędzi → widok nie wychodzi poza obszar geometrii', () => {
+    const v = focusView(rect(5, 5, 40, 30), M_PER_PX)
+    expect(v.x).toBe(0)
+    expect(v.y).toBe(0)
+  })
+
+  it('bez geometrii działki → cały obszar', () => {
+    expect(focusView([], M_PER_PX)).toEqual({ x: 0, y: 0, width: 1200, height: 750, zoom: 1 })
   })
 })
