@@ -222,7 +222,7 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 2. ~~**Trwały cache i kolejka (2–3 dni).**~~ Zrobione w kodzie 20–23.10.2026 (sekcja 10). Do zrobienia: migracja na stagingu i produkcji, `CRON_SECRET` na hostingu, weryfikacja funkcji zaplanowanej.
 3. ~~**Geometria planów ogólnych z Rejestru Urbanistycznego (3–5 dni).**~~ Zrobione 23.10.2026 (sekcja 11).
 4. ~~**Własny ETL linii energetycznych (3–5 dni).**~~ Zrobione 23.10.2026 z BDOT10k (sekcja 12). Do zrobienia: pierwszy pełny przebieg ETL i upload na stagingu.
-5. ~~**Jakość AI: eval i lepszy model (1–2 dni).**~~ Eval, poprawka walidatora i podstawa w raporcie zrobione 23.10.2026 (sekcja 13). Model przełączony na Haiku 5.5 low (decyzja właściciela). Do zrobienia: doładować konto Anthropic i wykonać bieg potwierdzający po poprawce walidatora.
+5. ~~**Jakość AI: eval i lepszy model (1–2 dni).**~~ Eval, poprawka walidatora i podstawa w raporcie zrobione 23.10.2026 (sekcja 13). Model przełączony na Haiku 5.5 low (decyzja właściciela), bieg potwierdzający wykonany. Dalej: poprawa promptu (spekulacje o kosztach i terminach) względem evala.
 
 ## Jak uruchomić weryfikację
 
@@ -427,7 +427,7 @@ OSM (Geofabrik) wymagałby parsera PBF i pobrania 1,8 GB, a dawałby głównie n
   - Haiku 5.5 high: 141 → 2;
   - Haiku 4.5: 45 → 8.
 - Nadal odpadają liczby zaokrąglone albo wyliczone („ponad 23 ha”, „24%” jako 100 − 76).
-- **Tabela wyżej powstała przed poprawką**, więc sędzia nie widział odzyskanych punktów. Trzeba to potwierdzić ponownym biegiem.
+- **Tabela wyżej powstała przed poprawką**, więc sędzia nie widział odzyskanych punktów. Bieg potwierdzający jest niżej.
 
 **Podstawa w raporcie** (`73a1b3f`)
 - Pod każdą rekomendacją i każdym ryzykiem, z AI i z reguł, jest „Podstawa: …” z nazwą sekcji raportu, w której jest fakt.
@@ -438,15 +438,31 @@ OSM (Geofabrik) wymagałby parsera PBF i pobrania 1,8 GB, a dawałby głównie n
 
 **Koszt evala:** pilot i kontrola sędziego $0,16, pełny bieg $4,64, czyli ok. $0,02 na przypadek, z czego ok. $0,018 to sędzia.
 
-**Niedokończone**
-- **W trakcie biegu wyczerpały się środki na koncie Anthropic.** 10 przypadków wariantu high się nie wykonało: jest 72 z 82. Jeśli produkcja używa tego samego konta, raporty dostają teraz rekomendacje z reguł zamiast AI, aż do doładowania.
-- **Przejście na Haiku 5.5 low** (decyzja właściciela, bez biegu potwierdzającego):
+**Niedokończone → zrobione 23.10.2026**
+
+**Bieg potwierdzający po poprawce walidatora** (23.10.2026; 41 działek × 2; $4,04)
+
+| | Haiku 4.5 | Haiku 5.5, effort low | Różnica (95% CI, na działkach) |
+|---|---|---|---|
+| Raport bez błędnego punktu | 5,1% | 32,1% | +26,8 pp (17,1 … 36,6) |
+| Błędne punkty | 30,4% | 12,8% | −18,6 pp (−24,1 … −13,4) |
+| Spekulacja / sprzeczny / nieoparty | 131 / 18 / 34 | 44 / 17 / 22 | |
+| Punktów na raport (pierwszy bieg) | 7,7 (7,2) | 8,0 (6,7) | |
+| Odrzucone przez walidator na raport (pierwszy bieg) | 0,17 (0,57) | 0,02 (1,33) | |
+
+- **Haiku 5.5 low ma mniej błędnych punktów na 36 z 41 działek**, a więcej na 2.
+- **Udział raportów bez błędu spadł u Haiku 5.5 z 46% do 32%.** Raporty mają teraz więcej punktów, czyli więcej okazji do błędu, a odsetek błędnych punktów jest podobny jak w pierwszym biegu (11,2% → 12,8%).
+- **Sędzia nie ocenił 4 z 80 przypadków Haiku 4.5:** w 2 zabrakło ocen części punktów, a 2 ucięło na limicie tokenów. Te przypadki są wyłączone z wyników.
+- **Nadal najczęstszym błędem jest spekulacja** o kosztach i terminach, np. „może wydłużyć procedury inwestycyjne”. To materiał na poprawę promptu względem tego evala.
+
+**Stan**
+- **Konto Anthropic doładowane.** W pierwszym biegu skończyły się środki i 10 przypadków wariantu high się nie wykonało: jest 72 z 82.
+- **Przejście na Haiku 5.5 low** (`3f7b789`):
   - kod używa dokładnie konfiguracji wariantu v1 z evala: `claude-haiku-5-5`, `effort: low`, `max_tokens` 8000, bez `temperature` i budżetu myślenia;
   - klucz cache AI zawiera model i effort;
   - działa po wdrożeniu;
-  - **nie wykonałem ani jednego wywołania produkcyjnej ścieżki na żywo**, bo konto nie ma środków; parametry żądania sprawdza test jednostkowy;
-  - bieg potwierdzający (baseline i v1 po poprawce walidatora, ok. $3,50) warto zrobić po doładowaniu konta;
-  - przykłady w `reports-sample/` są jeszcze z Haiku 4.5, sprzed zmiany.
+  - ścieżka produkcyjna zadziałała na żywo w e2e: raport z `claude-haiku-5-5` z 10 liniami „Podstawa”.
+- **Przykłady w `reports-sample/` wygenerowane na Haiku 5.5** (`717a9e5`): 14/14 z AI, 0 odrzuconych punktów.
 - **Ograniczenia oceny:**
   - sędzia to też model, a jego kontrola obejmuje tylko 4 przypadki;
   - nikt nie oznaczył ręcznie całego zestawu;
