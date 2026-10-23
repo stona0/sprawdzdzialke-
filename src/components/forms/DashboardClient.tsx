@@ -125,8 +125,9 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
       await new Promise(r => setTimeout(r, 3000))
     }
 
-    toast.error('Generowanie trwa zbyt długo. Odśwież stronę za chwilę.')
-    setGenerating(false)
+    // Kolejka ponawia nieudane próby — strona raportu odświeża się sama, aż raport będzie gotowy.
+    toast.info('Generowanie trwa dłużej niż zwykle — raport pojawi się na tej stronie, gdy będzie gotowy.')
+    router.push(`/report/${reportId}`)
   }
 
   async function handlePaymentConfirm() {

@@ -35,6 +35,7 @@ export default defineConfig({
         STRIPE_WEBHOOK_SECRET: 'whsec_e2e_mock',
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: 'pk_test_mock_e2e',
         NEXT_PUBLIC_APP_URL: `http://localhost:${PORT}`,
+        CRON_SECRET: 'e2e-cron-secret',
       },
     },
   ],

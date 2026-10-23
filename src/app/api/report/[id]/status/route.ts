@@ -1,6 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { after, NextRequest, NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { resolveReportStatus } from '@/lib/report-status'
+import { runReportJob } from '@/lib/report-queue'
+
+// Polling może wznowić przerwane zadanie kolejki (after() poniżej).
+export const maxDuration = 60
 
 export async function GET(
   _request: NextRequest,
@@ -26,6 +30,7 @@ export async function GET(
     return NextResponse.json({ error: 'Nie znaleziono raportu' }, { status: 404 })
   }
 
-  const status = await resolveReportStatus(supabaseService, report)
+  const { status, kick } = await resolveReportStatus(supabaseService, report)
+  if (kick) after(() => runReportJob(supabaseService, report.id))
   return NextResponse.json({ reportId: report.id, status })
 }

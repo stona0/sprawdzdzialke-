@@ -6,7 +6,7 @@ import { createServerClient } from '@supabase/ssr'
  *
  * Logika:
  * 1. Tworzy Supabase client z cookies (anon key) → odświeża JWT jeśli wygasł.
- * 2. Ścieżki publiczne (/login, /register, /forgot-password, /, /pricing, /api/payments/webhook)
+ * 2. Ścieżki publiczne (/login, /register, /forgot-password, /, /pricing, /api/payments/webhook, /api/cron/*)
  *    → przepuszcza bez sprawdzania sesji.
  * 3. Wszystko inne (/dashboard/*, /report/*, /admin/*, /api/*) → wymaga zalogowania.
  *    Jeśli brak sesji → redirect na /login.
@@ -24,6 +24,7 @@ const PUBLIC_PATHS = [
 // Prefixy które są zawsze publiczne
 const PUBLIC_PREFIXES = [
   '/api/payments/webhook', // Stripe webhook — no cookies, signature-verified
+  '/api/cron/',            // Cron — bez sesji, trasa sprawdza CRON_SECRET
   '/auth/callback',        // Supabase OAuth callback — wymienia code na sesję
   '/_next',               // Next.js assets
   '/favicon',

@@ -1,6 +1,6 @@
 import { after, NextRequest, NextResponse } from 'next/server'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { generateReport } from '@/lib/report-generator'
+import { enqueueReport, runReportJob } from '@/lib/report-queue'
 import { checkRateLimit, getRateLimitKey } from '@/lib/rate-limit'
 import { validateParcelId, validateGmina, sanitize } from '@/lib/validation'
 
@@ -134,19 +134,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ requiresPayment: true, reportId: report.id })
     }
 
-    // Odpowiadamy od razu (klient polluje /api/report/[id]/status), a generowanie
-    // idzie w after(). Gołe niezawiedzione Promise ginęło na serverless: platforma
-    // zamraża funkcję po wysłaniu odpowiedzi i raport zostawał w „generating”.
-    after(async () => {
-      try {
-        await generateReport(parcelId, gmina, user.id, report.id)
-      } catch (err) {
-        console.error('[generate] generateReport failed:', err)
-        await supabaseService.from('reports').update({ status: 'failed' }).eq('id', report.id)
-        // Nieudany raport nie powinien zużyć jedynego darmowego raportu.
-        await releaseFreeSlot()
-      }
-    })
+    // Raport trafia do kolejki (report_jobs). Pierwszą próbę uruchamiamy od razu w after();
+    // jeśli platforma ją przerwie, zadanie wznowi polling statusu albo cron.
+    // Porażkę ostateczną (i zwrot darmowego raportu) zapisuje SQL kolejki.
+    try {
+      await enqueueReport(supabaseService, report.id, { freeSlot: usedFreeSlot })
+    } catch (err) {
+      console.error('[generate] enqueue failed:', err)
+      await supabaseService.from('reports').update({ status: 'failed' }).eq('id', report.id)
+      await releaseFreeSlot()
+      return NextResponse.json({ error: 'Nie udało się rozpocząć generowania raportu' }, { status: 500 })
+    }
+    after(() => runReportJob(supabaseService, report.id))
 
     return NextResponse.json({ reportId: report.id, status: 'generating' })
   } catch (err) {

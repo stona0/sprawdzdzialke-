@@ -10,8 +10,15 @@ interface MockDb {
   profiles: Array<{ user_id: string; free_reports_used: number }>
   reports: Array<{ id: string; parcel_id: string; gmina: string; status: string; paid: boolean; html_content: string | null }>
   payments: Array<{ report_id: string; stripe_session_id: string }>
+  report_jobs: Array<{ report_id: string; status: string; attempts: number; free_slot: boolean }>
+  source_cache: Array<{ key: string }>
 }
 const mockDb = async (): Promise<MockDb> => (await fetch(`${MOCK}/__mock/db`)).json()
+const mockSql = async <T = unknown>(sql: string, params: unknown[] = []): Promise<T[]> => {
+  const res = await fetch(`${MOCK}/__mock/sql`, { method: 'POST', body: JSON.stringify({ sql, params }) })
+  if (!res.ok) throw new Error(`mock sql: ${await res.text()}`)
+  return res.json()
+}
 
 async function waitForReport(reportId: string, timeoutMs = 180_000) {
   const t0 = Date.now()
@@ -77,6 +84,10 @@ test('pełna ścieżka: logowanie → działka → darmowy raport → płatny ra
   expect(db.profiles[0].free_reports_used).toBe(1)
   expect(db.reports).toHaveLength(1)
   expect(db.reports[0]).toMatchObject({ parcel_id: FREE_PARCEL, status: 'completed', paid: true })
+  // Raport przeszedł przez kolejkę, a wyniki źródeł trafiły do trwałego cache
+  expect(db.report_jobs).toEqual([expect.objectContaining({ report_id: db.reports[0].id, status: 'done', attempts: 1, free_slot: true })])
+  const keys = db.source_cache.map(c => c.key)
+  expect(keys).toEqual(expect.arrayContaining([`v1:uldk:${FREE_PARCEL}`, `v1:kimpzp:${FREE_PARCEL}`, `v1:gdos:${FREE_PARCEL}`, `v1:isok:${FREE_PARCEL}`]))
 
   // 3. Drugi raport wymaga płatności
   await page.goto('/dashboard')
@@ -106,6 +117,7 @@ test('pełna ścieżka: logowanie → działka → darmowy raport → płatny ra
   const paid = await waitForReport(pending.id)
   expect(paid.status).toBe('completed')
   expect((await mockDb()).payments.map(p => p.stripe_session_id)).toContain('cs_test_e2e_1')
+  expect((await mockDb()).report_jobs.find(j => j.report_id === pending.id)).toMatchObject({ status: 'done', free_slot: false })
 
   // Ponowny webhook (Stripe ponawia) nie generuje raportu drugi raz
   const again = await request.post('/api/payments/webhook', { data: payload, headers: { 'stripe-signature': signature, 'content-type': 'application/json' } })
@@ -116,4 +128,37 @@ test('pełna ścieżka: logowanie → działka → darmowy raport → płatny ra
   const paidReport = page.frameLocator('iframe')
   await expect(paidReport.getByText(/Dolina Baryczy/).first()).toBeVisible()
   await expect(paidReport.locator('.section-title', { hasText: 'Ochrona przyrody' })).toBeVisible()
+})
+
+/** Raport „w trakcie”, którego worker zginął: zadanie zajęte, dzierżawa już wygasła. */
+async function orphanedReport(parcelId: string): Promise<string> {
+  const [r] = await mockSql<{ id: string }>(
+    `INSERT INTO reports (user_id, parcel_id, gmina, status, paid) VALUES ($1, $2, 'Długołęka', 'generating', true) RETURNING id`, [USER.id, parcelId])
+  await mockSql('SELECT enqueue_report_job($1, false)', [r.id])
+  await mockSql('SELECT claim_report_job($1, 90)', [r.id])
+  await mockSql(`UPDATE report_jobs SET locked_until = NOW() - interval '1 second' WHERE report_id = $1`, [r.id])
+  return r.id
+}
+
+test('przerwane generowanie: strona raportu wznawia zadanie, dane źródeł z cache', async ({ page }) => {
+  await login(page)
+  const id = await orphanedReport(FREE_PARCEL)
+  const t0 = Date.now()
+  await page.goto(`/report/${id}`) // render strony wykrywa zadanie bez workera i uruchamia je w after()
+  const done = await waitForReport(id, 120_000)
+  const ms = Date.now() - t0
+  console.log(`[e2e] wznowiony raport gotowy po ${ms} ms`)
+  expect(done.status).toBe('completed')
+  expect((await mockDb()).report_jobs.find(j => j.report_id === id)).toMatchObject({ status: 'done', attempts: 2 })
+  await expect(page.frameLocator('iframe').getByText('Źródła danych i ich status')).toBeVisible({ timeout: 30_000 })
+})
+
+test('cron: bez sekretu 401, z sekretem wykonuje zaległe zadania', async ({ request }) => {
+  expect((await request.get('/api/cron/report-jobs')).status()).toBe(401)
+  expect((await request.get('/api/cron/report-jobs', { headers: { authorization: 'Bearer zly' } })).status()).toBe(401)
+
+  const id = await orphanedReport(FREE_PARCEL)
+  const res = await request.get('/api/cron/report-jobs', { headers: { authorization: 'Bearer e2e-cron-secret' } })
+  expect(res.status()).toBe(200)
+  expect((await waitForReport(id, 120_000)).status).toBe('completed')
 })

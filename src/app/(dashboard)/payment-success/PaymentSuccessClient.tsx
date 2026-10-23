@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, Loader2, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
@@ -21,20 +20,20 @@ export default function PaymentSuccessClient({
   const [status, setStatus] = useState(initialStatus)
   const [polls, setPolls] = useState(0)
 
-  // Polluj status raportu co 3 s gdy generuje
+  // Polluj status raportu co 3 s gdy generuje. Trasa statusu wznawia też zadanie
+  // kolejki, jeśli pierwsza próba się nie udała (ponowienia mogą potrwać kilka minut).
   useEffect(() => {
     if (!reportId || status === 'completed' || status === 'failed') return
-    if (polls >= 20) return // max 60 s pollowania
+    if (polls >= 100) return // max ~5 min pollowania
 
     const id = setTimeout(async () => {
-      const supabase = createClient()
-      const { data } = await supabase
-        .from('reports')
-        .select('status')
-        .eq('id', reportId)
-        .single()
-
-      if (data?.status) setStatus(data.status)
+      try {
+        const res = await fetch(`/api/report/${reportId}/status`)
+        const data = await res.json()
+        if (data?.status) setStatus(data.status)
+      } catch {
+        // chwilowy błąd sieci — spróbujemy przy następnym cyklu
+      }
       setPolls(p => p + 1)
     }, 3000)
 
