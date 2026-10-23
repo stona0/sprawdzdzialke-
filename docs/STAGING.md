@@ -30,11 +30,16 @@ Przygotowane w repo:
    - Jeśli skrypt zgłosi, że baza ma już `public.profiles`, jesteś w złym projekcie. Nic nie zostało zmienione.
 3. **Sprawdź schemat:** SQL Editor → `supabase/check-schema.sql` → Run. Wszystkie wiersze powinny mieć `ok = true`.
 4. **Authentication → URL Configuration:**
-   - Site URL: adres stagingu z Netlify (krok 4; można uzupełnić później).
-   - Redirect URLs: `<adres stagingu>/**`.
+   - Site URL: `https://testdzialki.netlify.app`. Domyślne `http://localhost:3000` psuje linki z maili, gdy adres powrotu nie pasuje do listy poniżej.
+   - Redirect URLs: `https://testdzialki.netlify.app/**` i `http://localhost:3000/**` (lokalny `next dev` na stagingu).
 5. **Authentication → Providers:**
-   - E-mail wystarczy do testów. Na stagingu można wyłączyć „Confirm email”, żeby nie czekać na maile; wbudowana poczta Supabase ma niski limit wysyłki.
-   - Google: opcjonalnie. Wymaga klienta OAuth w Google Cloud z adresem przekierowania `https://<projekt>.supabase.co/auth/v1/callback`.
+   - E-mail wystarczy do testów. Na stagingu można wyłączyć „Confirm email”, żeby nie czekać na maile; wbudowana poczta Supabase ma niski limit wysyłki. Przy włączonym potwierdzaniu rejestracja pokazuje „wysłaliśmy link aktywacyjny”, a link wraca przez `/auth/callback`.
+   - **Google** (stan 23.10.2026: wyłączony, `external.google = false`; przycisk pokazuje „Logowanie przez Google jest chwilowo niedostępne”):
+     1. Google Cloud Console → Google Auth Platform (dawniej „OAuth consent screen”): typ odbiorców External, stan publikacji „In production” (zakresy `openid email profile` nie wymagają weryfikacji) albo „Testing” z listą testerów.
+     2. Clients → Create client → Web application. Authorized JavaScript origins: `https://testdzialki.netlify.app`, `http://localhost:3000`. Authorized redirect URIs: `https://gnpwqwjaehppholjysss.supabase.co/auth/v1/callback`. Skopiuj Client ID i Client secret (sekret widać tylko przy tworzeniu).
+     3. Supabase → Authentication → Sign In / Providers → Google → Enable, wklej Client ID i Client secret → Save.
+     4. Sprawdzenie: `curl -s https://gnpwqwjaehppholjysss.supabase.co/auth/v1/settings -H "apikey: <anon>"` → `"google":true`; przycisk „Kontynuuj z Google” prowadzi na ekran zgody Google.
+   - Produkcja po wznowieniu: ten sam klient może mieć drugi redirect URI `https://<ref produkcji>.supabase.co/auth/v1/callback` i origin `https://sprawdzdzialke.com`; w projekcie produkcji Site URL `https://sprawdzdzialke.com`, Redirect URLs `https://sprawdzdzialke.com/**`.
 6. **Project Settings → API:** skopiuj URL, klucz anon (publishable) i service_role (secret) do `.env.staging` (krok 3).
 7. **Panel admina (po pierwszej rejestracji na stagingu):** w SQL Editor uruchom
    `update public.profiles set role = 'admin' where user_id = (select id from auth.users where email = '<twój e-mail>');`

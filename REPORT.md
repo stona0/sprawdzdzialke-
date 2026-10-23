@@ -564,3 +564,33 @@ Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia
 **Ograniczenia**
 - Część opisów stykających się z linią zostaje jako krótkie odgałęzienia.
 - Przy dużym zagęszczeniu sieci linie się stykają; na wierzchu jest linia energetyczna.
+
+## 16. Logowanie Google i mapa uzbrojenia (23.10.2026)
+
+### Logowanie (Google, rejestracja, reset hasła)
+
+**Diagnoza.** Logowanie przez Google na stagingu kończyło się stroną z surowym błędem na supabase.co: `Unsupported provider: provider is not enabled` (HTTP 400). Publiczne `/auth/v1/settings` stagingu potwierdza `external.google = false`, czyli w nowym projekcie Supabase dostawcy Google nie skonfigurowano. Kod OAuth nie zmienił się od 28.05.2026; zmieniło się środowisko (nowy projekt stagingu, wstrzymana produkcja). Włączenie Google to konfiguracja po stronie właściciela: Google Cloud i panel Supabase, instrukcja krok po kroku w `docs/STAGING.md`, kroki 4–5. **Nie zrobiono jeszcze.**
+
+**Błędy w kodzie znalezione przy okazji (poprawione):**
+- **Open redirect:** `/auth/callback?next=…` przekierowywał po udanym logowaniu pod dowolny adres (`${origin}${next}`, np. `next=@evil.com`). Teraz przyjmowana jest tylko ścieżka w aplikacji (`safeNext` w `src/lib/auth-redirect.ts`).
+- **Ciche awarie:**
+  - callback ignorował `error` odsyłany przez Supabase (anulowana zgoda, wygasły link);
+  - każda porażka kończyła się kodem `auth_callback_failed`, którego `/login` nie wyświetlał;
+  - błędy Supabase trafiały na ekran po angielsku.
+  Teraz `/login?error=<kod>` pokazuje komunikat po polsku.
+- **Rejestracja przy włączonym potwierdzaniu e-maili** (staging: `mailer_autoconfirm = false`):
+  - po rejestracji aplikacja przechodziła do panelu, a proxy odsyłało z powrotem na logowanie bez wyjaśnienia; teraz pokazuje „wysłaliśmy link aktywacyjny”;
+  - link aktywacyjny nie miał adresu powrotu, więc trafiał na Site URL projektu (domyślnie `localhost:3000`); teraz wraca przez `/auth/callback`.
+- **Reset hasła nie działał wcale.** Link z maila prowadził na `/login`, który nie wymienia `code` na sesję, a formularza nowego hasła nie było. Teraz link prowadzi przez `/auth/callback` na nową stronę `/reset-password`.
+- **`?redirectTo=`** dodawany przez proxy był ignorowany: po zalogowaniu zawsze `/dashboard`. Teraz logowanie wraca na tę stronę, także przez Google.
+
+**Usunięte:** drugie `window.location.href = data.url` po `signInWithOAuth`. auth-js przekierowuje sam (`skipBrowserRedirect` domyślnie `false`), a komentarz, że `@supabase/ssr` 0.10 tego nie robi, był nieprawdziwy.
+
+**Dodane:** przed przekierowaniem do Google aplikacja sprawdza `/auth/v1/settings`. Przy wyłączonym dostawcy pokazuje komunikat zamiast obcej strony z JSON-em. Gdy sprawdzenie się nie uda, logowanie nie jest blokowane.
+
+**Dowody:**
+- `tests/unit/auth-redirect.test.ts`: 19 testów, m.in. `//evil.com`, `/\evil.com`, `/\t/evil.com`, adresy absolutne.
+- `tests/e2e/auth.spec.ts`: 7 testów na mocku Supabase, którego `/auth/v1/settings` odpowiada jak staging. Sprawdzają: błędne hasło, powrót na `redirectTo`, `redirectTo` na obcą domenę, wyłączony Google, błąd dostawcy w callbacku, `?next=` na obcą domenę, reset hasła bez sesji. Wszystkie przechodzą.
+- `npm test` 156/156; `npm run build` OK.
+
+**Nie sprawdzono:** pełnej ścieżki Google (wymaga konfiguracji właściciela i jego konta Google) ani resetu hasła z prawdziwym mailem.
