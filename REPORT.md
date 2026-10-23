@@ -1,6 +1,6 @@
 # SprawdzDziałkę.com — raport z naprawy (branch `fix/autonomous-recovery`)
 
-Stan na 19.10.2026, uzupełniony 23.10.2026 o trwały cache i kolejkę (sekcja 10) oraz plany ogólne z Rejestru Urbanistycznego (sekcja 11). Nic nie zostało wdrożone na produkcję, nic nie zostało zapisane do produkcyjnej bazy ani do konta Stripe.
+Stan na 19.10.2026, uzupełniony 23.10.2026 o trwały cache i kolejkę (sekcja 10) oraz plany ogólne z Rejestru Urbanistycznego (sekcja 11) i linie energetyczne z BDOT10k (sekcja 12). Nic nie zostało wdrożone na produkcję, nic nie zostało zapisane do produkcyjnej bazy ani do konta Stripe.
 
 ## 1. Podsumowanie
 
@@ -140,7 +140,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 
 | # | Problem | Przyczyna | Próby | Rekomendacja |
 |---|---|---|---|---|
-| B1 | **OSM/Overpass niedostępny** podczas całej sesji (bez linii WN z napięciem) | Publiczne instancje przeciążone: overpass-api.de 502/406/timeout, kumi i private.coffee timeout, mail.ru ~18 s | Zmiana instancji, równoległe zapytania, nagłówki UA/Accept, limit 15 s | Własny ekstrakt OSM (Geofabrik `poland-latest`) → tabela linii energetycznych w PostGIS, odświeżanie co miesiąc. Wtedy Overpass jest zbędny |
+| B1 | **OSM/Overpass niedostępny** podczas całej sesji (bez linii WN z napięciem) | Publiczne instancje przeciążone: overpass-api.de 502/406/timeout, kumi i private.coffee timeout, mail.ru ~18 s | Zmiana instancji, równoległe zapytania, nagłówki UA/Accept, limit 15 s; od `932844c` bezpiecznik 5 min | Rozwiązane w kodzie przez `6b30b22`: własne kafle linii z BDOT10k (sekcja 12); Overpass zostaje tylko jako zapas, gdy kafli nie ma. Wymaga uruchomienia ETL i wgrania kafli |
 | B2 | Stripe Checkout nieprzetestowany | W `.env.local` są tylko klucze live; tworzenie sesji live w ramach testu = efekt uboczny na produkcji | Przetestowany webhook (podpis, idempotencja, generowanie); dialog płatności w e2e | Dodać klucze testowe Stripe (`sk_test_…`) do środowiska dev/staging i dopisać krok checkout do e2e |
 | B3 | Zachowanie na hostingu niezweryfikowane | Brak dostępu do Netlify/Vercel i logów. Netlify: limit czasu funkcji synchronicznych jest krótki (zależnie od planu); wsparcie `after()`/`waitUntil` trzeba potwierdzić. Generowanie trwa ~25 s | `after()` + `maxDuration = 60`; od `73e73f2` kolejka z ponowieniami i wznawianiem przerwanych zadań (sekcja 10) | Wdrożyć branch na staging i sprawdzić `after()`, funkcję zaplanowaną Netlify i limity czasu |
 | B4 | ~~Geometria OUZ poza Wrocławiem~~ — rozwiązane w `c311e4f` (geometria z API Rejestru Urbanistycznego, sekcja 11) | Krajowa usługa GUGiK `PlanyOgolneGmin` nie zwraca nic nawet dla gmin z POG w mocy (Siechnice, Przemęt, Radlin, Strzeleczki), a na skali kraju nic nie rysuje | GetFeatureInfo HTML/JSON/text, GetMap całej Polski | Pobierać GML planów ogólnych z Rejestru Urbanistycznego (API ma download) do własnej bazy, analogicznie do Wrocławia |
@@ -157,6 +157,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 **Ryzyka bezpieczeństwa (poza zakresem zmian w kodzie)**
 - **Token GitHub (PAT) zapisany jawnym tekstem w URL remote'a `origin`** w `.git/config`. Należy go natychmiast unieważnić i ustawić remote bez tokenu (credential helper).
 - Klucze **live** Stripe w lokalnym `.env.local`. Development powinien używać kluczy testowych.
+- **Bucket `utility-maps` pozwalał na zapis każdemu z kluczem anon** (polityki insert/update bez klauzuli TO w migracji 20260529). Każdy mógł podmienić obraz mapy w płatnych raportach. Poprawka: migracja `20261024_utility_maps_write_policies.sql` (`6568008`) — **do uruchomienia na produkcji**.
 - Rate limiter jest w pamięci i nie jest współdzielony między instancjami serverless (cache źródeł już jest — sekcja 10).
 - Pozostały 2 umiarkowane podatności (`postcss-selector-parser` przez `@tailwindcss/typography`; tylko czas budowania).
 
@@ -166,7 +167,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 |---|---|---|---|---|
 | **KIUT/GESUT (GUGiK)** | Nie — tylko WMS; GetFeatureInfo „nie udostępnia danych opisowych” | **Tak**, z pikseli obrazu (±2 m): prąd, woda, kanalizacja, gaz; wykrywa sieć przez działkę | Powiaty przekazujące dane; brak m.in. Wrocławia i Krakowa | **Zbudowane i w raporcie** (`src/lib/sources/gesut.ts`). Live: Milicz — prąd 7 m, woda 1 m, kanalizacja 9 m, gaz 11 m; Kiełczów — prąd 126 m, kanalizacja 119 m |
 | **OSM** | Tak (z napięciem, operatorem) | Tak (dokładnie, z geometrii) | Dobre dla napowietrznych linii WN/SN, słabe dla sieci podziemnych | Zbudowane (`osm.ts`, reguła „linia WN ≤ 50 m” → ryzyko). Bezużyteczne bez stabilnego Overpass (B1) |
-| **BDOT10k (SULN, SUPR)** | Tak, ale WFS GUGiK udostępnia tylko listę paczek per powiat (GML) | Możliwa po ETL | Cały kraj; linie napowietrzne z klasą napięcia, główne rurociągi | Niezbudowane: wymaga pobrania i przetworzenia ~380 paczek powiatowych |
+| **BDOT10k (SULN, SUPR)** | Tak, ale WFS GUGiK udostępnia tylko listę paczek per powiat (GML) | Możliwa po ETL | Cały kraj; linie napowietrzne z klasą napięcia, główne rurociągi | **Zbudowane** (`6b30b22`, sekcja 12): ETL → kafle w Storage; w raporcie klasa napięcia, odległość, przecięcie działki |
 | Operatorzy sieci / mapa zasadnicza z powiatu | Różnie; zwykle płatne, na wniosek | — | — | Nie do zautomatyzowania rzetelnie; raport kieruje po warunki przyłączenia |
 
 **Rekomendacja.** Wod-kan i prąd „z odległością” dla powiatów z KIUT jest gotowe, a konkurencja zwykle i tak opiera się na tym samym źródle. Dla linii wysokiego napięcia (pasy technologiczne, ryzyko dla zabudowy) warto zbudować własny ETL z OSM i BDOT10k do PostGIS. Szacunek: 3–5 dni pracy plus miesięczne odświeżanie; daje to napięcie i dokładną geometrię bez zależności od Overpass.
@@ -219,7 +220,7 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 1. **Staging i sekrety (1–2 dni).** Unieważnić PAT z `.git/config`, osobny projekt Supabase i klucze testowe Stripe dla dev/staging, wdrożyć ten branch na staging i sprawdzić `after()` i limity czasu na docelowym hostingu (B2, B3). Bez tego nie da się bezpiecznie wypuścić żadnej poprawki.
 2. ~~**Trwały cache i kolejka (2–3 dni).**~~ Zrobione w kodzie 20–23.10.2026 (sekcja 10). Do zrobienia: migracja na stagingu i produkcji, `CRON_SECRET` na hostingu, weryfikacja funkcji zaplanowanej.
 3. ~~**Geometria planów ogólnych z Rejestru Urbanistycznego (3–5 dni).**~~ Zrobione 23.10.2026 (sekcja 11).
-4. **Własny ETL linii energetycznych z OSM i BDOT10k (3–5 dni).** Zamyka lukę konkurencyjną z napięciem i dokładną odległością, bez zależności od publicznego Overpass (B1).
+4. ~~**Własny ETL linii energetycznych (3–5 dni).**~~ Zrobione 23.10.2026 z BDOT10k (sekcja 12). Do zrobienia: pierwszy pełny przebieg ETL i upload na stagingu.
 5. **Jakość AI: eval i lepszy model (1–2 dni).** Zbudować zestaw ewaluacyjny z działek testowych (sprawdzanie zgodności z faktami), porównać Haiku 4.5 z nowszym modelem i pokazywać w raporcie „podstawę” każdej rekomendacji. Błędy semantyczne AI to dziś największe ryzyko jakości treści. Koszt modelu na raport jest pomijalny przy cenie 29 PLN.
 
 ## Jak uruchomić weryfikację
@@ -227,8 +228,9 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 ```bash
 npm install
 npm run typecheck
-npm test                 # 84 testy: fixture'y + SQL kolejki i cache na PGlite (bez sieci)
-npm run test:live        # 12 działek na żywych usługach (~3 min)
+npm test                 # 101 testów: fixture'y + SQL kolejki, cache i Storage na PGlite (bez sieci)
+npm run test:live        # 14 działek na żywych usługach (~3 min); z POWER_LINES_URL=./data/power-lines także linie BDOT10k
+npm run etl:power-lines -- --powiaty 0223,0264,0208,0213,1261,1463,1014,0605   # kafle BDOT10k dla działek testowych (~30 s); bez --powiaty cały kraj
 npm run test:e2e         # Playwright + mock Supabase na PGlite, 5 testów (~1,5 min; wymaga ANTHROPIC_API_KEY w .env.local, inaczej rekomendacje regułowe)
 npx tsx --tsconfig tsconfig.json scripts/cache-benchmark.mts   # pomiar cache: zimny start / nowa instancja / awaria usług (~1 min)
 npx tsx --env-file=.env.local --tsconfig tsconfig.json scripts/generate-sample-reports.mts   # reports-sample/
@@ -307,7 +309,7 @@ Pierwsze dwa zimne starty to ~15 s czekania na Overpass; potem działa bezpieczn
 | Radom `146301_1.0180.AR_176.7/2` | w mocy (wcześniej błędnie „brak”) | 1SJ | 100% | WZ możliwe |
 | gmina Sieradz `101408_2.0021.44/2` | brak; projekt w opracowaniu | w projekcie 5SO 82% + 1SJ 18% | w projekcie 18% | brak POG + informacja o projekcie |
 
-  Jedyny nieudany test live to Milicz, i nie z powodu tej zmiany: KIUT od 23.10 zwraca dla okolic Milicza pusty obraz na wszystkich trzech hostach (`integracja`, `integracja01`, `integracja02`). Raport pokazuje wtedy „brak danych w KIUT dla tego obszaru”. Oczekiwania w teście nie zmieniałem, bo dane mogą wrócić.
+  Jedyny nieudany test live to Milicz, i nie z powodu tej zmiany: KIUT przez pewien czas 23.10 zwracał dla okolic Milicza pusty obraz na wszystkich trzech hostach (`integracja`, `integracja01`, `integracja02`). Kilka godzin później test przeszedł (14/14, sekcja 12), więc była to chwilowa awaria. Problem: przy takiej awarii raport mówi „brak danych w KIUT dla tego obszaru”, bo pustego obrazu nie da się odróżnić od braku danych.
 - `npm run test:e2e`: 5/5.
 - Przykładowe raporty: `reports-sample/siechnice-ouz`, `siechnice-poza-ouz`, `radom-pog`, `sieradz-projekt-pog`.
 
@@ -318,4 +320,54 @@ Pierwsze dwa zimne starty to ~15 s czekania na Overpass; potem działa bezpieczn
 - **Zmiany planu.** Gdy gmina ma więcej niż jeden plan w mocy (np. zmianę jako osobny akt), raport bierze najnowszy w mocy. Na 23.10.2026 taki przypadek nie występuje.
 - **Wartości liczbowe.** Wysokość w RU to tekst („12 m”), z którego raport bierze pierwszą liczbę. Strefy bez parametrów (np. SO — strefa otwarta) mają w raporcie „—”.
 - **AI.** W nowych przykładach zostały pojedyncze błędy semantyczne z kategorii opisanej w kroku 5: instytucja spoza listy („Biuro Obsługi Geodety”) i błędna nazwa źródła OSM. Werdykt i ustalenia powstają regułami, nie przez AI.
+
+## 12. Linie energetyczne i rurociągi z BDOT10k (23.10.2026)
+
+**Wybór źródła.** BDOT10k (GUGiK) zamiast ekstraktu OSM:
+- dane oficjalne, dla całego kraju, otwarte;
+- klasy linii: OT_SULN_L (napowietrzne linie średniego, wysokiego i najwyższego napięcia) i OT_SUPR_L (rurociągi);
+- geometria od razu w EPSG:2180;
+- indeks paczek z datą aktualizacji każdego powiatu w WFS `BDOT10k_powiaty`.
+
+OSM (Geofabrik) wymagałby parsera PBF i pobrania 1,8 GB, a dawałby głównie napięcie w kV, które BDOT10k zastępuje klasą. Overpass zostaje jako zapas, gdy kafli nie ma.
+
+**Co zostało zrobione** (`7408c9b`, `6568008`, `6b30b22`)
+- **ETL** `npm run etl:power-lines`:
+  - pobiera 380 paczek powiatowych (~11 GB; serwer nie obsługuje pobierania fragmentów, więc każda paczka jest ściągana w całości i od razu usuwana);
+  - wyciąga dwie klasy obiektów i zapisuje kafle 10 × 10 km oraz manifest;
+  - jeśli któryś powiat się nie uda, zbiór nie jest publikowany, bo niepełny dałby fałszywe „brak linii”.
+- **Upload** `npm run etl:power-lines:upload` do publicznego bucketu `power-lines`:
+  - używa osobnych zmiennych `ETL_SUPABASE_*` i wymaga `--yes`, żeby nie dało się przypadkiem pisać do produkcji z `.env.local`;
+  - kafle trafiają pod ścieżkę z wersją, a `current.json` jest wgrywany na końcu.
+- **Workflow** GitHub Actions uruchamia ETL i upload raz w miesiącu. Jest nieaktywny, dopóki w repozytorium nie ustawi się zmiennej `POWER_LINES_ETL=on` i sekretów.
+- **Raport:**
+  - pobiera 1–4 kafle wokół działki;
+  - podaje najbliższą linię każdej klasy i najbliższy rurociąg każdego rodzaju: odległość od granicy działki do osi linii albo „przez działkę”;
+  - pokazuje datę danych powiatu i zakres BDOT10k (bez linii nN i kabli podziemnych).
+- **Ustalenia:**
+  - linia 220–400 kV ≤ 40 m albo 110 kV ≤ 20 m od granicy działki → **ryzyko** (typowy pas technologiczny);
+  - linia 220–400 kV lub 110 kV do 100 m → uwaga;
+  - linia SN przez działkę lub ≤ 7 m → uwaga;
+  - rurociąg przez działkę albo gazowy/paliwowy ≤ 20 m → uwaga.
+- Przy okazji znalazłem i poprawiłem **lukę bezpieczeństwa w bucketcie `utility-maps`** (sekcja 5, ryzyka bezpieczeństwa).
+
+**Dowody**
+- `npm test`: 101/101. Testy obejmują parser na fragmentach prawdziwych paczek, kafle i odległości, przypadki „brak danych”, „powiat spoza zbioru” i „brakujący kafel” (błąd, a nie „brak linii”) oraz upload z odczytem przez HTTP na mocku Supabase. Test migracji sprawdza, że polityki zapisu `utility-maps` zniknęły.
+- `POWER_LINES_URL=./data/power-lines npm run test:live`: 14/14. Dwie nowe działki: Sobótka `022307_4.0003.541` (linia 110 kV przez działkę, SN 3 m) i Kraków-Podgórze `126104_9.0078.270` (linia 220–400 kV przez działkę).
+- ETL na próbie 32 powiatów (po 2 z każdego województwa): 29 711 obiektów (27 064 SN, 692 WN, 141 NN, 1814 rurociągów), 0 błędów, 83 s, 6 MB. Szacunek dla kraju: ok. 15–20 min i ok. 70 MB kafli.
+- Zbieranie danych z kaflami trwa ok. 2 s na działkę (wcześniej ok. 16 s przy niedziałającym Overpass).
+- `npm run test:e2e`: 5/5 (bez kafli w mocku, czyli ścieżka zapasowa przez OSM). `next build`: OK.
+- Przykłady: `reports-sample/sobotka-linia-110kv`, `krakow-podgorze-linia-nn`.
+
+**Wdrożenie**
+1. Migracje `20261024_power_lines_bucket.sql` i `20261024_utility_maps_write_policies.sql`, najpierw na stagingu.
+2. Pierwszy pełny przebieg ETL i upload (lokalnie albo przez workflow) na staging. **Pełnego przebiegu dla całego kraju nie wykonałem**: przetestowałem 40 powiatów (8 z działkami testowymi i 32 losowe).
+3. Bez tych kroków raport działa jak dotąd, z liniami z OSM.
+
+**Ograniczenia**
+- **Aktualność:** dane powiatów pochodzą z lat 2021–2024 (np. kłodzki: 23.12.2021). Raport pokazuje datę; nowych linii może brakować.
+- **Zakres:** BDOT10k nie zawiera linii niskiego napięcia ani kabli podziemnych. Raport mówi to wprost, a przyłącza dalej opisuje KIUT.
+- **Pasy technologiczne:** wartości ±40 m (220–400 kV), ±20 m (110 kV) i ±7 m (SN) są typowe, nie wiążące. Raport każe potwierdzić u operatora. Przy linii 400 kV pas bywa szerszy niż 2 × 40 m.
+- **Odcinki:** BDOT10k zapisuje linię jako odcinki między słupami. Raport pokazuje najbliższy odcinek każdej klasy, a nie liczbę linii.
+- **AI** w nowych przykładach dopisuje spekulacje („dodatkowe opłaty za służebność”, „pola elektromagnetyczne”). Ustalenia o liniach powstają regułami; to temat kroku 5.
 
