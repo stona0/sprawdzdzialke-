@@ -3,7 +3,7 @@
 -- Uruchom w Supabase → SQL Editor:
 --   • na stagingu po bootstrap.sql: wszystkie wiersze powinny mieć ok = true;
 --   • na produkcji PRZED migracjami: wiersze z ok = false pokazują, których
---     plików z kolumny "plik" brakuje (zwykle 20261020 i 20261024).
+--     plików z kolumny "plik" brakuje (zwykle 20261020, 20261024 i 20261025).
 -- Wiersze z ok = false są na górze.
 -- ============================================================
 WITH expected(kind, name, plik) AS (VALUES
@@ -29,7 +29,9 @@ WITH expected(kind, name, plik) AS (VALUES
   ('bucket',          'power-lines',                 '20261024_power_lines_bucket.sql'),
   ('polityka',        'Public read power-lines',     '20261024_power_lines_bucket.sql'),
   ('brak polityki',   'Service insert utility-maps', '20261024_utility_maps_write_policies.sql'),
-  ('brak polityki',   'Service update utility-maps', '20261024_utility_maps_write_policies.sql')
+  ('brak polityki',   'Service update utility-maps', '20261024_utility_maps_write_policies.sql'),
+  ('anon bez dostępu', 'public.increment_free_reports(uuid)', '20261025_security_definer_functions.sql'),
+  ('anon bez dostępu', 'public.handle_new_user()',   '20261025_security_definer_functions.sql')
 ), checked AS (
   SELECT kind, name, plik,
     CASE kind

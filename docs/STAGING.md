@@ -98,7 +98,9 @@ Skrypt sprawdza:
 - kafle w Storage.
 
 Potem scenariusz ręczny:
-1. **Rejestracja e-mailem i logowanie.**
+1. **Rejestracja e-mailem i logowanie.** W Table Editor → `profiles` musi pojawić się wiersz z Twoim e-mailem.
+   - To potwierdza, że trigger rejestracji działa po migracji `20261025` (odbiera uprawnienia do funkcji triggera).
+   - Jeśli rejestracja kończy się błędem „Database error saving new user”, **nie** uruchamiaj tej migracji na produkcji.
 2. **Darmowy raport:** działka, np. `022307_4.0003.541` (Sobótka, linia 110 kV). Raport powinien być gotowy w ok. 30–60 s. Sprawdź sekcje, mapę i „Podstawa: …” przy rekomendacjach.
 3. **Płatny raport:** drugi raport → płatność kartą testową `4242 4242 4242 4242`, dowolna przyszła data i CVC. Po powrocie raport generuje się po webhooku. W Stripe (test) → Webhooks zdarzenie ma status 200.
 4. **Baza** (Supabase → Table Editor):
@@ -111,11 +113,12 @@ Potem scenariusz ręczny:
 ## 7. Po stagingu: produkcja
 
 1. **Kopia bazy produkcyjnej:** Database → Backups albo `pg_dump`.
-2. **Kontrola przed migracjami:** SQL Editor produkcji → `supabase/check-schema.sql` (tylko odczyt). Wiersze z `ok = false` pokażą brakujące pliki, zwykle trzy migracje z tego brancha.
+2. **Kontrola przed migracjami:** SQL Editor produkcji → `supabase/check-schema.sql` (tylko odczyt). Wiersze z `ok = false` pokażą brakujące pliki, zwykle cztery migracje z tego brancha.
 3. **Migracje po kolei**, każdą osobno w SQL Editor:
    - `20261020_source_cache_report_jobs.sql`
    - `20261024_power_lines_bucket.sql`
    - `20261024_utility_maps_write_policies.sql`
+   - `20261025_security_definer_functions.sql`
    - Potem ponownie `check-schema.sql`: wszystko `ok = true`.
    - **Nie** używaj `bootstrap.sql` na produkcji (i tak odmówi).
 4. **`CRON_SECRET`** w zmiennych witryny produkcyjnej.

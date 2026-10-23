@@ -46,11 +46,16 @@ describe('bootstrap.sql dla stagingu', () => {
 })
 
 describe('check-schema.sql na bazie „jak produkcja” (bez migracji z tego brancha)', () => {
-  it('wskazuje dokładnie brakujące pliki 20261020 i 20261024', async () => {
+  it('wskazuje dokładnie brakujące pliki 20261020, 20261024 i 20261025', async () => {
     const db = await freshDb()
-    for (const f of migrationFiles().filter(f => !/2026102[04]_/.test(f))) await db.exec(readFileSync(f, 'utf8'))
+    for (const f of migrationFiles().filter(f => !/2026102[045]_/.test(f))) await db.exec(readFileSync(f, 'utf8'))
     const missing = new Set((await db.query<Row>(CHECK)).rows.filter(r => !r.ok).map(r => r.plik))
-    expect([...missing].sort()).toEqual(['20261020_source_cache_report_jobs.sql', '20261024_power_lines_bucket.sql', '20261024_utility_maps_write_policies.sql'])
+    expect([...missing].sort()).toEqual([
+      '20261020_source_cache_report_jobs.sql',
+      '20261024_power_lines_bucket.sql',
+      '20261024_utility_maps_write_policies.sql',
+      '20261025_security_definer_functions.sql',
+    ])
   })
 })
 

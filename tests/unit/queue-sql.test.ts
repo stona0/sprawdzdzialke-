@@ -65,6 +65,24 @@ describe('migracje', () => {
       has_function_privilege('service_role', 'claim_report_job(uuid, integer)', 'EXECUTE') AS svc`)
     expect(r).toEqual({ anon: false, auth: false, svc: true })
   })
+
+  it('funkcje SECURITY DEFINER ze schema.sql poza API; trigger rejestracji nadal zakłada profil', async () => {
+    const r = await one(`SELECT
+      has_function_privilege('anon', 'increment_free_reports(uuid)', 'EXECUTE') AS inc_anon,
+      has_function_privilege('authenticated', 'increment_free_reports(uuid)', 'EXECUTE') AS inc_auth,
+      has_function_privilege('anon', 'handle_new_user()', 'EXECUTE') AS trg_anon,
+      has_function_privilege('authenticated', 'handle_new_user()', 'EXECUTE') AS trg_auth,
+      (SELECT array_agg(proconfig[1] ORDER BY proname) FROM pg_proc WHERE proname IN ('handle_new_user', 'increment_free_reports')) AS config`)
+    expect(r).toEqual({ inc_anon: false, inc_auth: false, trg_anon: false, trg_auth: false, config: ['search_path=public', 'search_path=public'] })
+
+    // Supabase Auth wstawia do auth.users jako supabase_auth_admin, który nie ma EXECUTE na funkcji triggera
+    await db.exec(`CREATE ROLE supabase_auth_admin; GRANT USAGE ON SCHEMA auth TO supabase_auth_admin; GRANT INSERT ON auth.users TO supabase_auth_admin`)
+    const id = randomUUID()
+    await db.exec('SET ROLE supabase_auth_admin')
+    await db.query('INSERT INTO auth.users (id, email) VALUES ($1, $2)', [id, 'nowy@sprawdzdzialke.test'])
+    await db.exec('RESET ROLE')
+    expect(await one('SELECT email, free_reports_used FROM profiles WHERE user_id = $1', [id])).toEqual({ email: 'nowy@sprawdzdzialke.test', free_reports_used: 0 })
+  })
 })
 
 describe('kolejka raportów', () => {

@@ -159,6 +159,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 - Klucze **live** Stripe w lokalnym `.env.local`. Development powinien używać kluczy testowych.
 - **Klucz API Anthropic jawnym tekstem w `.claude/launch.json`** (konfiguracja podglądu dev serwera). Plik jest w `.gitignore` i nie ma go w historii gita, ale klucz powinien być tylko w `.env.local`.
 - **Bucket `utility-maps` pozwalał na zapis każdemu z kluczem anon** (polityki insert/update bez klauzuli TO w migracji 20260529). Każdy mógł podmienić obraz mapy w płatnych raportach. Poprawka: migracja `20261024_utility_maps_write_policies.sql` (`6568008`) — **do uruchomienia na produkcji**.
+- **Funkcja `increment_free_reports(uid)` była wywoływalna z publicznym kluczem anon** (`/rest/v1/rpc/…`, SECURITY DEFINER, ze `schema.sql`). Kto znał UUID użytkownika, mógł mu odebrać darmowy raport. Aplikacja jej nie używa. Tak samo wystawiona była funkcja triggera `handle_new_user()`. Wykrył to doradca bezpieczeństwa Supabase na stagingu. Poprawka: migracja `20261025_security_definer_functions.sql` (sekcja 14) — **do uruchomienia na produkcji** po udanej rejestracji na stagingu.
 - Rate limiter jest w pamięci i nie jest współdzielony między instancjami serverless (cache źródeł już jest — sekcja 10).
 - Pozostały 2 umiarkowane podatności (`postcss-selector-parser` przez `@tailwindcss/typography`; tylko czas budowania).
 
