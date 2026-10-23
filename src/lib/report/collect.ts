@@ -24,6 +24,7 @@ export interface SourceSummary {
   error?: string
   ms: number
   fetchedAt: string
+  stale?: boolean
 }
 
 export interface Finding {
@@ -65,7 +66,7 @@ export interface CollectDeps {
 }
 
 function summary(r: SourceResult<unknown>): SourceSummary {
-  return { source: r.source, status: r.status, error: r.error, ms: r.ms, fetchedAt: r.fetchedAt }
+  return { source: r.source, status: r.status, error: r.error, ms: r.ms, fetchedAt: r.fetchedAt, ...(r.stale ? { stale: true } : {}) }
 }
 
 const skipped = <T>(source: string): SourceResult<T> => ({
@@ -157,9 +158,15 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
     sip,
     utilityMapUrl,
     findings,
-    sources: [wMpzp, wPog, kimpzp, ru, isok, gdos, gesut, osm]
-      .filter(s => !(s.status === 'not_covered' && s.ms === 0))
-      .map(summary),
+    sources: [
+      {
+        source: 'Dane ewidencyjne – ULDK (GUGiK)', status: 'ok' as const, ms: 0,
+        fetchedAt: parcel.fetchedAt ?? now.toISOString(), ...(parcel.stale ? { stale: true } : {}),
+      },
+      ...[wMpzp, wPog, kimpzp, ru, isok, gdos, gesut, osm]
+        .filter(s => !(s.status === 'not_covered' && s.ms === 0))
+        .map(summary),
+    ],
   }
 }
 

@@ -5,7 +5,7 @@
  * Uwaga: rejestr bywa opóźniony względem gmin (np. 19.10.2026 POG Wrocławia był
  * w nim jeszcze „w opracowaniu”, choć obowiązuje od 19.09.2026).
  */
-import { cacheableResult, cached, fetchWithRetry, runSource, type SourceResult } from '../http'
+import { cachedSource, fetchWithRetry, runSource, type SourceResult } from '../http'
 
 const API = 'https://rejestr-urbanistyczny.gov.pl/api/public/published/query'
 export const RU_PUBLIC_URL = 'https://rejestr-urbanistyczny.gov.pl/published/pog'
@@ -38,7 +38,7 @@ export const IN_FORCE_STATUS = 'prawnie wiążący lub realizowany'
 
 export async function queryRejestrPog(terc: string, communeName: string): Promise<SourceResult<RuPog>> {
   const name = communeName.replace(/\s*\(.*\)\s*/g, '').trim()
-  return cached(`ru-pog:${terc}`, 6 * 60 * 60 * 1000, () => runSource<RuPog>('Plan ogólny – Rejestr Urbanistyczny', async () => {
+  return cachedSource(`ru-pog:${terc}`, 6 * 60 * 60 * 1000, () => runSource<RuPog>('Plan ogólny – Rejestr Urbanistyczny', async () => {
     const body = {
       page: { number: 1, size: 50, sort: { sortBy: 'publishDate', direction: 'desc' } },
       criteria: {
@@ -72,5 +72,5 @@ export async function queryRejestrPog(terc: string, communeName: string): Promis
       gmina: act.commune,
     }
     return { status: 'ok', data: { entry, inForce: entry.status === IN_FORCE_STATUS } }
-  }), cacheableResult)
+  }))
 }

@@ -6,7 +6,7 @@
  * nie mają obowiązującego POG Wrocławia, dlatego dla Wrocławia źródłem jest GIS miasta.
  */
 import type { MultiPolygon } from './geo'
-import { cacheableResult, cached, DAY, runSource, type SourceResult } from './http'
+import { cachedSource, DAY, runSource, type SourceResult } from './http'
 import { num, queryByParcel, str } from './sources/arcgis'
 
 const BASE = 'https://gis.um.wroc.pl/portal_srv/rest/services'
@@ -48,7 +48,7 @@ function list(v: string | number | null | undefined): string[] {
 }
 
 export async function queryWroclawPog(parcelId: string, geom: MultiPolygon): Promise<SourceResult<Pog>> {
-  return cached(`wroclaw-pog:${parcelId}`, DAY, () => runSource('Plan ogólny – GIS UM Wrocławia', async () => {
+  return cachedSource(`wroclaw-pog:${parcelId}`, DAY, () => runSource('Plan ogólny – GIS UM Wrocławia', async () => {
     const [strefy, ouz, ozs] = await Promise.all([
       queryByParcel(LAYERS.strefy, geom, '*'),
       queryByParcel(LAYERS.ouz, geom, 'OZNACZENIE', { minSharePct: 0.1 }),
@@ -78,5 +78,5 @@ export async function queryWroclawPog(parcelId: string, geom: MultiPolygon): Pro
       zrodlo: 'GIS Urzędu Miejskiego Wrocławia',
     }
     return { status: 'ok', data }
-  }), cacheableResult)
+  }))
 }

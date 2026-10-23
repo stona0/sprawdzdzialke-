@@ -6,7 +6,7 @@
  * na pewno wewnątrz działki.
  */
 import { interiorPoint, type MultiPolygon } from '../geo'
-import { cacheableResult, cached, DAY, fetchWithRetry, runSource, type SourceResult } from '../http'
+import { cachedSource, DAY, fetchWithRetry, runSource, type SourceResult } from '../http'
 import { gfiUrl2180, parseHtmlTables } from './wms'
 
 const KIMPZP =
@@ -61,11 +61,11 @@ export function parseKimpzpHtml(html: string): { status: 'ok' | 'no_data' | 'not
 }
 
 export async function queryKimpzp(parcelId: string, geom: MultiPolygon): Promise<SourceResult<KimpzpPlan[]>> {
-  return cached(`kimpzp:${parcelId}`, DAY, () => runSource('MPZP – Krajowa Integracja MPZP (GUGiK)', async () => {
+  return cachedSource(`kimpzp:${parcelId}`, DAY, () => runSource('MPZP – Krajowa Integracja MPZP (GUGiK)', async () => {
     const url = gfiUrl2180(KIMPZP, ['plany'], interiorPoint(geom), 'text/html')
     const res = await fetchWithRetry(url, { timeoutMs: 20_000, retries: 1 })
     if (!res.ok) throw new Error(`KIMPZP HTTP ${res.status}`)
     const { status, plans } = parseKimpzpHtml(await res.text())
     return { status, data: plans }
-  }), cacheableResult)
+  }))
 }

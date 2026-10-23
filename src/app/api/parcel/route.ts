@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getParcelData } from '@/lib/geoportal'
 import { checkRateLimit, getRateLimitKey } from '@/lib/rate-limit'
 import { validateParcelId, sanitize } from '@/lib/validation'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
+import { enablePersistentCache } from '@/lib/source-cache'
 
 // Rate limit: 20 wyszukiwań / minutę per user/IP
 const RL_MAX = 20
@@ -51,6 +52,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    // Podgląd działki zapisuje wynik ULDK do trwałego cache — raport (często w innej
+    // instancji funkcji) nie musi pytać ULDK drugi raz.
+    enablePersistentCache(await createServiceClient())
     const data = await getParcelData(parcelId, gmina)
     return NextResponse.json(data)
   } catch (err) {

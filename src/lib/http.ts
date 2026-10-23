@@ -15,6 +15,8 @@ export interface SourceResult<T> {
   error?: string
   ms: number
   fetchedAt: string
+  /** Wynik z trwałego cache po terminie świeżości — źródło nie odpowiedziało przy tym raporcie. */
+  stale?: boolean
 }
 
 export class HttpError extends Error {
@@ -49,36 +51,140 @@ export async function fetchWithRetry(url: string, init: RetryInit = {}): Promise
   throw lastErr
 }
 
-// ─── Cache w pamięci procesu ──────────────────────────────────────────────────
-// Na serverless żyje tyle co ciepła instancja; to wystarcza do odciążenia
-// państwowych usług przy powtórnych zapytaniach o tę samą działkę.
+// ─── Cache ────────────────────────────────────────────────────────────────────
+// Dwa poziomy: pamięć procesu (L1, żyje tyle co ciepła instancja) i opcjonalny
+// trwały magazyn (L2, tabela source_cache) współdzielony przez instancje.
+// L2 jest zarazem zapisem postępu: gdy platforma przerwie generowanie raportu,
+// kolejna próba z kolejki bierze z L2 wszystko, co zdążyło się pobrać.
+
+/** Zmień przy zmianie kształtu cache'owanych danych — stare wpisy w L2 przestaną pasować. */
+export const CACHE_VERSION = 'v1'
+
+export interface PersistentEntry {
+  value: unknown
+  /** Do kiedy wynik jest aktualny (ms epoch). */
+  freshUntil: number
+  /** Do kiedy wolno go użyć awaryjnie, gdy źródło nie odpowiada. */
+  keepUntil: number
+  createdAt: number
+}
+
+export interface PersistentCache {
+  get(key: string): Promise<PersistentEntry | null>
+  set(key: string, entry: PersistentEntry): Promise<void>
+}
+
+let persistent: PersistentCache | null = null
+
+/** Włącza L2. Bez tego (testy, skrypty) cache działa tylko w pamięci. */
+export function setPersistentCache(store: PersistentCache | null) {
+  persistent = store
+}
+
+const L2_TIMEOUT_MS = 2500
+
+// Awaria magazynu nigdy nie psuje raportu — najwyżej pobieramy dane od nowa.
+async function l2<T>(op: string, fn: (s: PersistentCache) => Promise<T>): Promise<T | null> {
+  if (!persistent) return null
+  const store = persistent
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([
+      fn(store),
+      new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`timeout ${L2_TIMEOUT_MS} ms`)), L2_TIMEOUT_MS) }),
+    ])
+  } catch (e) {
+    console.warn(`[cache] ${op} L2 nieudany:`, e instanceof Error ? e.message : e)
+    return null
+  } finally {
+    clearTimeout(timer)
+  }
+}
 
 const MAX_ENTRIES = 1000
 const store = new Map<string, { exp: number; value: unknown }>()
 const inflight = new Map<string, Promise<unknown>>()
 
+/** Jak długo trzymamy wynik w L2 na wypadek awarii źródła. */
+export const STALE_KEEP_MS = 30 * 24 * 60 * 60 * 1000
+
+function remember(key: string, value: unknown, exp: number) {
+  if (store.size >= MAX_ENTRIES) store.delete(store.keys().next().value as string)
+  store.set(key, { exp, value })
+}
+
+interface StalePolicy<T> {
+  /** Oznacza wartość jako kopię (np. flaga widoczna w raporcie). */
+  mark: (v: T) => T
+  /** Czy użyć kopii także, gdy fn zwróci wynik odrzucony przez shouldCache (a nie tylko rzuci). */
+  onRejected: boolean
+}
+
+async function load<T>(
+  key: string,
+  ttlMs: number,
+  fn: () => Promise<T>,
+  shouldCache: (v: T) => boolean,
+  stalePolicy?: StalePolicy<T>,
+): Promise<T> {
+  const l2Key = `${CACHE_VERSION}:${key}`
+  const entry = await l2('odczyt', s => s.get(l2Key))
+  if (entry && entry.freshUntil > Date.now()) {
+    remember(key, entry.value, entry.freshUntil)
+    return entry.value as T
+  }
+  // Przeterminowany wpis ratuje raport, gdy źródło właśnie nie odpowiada.
+  const stale = stalePolicy && entry && entry.keepUntil > Date.now() ? stalePolicy.mark(entry.value as T) : undefined
+
+  let value: T
+  try {
+    value = await fn()
+  } catch (e) {
+    if (stale !== undefined) return stale
+    throw e
+  }
+  if (!shouldCache(value)) return stalePolicy?.onRejected && stale !== undefined ? stale : value
+
+  const now = Date.now()
+  remember(key, value, now + ttlMs)
+  await l2('zapis', s => s.set(l2Key, { value, freshUntil: now + ttlMs, keepUntil: now + Math.max(ttlMs, STALE_KEEP_MS), createdAt: now }))
+  return value
+}
+
+function dedupe<T>(key: string, run: () => Promise<T>): Promise<T> {
+  const hit = store.get(key)
+  if (hit && hit.exp > Date.now()) return Promise.resolve(hit.value as T)
+  const pending = inflight.get(key)
+  if (pending) return pending as Promise<T>
+  const p = run().finally(() => inflight.delete(key))
+  inflight.set(key, p)
+  return p
+}
+
+/**
+ * @param staleOnThrow gdy podane, a fn rzuci (źródło nie odpowiada), zwracamy
+ *   przeterminowany wpis z L2 (do STALE_KEEP_MS) oznaczony tą funkcją.
+ */
 export async function cached<T>(
   key: string,
   ttlMs: number,
   fn: () => Promise<T>,
   shouldCache: (v: T) => boolean = () => true,
+  staleOnThrow?: (v: T) => T,
 ): Promise<T> {
-  const hit = store.get(key)
-  if (hit && hit.exp > Date.now()) return hit.value as T
-  const pending = inflight.get(key)
-  if (pending) return pending as Promise<T>
+  return dedupe(key, () => load(key, ttlMs, fn, shouldCache, staleOnThrow && { mark: staleOnThrow, onRejected: false }))
+}
 
-  const p = fn()
-    .then(v => {
-      if (shouldCache(v)) {
-        if (store.size >= MAX_ENTRIES) store.delete(store.keys().next().value as string)
-        store.set(key, { exp: Date.now() + ttlMs, value: v })
-      }
-      return v
-    })
-    .finally(() => inflight.delete(key))
-  inflight.set(key, p)
-  return p
+/**
+ * Cache wyniku źródła danych. Gdy źródło zwróci błąd, a w L2 jest wcześniejszy
+ * wynik (do STALE_KEEP_MS), zwracamy go z flagą `stale` — raport pokazuje datę pobrania.
+ */
+export async function cachedSource<T>(
+  key: string,
+  ttlMs: number,
+  fn: () => Promise<SourceResult<T>>,
+): Promise<SourceResult<T>> {
+  return dedupe(key, () => load(key, ttlMs, fn, cacheableResult, { mark: v => ({ ...v, stale: true }), onRejected: true }))
 }
 
 export function clearCache() {

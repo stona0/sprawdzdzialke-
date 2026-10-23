@@ -13,7 +13,7 @@
  *  - nie rozróżnia napięcia, średnicy ani tego, czy sieć jest czynna i dostępna do przyłączenia.
  */
 import { bbox, distanceToLine, pointInMultiPolygon, type MultiPolygon, type Pt } from '../geo'
-import { cacheableResult, cached, DAY, fetchWithRetry, runSource, type SourceResult } from '../http'
+import { cachedSource, DAY, fetchWithRetry, runSource, type SourceResult } from '../http'
 
 const KIUT = 'https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu'
 export const GESUT_WINDOW_M = 100
@@ -87,7 +87,7 @@ export function measure(parcel: MultiPolygon, pixels: Pt[]): NetworkDistance {
 }
 
 export async function queryGesut(parcelId: string, geom: MultiPolygon): Promise<SourceResult<GesutResult>> {
-  return cached(`gesut:${parcelId}`, DAY, () => runSource('Uzbrojenie terenu – KIUT/GESUT (GUGiK)', async () => {
+  return cachedSource(`gesut:${parcelId}`, DAY, () => runSource('Uzbrojenie terenu – KIUT/GESUT (GUGiK)', async () => {
     const [minx, miny, maxx, maxy] = bbox(geom)
     const x0 = minx - GESUT_WINDOW_M, y0 = miny - GESUT_WINDOW_M
     const x1 = maxx + GESUT_WINDOW_M, y1 = maxy + GESUT_WINDOW_M
@@ -108,5 +108,5 @@ export async function queryGesut(parcelId: string, geom: MultiPolygon): Promise<
       return { status: 'no_data', data }
     }
     return { status: 'ok', data }
-  }), cacheableResult)
+  }))
 }

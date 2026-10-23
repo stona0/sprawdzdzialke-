@@ -5,7 +5,7 @@
  * NIE oznacza braku sieci.
  */
 import { bbox, distanceToLine, fromWgs84, toWgs84, type MultiPolygon, type Pt } from '../geo'
-import { cacheableResult, cached, DAY, runSource, USER_AGENT, type SourceResult } from '../http'
+import { cachedSource, DAY, runSource, USER_AGENT, type SourceResult } from '../http'
 
 // overpass.osm.ch obsługuje tylko Szwajcarię (zwraca 200 i zero obiektów dla Polski),
 // a overpass.kumi.systems regularnie nie odpowiada — oba usunięte.
@@ -95,7 +95,7 @@ export function classifyWays(ways: OverpassWay[], parcel: MultiPolygon): OsmUtil
 }
 
 export async function queryOsmUtilities(parcelId: string, geom: MultiPolygon): Promise<SourceResult<OsmUtilities>> {
-  return cached(`osm:${parcelId}`, DAY, () => runSource('Linie i rurociągi – OpenStreetMap', async () => {
+  return cachedSource(`osm:${parcelId}`, DAY, () => runSource('Linie i rurociągi – OpenStreetMap', async () => {
     const [minx, miny, maxx, maxy] = bbox(geom)
     const sw = toWgs84([minx - OSM_RADIUS_M, miny - OSM_RADIUS_M])
     const ne = toWgs84([maxx + OSM_RADIUS_M, maxy + OSM_RADIUS_M])
@@ -106,5 +106,5 @@ way["man_made"="pipeline"](${b});
 );out tags geom;`
     const data = classifyWays(await overpass(q), geom)
     return { status: data.power.length || data.pipelines.length ? 'ok' : 'no_data', data }
-  }), cacheableResult)
+  }))
 }

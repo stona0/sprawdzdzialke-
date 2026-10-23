@@ -9,7 +9,7 @@
  * strefy nie oznacza, że terenu nigdy nie zalewa (podtopienia, małe cieki, opady nawalne).
  */
 import { samplePoints, toWgs84, type MultiPolygon } from '../geo'
-import { cacheableResult, cached, DAY, fetchWithRetry, runSource, type SourceResult } from '../http'
+import { cachedSource, DAY, fetchWithRetry, runSource, type SourceResult } from '../http'
 
 const WMS = 'https://wody.isok.gov.pl/wss/INSPIRE/INSPIRE_NZ_HY_MZPMRP_WMS'
 export const ISOK_MAP_URL = 'https://wody.isok.gov.pl/imap_kzgw/?gpmap=gpMZP'
@@ -91,10 +91,10 @@ async function gfi(lat: number, lng: number): Promise<Feature[]> {
 }
 
 export async function queryIsok(parcelId: string, geom: MultiPolygon): Promise<SourceResult<IsokResult>> {
-  return cached(`isok:${parcelId}`, DAY, () => runSource('Zagrożenie powodziowe – ISOK / Wody Polskie', async () => {
+  return cachedSource(`isok:${parcelId}`, DAY, () => runSource('Zagrożenie powodziowe – ISOK / Wody Polskie', async () => {
     const pts = samplePoints(geom, 5).map(toWgs84)
     const features = (await Promise.all(pts.map(p => gfi(p.lat, p.lng)))).flat()
     const data = summarizeIsok(features)
     return { status: data.scenarios.length ? 'ok' : 'no_data', data }
-  }), cacheableResult)
+  }))
 }

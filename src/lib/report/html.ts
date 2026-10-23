@@ -220,9 +220,9 @@ function aiSection(ai: AiInsights): string {
 
 function sourcesSection(d: ReportData): string {
   const rows = d.sources.map(s =>
-    `<tr><td>${esc(s.source)}</td><td>${esc(STATUS_LABEL[s.status] ?? s.status)}</td><td>${esc(warsawTime(s.fetchedAt))}</td></tr>`).join('')
+    `<tr><td>${esc(s.source)}</td><td>${esc(STATUS_LABEL[s.status] ?? s.status)}${s.stale ? '<br><small>⚠️ źródło nie odpowiedziało — użyto wcześniej pobranych danych</small>' : ''}</td><td>${esc(warsawTime(s.fetchedAt))}</td></tr>`).join('')
   return section('Źródła danych i ich status', '🔎', `<table class="src"><thead><tr><th>Źródło</th><th>Status</th><th>Pobrano</th></tr></thead><tbody>${rows}</tbody></table>
-    <p class="hint">„Źródło niedostępne” oznacza, że nie wiemy — nie że problemu nie ma. Dane są pobierane na żywo z rejestrów publicznych w chwili generowania raportu.</p>`, true)
+    <p class="hint">„Źródło niedostępne” oznacza, że nie wiemy — nie że problemu nie ma. Dane pochodzą z rejestrów publicznych; kolumna „Pobrano” pokazuje, kiedy je pobraliśmy. Wyniki uznajemy za aktualne najwyżej przez dobę; starszych używamy tylko, gdy źródło nie odpowiada, i oznaczamy je w tabeli.</p>`, true)
 }
 
 export function buildReportHtml(d: ReportData, ai: AiInsights): string {

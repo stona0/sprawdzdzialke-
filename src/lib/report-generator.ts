@@ -1,8 +1,13 @@
+import { createHash } from 'node:crypto'
 import { createServiceClient } from './supabase/server'
-import { generateInsights } from './report/ai'
+import { cached } from './http'
+import { AI_MODEL, buildFacts, generateInsights } from './report/ai'
 import { collectReportData, type SipRow } from './report/collect'
 import { buildReportHtml } from './report/html'
+import { enablePersistentCache } from './source-cache'
 import { generateUtilityMap } from './utility-map'
+
+const AI_TTL_MS = 30 * 24 * 60 * 60 * 1000
 
 export async function generateReport(
   parcelId: string,
@@ -11,6 +16,7 @@ export async function generateReport(
   reportId: string,
 ): Promise<string> {
   const supabase = await createServiceClient()
+  enablePersistentCache(supabase)
 
   const data = await collectReportData(parcelId, gmina, {
     sipLookup: async (name: string) => {
@@ -24,7 +30,10 @@ export async function generateReport(
     utilityMap: (lat, lng, wkt) => generateUtilityMap(lat, lng, wkt),
   })
 
-  const insights = await generateInsights(data)
+  // Te same fakty → te same rekomendacje; ponowna generacja nie płaci drugi raz za wywołanie modelu.
+  // Rekomendacji z reguł (AI niedostępne) nie zapisujemy — następnym razem spróbujemy AI.
+  const factsHash = createHash('sha256').update(JSON.stringify(buildFacts(data))).digest('hex').slice(0, 32)
+  const insights = await cached(`ai:${AI_MODEL}:${factsHash}`, AI_TTL_MS, () => generateInsights(data), i => i.model !== null)
   const html = buildReportHtml(data, insights)
 
   const { error } = await supabase

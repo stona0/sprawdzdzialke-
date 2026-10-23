@@ -22,6 +22,10 @@ export interface ParcelData {
   /** Geometria działki w EPSG:2180 (metry). */
   geom: MultiPolygon | null
   found: boolean
+  /** Kiedy pobrano dane z ULDK. */
+  fetchedAt?: string
+  /** Kopia z trwałego cache — ULDK nie odpowiadało. */
+  stale?: boolean
 }
 
 // Format identyfikatora EGB: JEDN_EWID.OBREB.NUMER, np. 141201_1.0001.6/2 lub 0261011.0001.AR_1.6/3
@@ -39,7 +43,8 @@ export function tercFromParcelId(parcelId: string): string {
 }
 
 export async function getParcelData(parcelId: string, gmina: string): Promise<ParcelData> {
-  return cached(`uldk:${parcelId}`, DAY, () => fetchParcel(parcelId, gmina), p => p.found)
+  // Brak działki to odpowiedź, nie awaria — kopii używamy tylko, gdy ULDK nie odpowiada.
+  return cached(`uldk:${parcelId}`, DAY, () => fetchParcel(parcelId, gmina), p => p.found, p => ({ ...p, stale: true }))
 }
 
 async function fetchParcel(parcelId: string, gmina: string): Promise<ParcelData> {
@@ -49,7 +54,7 @@ async function fetchParcel(parcelId: string, gmina: string): Promise<ParcelData>
     `&result=geom_wkt,voivodeship,county,commune,region,parcel`
   const res = await fetchWithRetry(url, { timeoutMs: 10_000, retries: 2 })
   if (!res.ok) throw new Error(`Geoportal ULDK: HTTP ${res.status}`)
-  return parseULDKResponse(await res.text(), parcelId, gmina)
+  return { ...parseULDKResponse(await res.text(), parcelId, gmina), fetchedAt: new Date().toISOString() }
 }
 
 export function parseULDKResponse(text: string, parcelId: string, gmina: string): ParcelData {

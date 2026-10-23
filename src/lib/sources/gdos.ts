@@ -6,7 +6,7 @@
  * Filtry CQL (INTERSECTS/DWITHIN) w tej usłudze zwracają puste wyniki — nie używać.
  */
 import { bbox, samplePoints, type MultiPolygon } from '../geo'
-import { cacheableResult, cached, DAY, fetchWithRetry, runSource, type SourceResult } from '../http'
+import { cachedSource, DAY, fetchWithRetry, runSource, type SourceResult } from '../http'
 import { gfiUrl2180 } from './wms'
 
 const WMS = 'https://sdi.gdos.gov.pl/wms'
@@ -67,10 +67,10 @@ async function nearby(geom: MultiPolygon): Promise<GdosArea[]> {
 }
 
 export async function queryGdos(parcelId: string, geom: MultiPolygon): Promise<SourceResult<GdosResult>> {
-  return cached(`gdos:${parcelId}`, DAY, () => runSource('Ochrona przyrody – GDOŚ', async () => {
+  return cachedSource(`gdos:${parcelId}`, DAY, () => runSource('Ochrona przyrody – GDOŚ', async () => {
     const [on, near] = await Promise.all([onParcel(geom), nearby(geom)])
     const nearOnly = near.filter(n => !on.some(o => o.type === n.type && o.name === n.name))
     const data = { onParcel: on, nearby: nearOnly }
     return { status: on.length || nearOnly.length ? 'ok' : 'no_data', data }
-  }), cacheableResult)
+  }))
 }

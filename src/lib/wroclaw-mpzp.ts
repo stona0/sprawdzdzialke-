@@ -4,7 +4,7 @@
  * (np. MN + droga KDD) i raport podaje udział każdego.
  */
 import type { MultiPolygon } from './geo'
-import { cacheableResult, cached, DAY, runSource, type SourceResult } from './http'
+import { cachedSource, DAY, runSource, type SourceResult } from './http'
 import { queryByParcel, str } from './sources/arcgis'
 
 const SRV = 'https://gis.um.wroc.pl/portal_srv/rest/services/POG_PROJEKT_OP_plany_miejscowe/MapServer'
@@ -57,7 +57,7 @@ export function isWroclawTerc(terc: string): boolean {
 }
 
 export async function queryWroclawMpzp(parcelId: string, geom: MultiPolygon): Promise<SourceResult<WroclawMpzp>> {
-  return cached(`wroclaw-mpzp:${parcelId}`, DAY, () => runSource('MPZP – GIS UM Wrocławia', async () => {
+  return cachedSource(`wroclaw-mpzp:${parcelId}`, DAY, () => runSource('MPZP – GIS UM Wrocławia', async () => {
     const [tereny, plany, uchwalone, wOpr, wOprDz, dziedzictwo, archeo] = await Promise.all([
       queryByParcel(L.tereny, geom, 'NRPLANU,SBLTERENU,UPROSZCZONA_KLASYFIKACJA,SYM_LIT,SYM_LIT_OPIS'),
       queryByParcel(L.planyObowiazujace, geom, 'PLA_NR,STAN_NAZWA,TYTUL,UCHWALENIE_UCHWALA_URL'),
@@ -93,5 +93,5 @@ export async function queryWroclawMpzp(parcelId: string, geom: MultiPolygon): Pr
       archeologia: archeo.length > 0,
     }
     return { status: zones.length || data.plans.length ? 'ok' : 'no_data', data }
-  }), cacheableResult)
+  }))
 }
