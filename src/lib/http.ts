@@ -187,8 +187,32 @@ export async function cachedSource<T>(
   return dedupe(key, () => load(key, ttlMs, fn, cacheableResult, { mark: v => ({ ...v, stale: true }), onRejected: true }))
 }
 
+// ─── Bezpiecznik ──────────────────────────────────────────────────────────────
+// Usługę, która właśnie przestała odpowiadać, pomijamy przez chwilę we wszystkich
+// instancjach (L1 + L2), zamiast w każdym raporcie czekać na jej timeout.
+
+const tripped = new Map<string, number>()
+
+export async function isTripped(name: string): Promise<boolean> {
+  const until = tripped.get(name)
+  if (until && until > Date.now()) return true
+  const entry = await l2('odczyt', s => s.get(`${CACHE_VERSION}:circuit:${name}`))
+  if (entry && entry.freshUntil > Date.now()) {
+    tripped.set(name, entry.freshUntil)
+    return true
+  }
+  return false
+}
+
+export async function trip(name: string, ms: number, reason: string): Promise<void> {
+  const now = Date.now()
+  tripped.set(name, now + ms)
+  await l2('zapis', s => s.set(`${CACHE_VERSION}:circuit:${name}`, { value: { reason }, freshUntil: now + ms, keepUntil: now + ms, createdAt: now }))
+}
+
 export function clearCache() {
   store.clear()
+  tripped.clear()
 }
 
 export const DAY = 24 * 60 * 60 * 1000

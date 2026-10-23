@@ -1,11 +1,11 @@
 /**
- * Trwały cache źródeł (L2) — przez supabase-js na mocku Supabase
+ * Trwały cache źródeł (L2) i bezpiecznik — przez supabase-js na mocku Supabase
  * (PGlite ze schematem z repo). Bez sieci.
  */
 import type { PGlite } from '@electric-sql/pglite'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import { cached, cachedSource, clearCache, setPersistentCache, type SourceResult } from '@/lib/http'
+import { cached, cachedSource, clearCache, isTripped, setPersistentCache, trip, type SourceResult } from '@/lib/http'
 import { supabaseSourceCache } from '@/lib/source-cache'
 import { startMockSupabase } from '../e2e/mock-supabase.mjs'
 
@@ -77,6 +77,16 @@ describe('trwały cache źródeł (source_cache)', () => {
     expect(await cached<P>('uldk:t', 60_000, async () => ({ found: false }), p => p.found, mark)).toEqual({ found: false })
     clearCache()
     expect(await cached<P>('uldk:t', 60_000, async () => { throw new Error('ULDK: HTTP 503') }, p => p.found, mark)).toEqual({ found: true, stale: true })
+  })
+
+  it('bezpiecznik: awaria usługi w jednej instancji wyłącza ją na chwilę w innych', async () => {
+    expect(await isTripped('overpass')).toBe(false)
+    await trip('overpass', 60_000, 'timeout')
+    clearCache() // inna instancja
+    expect(await isTripped('overpass')).toBe(true)
+    await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 second' WHERE key = 'v1:circuit:overpass'`)
+    clearCache()
+    expect(await isTripped('overpass')).toBe(false)
   })
 
   it('niedostępna baza nie psuje pobierania', async () => {

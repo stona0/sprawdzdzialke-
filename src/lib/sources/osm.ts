@@ -5,7 +5,7 @@
  * NIE oznacza braku sieci.
  */
 import { bbox, distanceToLine, fromWgs84, toWgs84, type MultiPolygon, type Pt } from '../geo'
-import { cachedSource, DAY, runSource, USER_AGENT, type SourceResult } from '../http'
+import { cachedSource, DAY, isTripped, runSource, trip, USER_AGENT, type SourceResult } from '../http'
 
 // overpass.osm.ch obsługuje tylko Szwajcarię (zwraca 200 i zero obiektów dla Polski),
 // a overpass.kumi.systems regularnie nie odpowiada — oba usunięte.
@@ -36,7 +36,13 @@ interface OverpassWay {
   geometry?: Array<{ lat: number; lon: number }>
 }
 
+// Publiczne Overpass potrafią nie odpowiadać godzinami; bez bezpiecznika każdy raport
+// czekałby 15 s na timeout.
+const CIRCUIT = 'overpass'
+const CIRCUIT_MS = 5 * 60 * 1000
+
 async function overpass(query: string): Promise<OverpassWay[]> {
+  if (await isTripped(CIRCUIT)) throw new Error('Overpass nie odpowiadał w ostatnich minutach — pominięto')
   const body = `data=${encodeURIComponent(query)}`
   const attempt = async (url: string) => {
     const res = await fetch(url, {
@@ -55,6 +61,7 @@ async function overpass(query: string): Promise<OverpassWay[]> {
     return await Promise.any(OVERPASS.map(attempt))
   } catch (e) {
     const errs = e instanceof AggregateError ? e.errors.map(x => (x as Error).message).join('; ') : String(e)
+    await trip(CIRCUIT, CIRCUIT_MS, errs)
     throw new Error(`Wszystkie instancje Overpass zawiodły: ${errs}`)
   }
 }
