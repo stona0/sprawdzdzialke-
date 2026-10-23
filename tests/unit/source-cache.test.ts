@@ -78,6 +78,14 @@ describe('trwały cache źródeł (source_cache)', () => {
     expect(r.stale).toBeUndefined()
   })
 
+  it('niepotwierdzony wynik bez danych (pusty obraz KIUT przy awarii powiatu) → kopia z danymi, jak przy błędzie', async () => {
+    await cachedSource('test:nc', 60_000, async () => result('ok', { gaz: 4 }))
+    await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 hour'`)
+    clearCache()
+    const r = await cachedSource('test:nc', 60_000, async () => ({ ...result('not_covered'), unconfirmed: true }))
+    expect(r).toMatchObject({ status: 'ok', data: { gaz: 4 }, stale: true })
+  })
+
   it('po keep_until nie używamy starego wyniku', async () => {
     await cachedSource('test:d', 60_000, async () => result('ok', { x: 1 }))
     await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '2 days', keep_until = NOW() - interval '1 day'`)

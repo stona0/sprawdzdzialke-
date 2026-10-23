@@ -138,7 +138,9 @@ export async function queryGesut(parcelId: string, geom: MultiPolygon): Promise<
       const cx = (minx + maxx) / 2, cy = (miny + maxy) / 2
       const layers = Object.values(NETWORKS).map(v => v.layer).join(',')
       const wide = await renderSampled(layers, cx - COVERAGE_WINDOW_M, cy - COVERAGE_WINDOW_M, cx + COVERAGE_WINDOW_M, cy + COVERAGE_WINDOW_M, 5)
-      if (!wide.pixels.length) return { status: 'not_covered', data: null, unconfirmed: unconfirmed || !wide.agree }
+      // Pusty obraz to też awaria serwera powiatu (23.10.2026 ok. 18:25 powiat wrocławski: 200 i pusty PNG,
+      // rano ~175 KB sieci) — zgodnie puste odpowiedzi niczego nie potwierdzają, więc bez cache.
+      if (!wide.pixels.length) return { status: 'not_covered', data: null, unconfirmed: true }
       return { status: 'no_data', data, unconfirmed: unconfirmed || !wide.agree }
     }
     return { status: 'ok', data, unconfirmed }

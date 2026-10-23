@@ -102,11 +102,13 @@ describe('KIUT: każda warstwa dwa razy, połączenie odpowiedzi', () => {
 describe('KIUT: sprawdzenie pokrycia, gdy w promieniu 100 m nie ma żadnej sieci', () => {
   const EMPTY = { energia: ['gaz-pusta'], woda: ['gaz-pusta'], kanalizacja: ['gaz-pusta'], gaz: ['gaz-pusta'] }
 
-  it('obie odpowiedzi na sprawdzenie pokrycia puste → not_covered', async () => {
-    kiut({ ...EMPTY, wide: ['gaz-pusta'] })
+  it('obie odpowiedzi na sprawdzenie pokrycia puste → not_covered, ale bez cache (tak samo wygląda awaria serwera powiatu)', async () => {
+    const f = kiut({ ...EMPTY, wide: ['gaz-pusta'] })
     const r = await queryGesut(SOBOTKA, geom)
     expect(r.status).toBe('not_covered')
-    expect(r.unconfirmed).toBeUndefined()
+    expect(r.unconfirmed).toBe(true)
+    await queryGesut(SOBOTKA, geom)
+    expect(f).toHaveBeenCalledTimes(20) // 2 × (4 warstwy + sprawdzenie pokrycia) × 2 odpowiedzi
   })
 
   it('jedna z nich pusta → no_data („brak sieci”, nie „brak danych KIUT”), bez cache', async () => {

@@ -192,13 +192,17 @@ export async function cached<T>(key: string, ttlMs: number, fn: () => Promise<T>
  * Cache wyniku źródła danych. Gdy źródło zwróci błąd, a w L2 jest wcześniejszy
  * wynik (do STALE_KEEP_MS), zwracamy go z flagą `stale` — raport pokazuje datę pobrania.
  * Wynik `unconfirmed` idzie do raportu świeży, ale bez zapisu: kolejny raport zapyta źródło od nowa.
+ * Gdy taki wynik nie ma danych (np. pusty obraz KIUT przy awarii serwera powiatu), kopia go zastępuje jak błąd.
  */
 export async function cachedSource<T>(
   key: string,
   ttlMs: number,
   fn: () => Promise<SourceResult<T>>,
 ): Promise<SourceResult<T>> {
-  return dedupe(key, () => load(key, ttlMs, fn, cacheableResult, { mark: v => ({ ...v, stale: true }), replaces: v => v.status === 'error' }))
+  return dedupe(key, () => load(key, ttlMs, fn, cacheableResult, {
+    mark: v => ({ ...v, stale: true }),
+    replaces: v => v.status === 'error' || (v.unconfirmed === true && v.data === null),
+  }))
 }
 
 // ─── Bezpiecznik ──────────────────────────────────────────────────────────────
