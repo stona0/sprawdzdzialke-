@@ -228,6 +228,9 @@ export async function runSource<T>(
     const { status, data } = await fn()
     return { source, status, data, ms: Date.now() - t0, fetchedAt: new Date().toISOString() }
   } catch (e) {
+    // Przyczyna trafia do logów funkcji hostingu; „fetch failed” bez cause nic nie mówi.
+    const cause = e instanceof Error && e.cause instanceof Error ? ` (${(e.cause as NodeJS.ErrnoException).code ?? ''} ${e.cause.message})` : ''
+    console.warn(`[source] ${source} błąd po ${Date.now() - t0} ms: ${e instanceof Error ? e.message : String(e)}${cause}`)
     return {
       source,
       status: 'error',
