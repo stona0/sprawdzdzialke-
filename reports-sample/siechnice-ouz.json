@@ -1,7 +1,7 @@
 {
   "version": 2,
   "parcelId": "022308_5.0021.24",
-  "generatedAt": "2026-10-23T08:58:44.227Z",
+  "generatedAt": "2026-10-23T12:09:25.711Z",
   "parcel": {
     "parcelId": "022308_5.0021.24",
     "numer": "24",
@@ -18,7 +18,7 @@
     },
     "geomWkt": "SRID=2180;POLYGON((363698.80976287 352733.950910966,363696.010415317 352735.398403708,363654.000211681 352757.111067876,363634.464609429 352767.232710422,363614.918876452 352777.344494719,363595.38300194 352787.446149452,363567.329961797 352801.951880467,363546.850975513 352812.536170363,363526.38225462 352823.140314546,363497.991702006 352837.820569566,363477.542562093 352848.394460445,363457.113410855 352858.968080754,363436.693982378 352869.521576967,363400.828638157 352888.071951407,363399.488592303 352888.769898076,363383.735367601 352839.511342527,363689.066294479 352684.830728257,363698.80976287 352733.950910966))",
     "found": true,
-    "fetchedAt": "2026-10-23T08:58:44.894Z"
+    "fetchedAt": "2026-10-23T12:09:26.491Z"
   },
   "mpzp": {
     "covered": false,
@@ -97,30 +97,44 @@
   },
   "gesut": {
     "energia": {
-      "distanceM": 0,
-      "crosses": true
+      "distanceM": 8,
+      "crosses": false
     },
     "woda": {
       "distanceM": 0,
       "crosses": false
     },
     "kanalizacja": {
-      "distanceM": 2,
+      "distanceM": 1,
       "crosses": false
     },
     "gaz": {
-      "distanceM": 89,
-      "crosses": false
+      "distanceM": 0,
+      "crosses": true
     }
   },
   "gesutStatus": "ok",
   "osm": null,
+  "powerLines": {
+    "lines": [
+      {
+        "klasa": "MV",
+        "distanceM": 214,
+        "crosses": false,
+        "status": null
+      }
+    ],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2023-11-08",
+    "datasetVersion": "20261023"
+  },
   "sip": null,
   "findings": [
     {
       "level": "uwaga",
       "basis": "uzbrojenie",
-      "text": "Przez działkę przebiega: sieć elektroenergetyczna (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+      "text": "Przez działkę przebiega: sieć gazowa (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
     }
   ],
   "sources": [
@@ -128,67 +142,192 @@
       "source": "Dane ewidencyjne – ULDK (GUGiK)",
       "status": "ok",
       "ms": 0,
-      "fetchedAt": "2026-10-23T08:58:44.894Z"
+      "fetchedAt": "2026-10-23T12:09:26.491Z"
     },
     {
       "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
       "status": "no_data",
-      "ms": 361,
-      "fetchedAt": "2026-10-23T08:58:45.257Z"
+      "ms": 249,
+      "fetchedAt": "2026-10-23T12:09:26.742Z"
     },
     {
       "source": "Plan ogólny – Rejestr Urbanistyczny",
       "status": "ok",
-      "ms": 201,
-      "fetchedAt": "2026-10-23T08:58:45.096Z"
+      "ms": 190,
+      "fetchedAt": "2026-10-23T12:09:26.682Z"
     },
     {
       "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
       "status": "ok",
-      "ms": 1097,
-      "fetchedAt": "2026-10-23T08:58:46.193Z"
+      "ms": 552,
+      "fetchedAt": "2026-10-23T12:09:27.234Z"
     },
     {
       "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
       "status": "no_data",
-      "ms": 799,
-      "fetchedAt": "2026-10-23T08:58:45.696Z"
+      "ms": 476,
+      "fetchedAt": "2026-10-23T12:09:26.970Z"
     },
     {
       "source": "Ochrona przyrody – GDOŚ",
       "status": "no_data",
-      "ms": 465,
-      "fetchedAt": "2026-10-23T08:58:45.366Z"
+      "ms": 273,
+      "fetchedAt": "2026-10-23T12:09:26.769Z"
     },
     {
       "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
       "status": "ok",
-      "ms": 1399,
-      "fetchedAt": "2026-10-23T08:58:46.306Z"
+      "ms": 573,
+      "fetchedAt": "2026-10-23T12:09:27.072Z"
     },
     {
-      "source": "Linie i rurociągi – OpenStreetMap",
-      "status": "error",
-      "error": "Wszystkie instancje Overpass zawiodły: The operation was aborted due to timeout; The operation was aborted due to timeout; The operation was aborted due to timeout",
-      "ms": 15002,
-      "fetchedAt": "2026-10-23T08:58:59.910Z"
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "ok",
+      "ms": 18,
+      "fetchedAt": "2026-10-23T12:09:26.518Z"
     }
   ],
   "utilityMap": "osadzona w HTML",
   "ai": {
     "rekomendacje": [
-      "Przed zakupem uzyskaj w urzędzie gminy Siechnice wypis i wyrys z planu ogólnego potwierdzający parametry zabudowy dla strefy 685SJ oraz zasady obszaru uzupełnienia zabudowy. Weryfikacja ta jest niezbędna, aby jasno określić możliwości zabudowy działki.",
-      "Skontaktuj się z operatorem sieci elektroenergetycznej, aby uzyskać informacje o przebiegu linii przez działkę, pasach ochronnych i ograniczeniach zabudowy. Ustal warunki przyłączenia oraz czy linia podlega modernizacji.",
-      "Potwierdź w urzędzie gminy możliwość uzyskania decyzji o warunkach zabudowy dla tej działki oraz poznaj procedurę i wymagane dokumenty. Pamiętaj, że decyzja wydana po 1.01.2026 wygaśnie 5 lat od uprawomocnienia.",
-      "Sprawdź możliwość przyłączenia do wodociągu (0 m od granicy) i kanalizacji (2 m od granicy) u operatora sieci, uzyskując warunki i koszty przyłączenia. Sieć gazowa znajduje się 89 m od działki, co może wymagać osobnej oceny."
+      {
+        "tekst": "Zamów w urzędzie gminy Siechnice wypis i wyrys z planu ogólnego oraz zaświadczenie potwierdzające możliwość uzyskania decyzji o warunkach zabudowy dla działki 24 w obrębie Żerniki Wrocławskie.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny",
+          "mpzp"
+        ]
+      },
+      {
+        "tekst": "Sprawdź w starostwie powiatowym (geodezja) oraz w księdze wieczystej, czy na działce ustanowiono służebność przesyłu lub inne obciążenia związane z siecią gazową.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatora sieci gazowej o przebieg sieci na działce i ewentualny pas ochronny, zanim określisz miejsce zabudowy.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Zleć geodecie aktualne wytyczenie granic i naniesienie sieci gazowej na mapę, ponieważ dane z KIUT wymagają potwierdzenia w terenie.",
+        "podstawa": [
+          "dzialka",
+          "uzbrojenie"
+        ]
+      }
     ],
     "ryzyka": [
-      "Sieć elektroenergetyczna przebiega przez działkę, co zwykle wiąże się z pasem ochronnym ograniczającym zabudowę. Brak dokładnych danych o jego szerokości i warunków może utrudnić planowanie zabudowy.",
-      "Decyzja o warunkach zabudowy będzie wiążąca dopiero po jej wydaniu i uprawomocnieniu. Inwestycja na podstawie samej oceny zabudowy wiąże się z ryzykiem, że organ nie wydać takiej decyzji lub wyda ją z innymi warunkami.",
-      "Tylko ok. 76% działki leży w obszarze uzupełnienia zabudowy, a pozostała część może podlegać innym ograniczeniom. Przed zakupem uzyskaj szczegółową mapę z oznaczeniem granic strefy dla pełnego obrazu możliwości zabudowy.",
-      "Brak danych z OSM o liniach energetycznych uniemożliwia pełną weryfikację ich przebiegu. Dokonaj dodatkowych ustaleń bezpośrednio u operatora sieci, aby uniknąć niespodzianek po zakupie."
+      {
+        "tekst": "Plan ogólny dopuszcza na działce maksymalną wysokość 12 m, intensywność 0,6, udział zabudowy 35% i minimalny udział powierzchni biologicznie czynnej 50%, co ogranicza wielkość przyszłego obiektu.",
+        "podstawa": [
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Przez działkę przebiega sieć gazowa, co może wymusić pas ochronny lub służebność ograniczającą zabudowę części terenu.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Wodociąg przebiega bezpośrednio przy granicy działki, a kanalizacja w odległości 1 m, co trzeba uwzględnić przy lokalizacji budynku i przyłączy; przyłącza wymagają warunków od operatora sieci.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Dane o liniach niskiego napięcia i kablach nie są objęte zestawieniem BDOT10k, dlatego zapytaj operatora sieci elektroenergetycznej o pełne warunki przyłączenia.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      }
     ],
-    "model": "claude-haiku-4-5-20251001",
-    "odrzucone": 0
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2260,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 857,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Zamów w urzędzie gminy Siechnice wypis i wyrys z planu ogólnego oraz zaświadczenie potwierdzające możliwość uzyskania decyzji o warunkach zabudowy dla działki 24 w obrębie Żerniki Wrocławskie.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny",
+              "mpzp"
+            ]
+          },
+          {
+            "tekst": "Sprawdź w starostwie powiatowym (geodezja) oraz w księdze wieczystej, czy na działce ustanowiono służebność przesyłu lub inne obciążenia związane z siecią gazową.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatora sieci gazowej o przebieg sieci na działce i ewentualny pas ochronny, zanim określisz miejsce zabudowy.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Zleć geodecie aktualne wytyczenie granic i naniesienie sieci gazowej na mapę, ponieważ dane z KIUT wymagają potwierdzenia w terenie.",
+            "podstawa": [
+              "dzialka",
+              "uzbrojenie"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Plan ogólny dopuszcza na działce maksymalną wysokość 12 m, intensywność 0,6, udział zabudowy 35% i minimalny udział powierzchni biologicznie czynnej 50%, co ogranicza wielkość przyszłego obiektu.",
+            "podstawa": [
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Przez działkę przebiega sieć gazowa, co może wymusić pas ochronny lub służebność ograniczającą zabudowę części terenu.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Wodociąg przebiega bezpośrednio przy granicy działki, a kanalizacja w odległości 1 m, co trzeba uwzględnić przy lokalizacji budynku i przyłączy; przyłącza wymagają warunków od operatora sieci.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Dane o liniach niskiego napięcia i kablach nie są objęte zestawieniem BDOT10k, dlatego zapytaj operatora sieci elektroenergetycznej o pełne warunki przyłączenia.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

@@ -1,7 +1,7 @@
 {
   "version": 2,
   "parcelId": "022307_4.0003.541",
-  "generatedAt": "2026-10-23T09:33:31.321Z",
+  "generatedAt": "2026-10-23T12:09:56.777Z",
   "parcel": {
     "parcelId": "022307_4.0003.541",
     "numer": "541",
@@ -18,7 +18,7 @@
     },
     "geomWkt": "SRID=2180;POLYGON((339084.207730504 339278.522944344,339109.791318415 339211.507225486,339202.96885055 339228.978750819,339208.867181959 339204.646451518,339295.956515546 339240.554698658,339287.763178804 339347.092245522,339287.610302777 339351.30299326,339250.391714569 339345.379347173,339211.600113363 339339.197103501,339095.936837255 339320.780682049,339097.567890901 339309.092246188,339101.441943127 339284.397494033,339098.167719317 339283.27222873,339084.207730504 339278.522944344))",
     "found": true,
-    "fetchedAt": "2026-10-23T09:33:32.184Z"
+    "fetchedAt": "2026-10-23T12:09:57.363Z"
   },
   "mpzp": {
     "covered": true,
@@ -93,7 +93,7 @@
       "crosses": true
     },
     "gaz": {
-      "distanceM": 4,
+      "distanceM": null,
       "crosses": false
     }
   },
@@ -147,60 +147,184 @@
       "source": "Dane ewidencyjne – ULDK (GUGiK)",
       "status": "ok",
       "ms": 0,
-      "fetchedAt": "2026-10-23T09:33:32.184Z"
+      "fetchedAt": "2026-10-23T12:09:57.363Z"
     },
     {
       "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
       "status": "ok",
-      "ms": 344,
-      "fetchedAt": "2026-10-23T09:33:32.530Z"
+      "ms": 209,
+      "fetchedAt": "2026-10-23T12:09:57.573Z"
     },
     {
       "source": "Plan ogólny – Rejestr Urbanistyczny",
       "status": "no_data",
-      "ms": 249,
-      "fetchedAt": "2026-10-23T09:33:32.434Z"
+      "ms": 111,
+      "fetchedAt": "2026-10-23T12:09:57.475Z"
     },
     {
       "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
       "status": "no_data",
-      "ms": 875,
-      "fetchedAt": "2026-10-23T09:33:33.063Z"
+      "ms": 535,
+      "fetchedAt": "2026-10-23T12:09:57.900Z"
     },
     {
       "source": "Ochrona przyrody – GDOŚ",
       "status": "ok",
-      "ms": 2188,
-      "fetchedAt": "2026-10-23T09:33:34.380Z"
+      "ms": 465,
+      "fetchedAt": "2026-10-23T12:09:57.831Z"
     },
     {
       "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
       "status": "ok",
-      "ms": 1112,
-      "fetchedAt": "2026-10-23T09:33:33.310Z"
+      "ms": 521,
+      "fetchedAt": "2026-10-23T12:09:57.895Z"
     },
     {
       "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
       "status": "ok",
-      "ms": 3,
-      "fetchedAt": "2026-10-23T09:33:32.206Z"
+      "ms": 4,
+      "fetchedAt": "2026-10-23T12:09:57.380Z"
     }
   ],
   "utilityMap": "osadzona w HTML",
   "ai": {
     "rekomendacje": [
-      "Uzyskaj w urzędzie gminy Sobótka wypis i wyrys z MPZP oraz zaświadczenie potwierdzające przeznaczenie terenu i obowiązujące warunki zabudowy. Plan obejmuje tę działkę, więc decyzja o warunkach zabudowy nie będzie wydawana.",
-      "Skontaktuj się z operatorem sieci elektroenergetycznej, aby potwierdzić zasięg pasa technologicznego linii wysokiego napięcia 110 kV przebiegającej przez działkę oraz możliwości zabudowy w tym obszarze.",
-      "Przed podpisaniem umowy zweryfikuj u operatora kanalizacji przebieg sieci przez działkę, istnienie pasa ochronnego i służebności przesyłu, które mogą ograniczać możliwość zabudowy na części terenu.",
-      "Zwróć się do regionalnej dyrekcji ochrony środowiska w sprawie wymaganych uzgodnień dla inwestycji ze względu na położenie działki w otulinie Ślężańskiego Parku Krajobrazowego i sąsiedztwo Natura 2000."
+      {
+        "tekst": "Potwierdź w urzędzie gminy Sobótka ustalenia obowiązującego MPZP SOB_1 dla działki 541 (wypis i wyrys z planu), bo to on decyduje o zabudowie, a fakt przeznaczenia i daty uchwały są w danych brakujące.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "mpzp"
+        ]
+      },
+      {
+        "tekst": "Zleć geodecie lub w starostwie powiatowym (geodezja) wyrys z mapy ewidencyjnej, aby ustalić, która część działki 541 leży w pasie linii 110 kV i w przebiegu kanalizacji.",
+        "podstawa": [
+          "dzialka",
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatora sieci o warunki dla linii 110 kV, linii SN, wodociągu i kanalizacji, w tym szerokość pasa technologicznego i ewentualne służebności przesyłu.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Ustal w RDOŚ, czy inwestycja na części działki w otulinie Ślężańskiego Parku Krajobrazowego wymaga oceny oddziaływania na środowisko lub uzgodnień.",
+        "podstawa": [
+          "przyroda",
+          "ustalenia"
+        ]
+      }
     ],
     "ryzyka": [
-      "Linia wysokiego napięcia 110 kV przebiegająca przez działkę ogranicza możliwości zabudowy i może wymagać dodatkowych opłat za służebność. Pas technologiczny linii (ok. 20 m od osi w każdą stronę) może zajmować znaczną część użyteczną działki.",
-      "Kanalizacja przebiegająca przez działkę i linia średniego napięcia w odległości 3 m od granicy mogą oznaczać służebności przesyłu ograniczające projektowanie zabudowy i utrudniające jej lokalizację.",
-      "Położenie działki w otulinie parku krajobrazowego i bliskość specjalnego obszaru ochrony siedlisk Natura 2000 mogą wiązać się z wymogami oceny oddziaływania na środowisko i ograniczeniami w zabudowie nieznanego zakresu do czasu konsultacji z RDOŚ.",
-      "MPZP określa przeznaczenie terenu, ale jego ustalenia pozostają nieznane. Jeśli plan przewiduje tereny niebudowlane lub funkcje niezgodne z planowanym użytkowaniem, zakup może nie spełnić Twoich oczekiwań."
+      {
+        "tekst": "Część działki może leżeć w pasie technologicznym linii 110 kV, gdzie zabudowa jest ograniczona, a przez działkę przebiega kanalizacja z możliwym pasem ochronnym.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Działka leży w otulinie Parku Krajobrazowego, a w odległości do 300 m znajduje się obszar Natura 2000, co może wydłużyć procedury inwestycyjne.",
+        "podstawa": [
+          "przyroda"
+        ]
+      },
+      {
+        "tekst": "Brak danych o przeznaczeniu i uchwale planu MPZP SOB_1 uniemożliwia ocenę, co dokładnie można na działce wybudować.",
+        "podstawa": [
+          "mpzp"
+        ]
+      },
+      {
+        "tekst": "Brak sieci gazowej w promieniu 100 m od działki może wiązać się z kosztami alternatywnego ogrzewania.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      }
     ],
-    "model": "claude-haiku-4-5-20251001",
-    "odrzucone": 0
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2512,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 814,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Potwierdź w urzędzie gminy Sobótka ustalenia obowiązującego MPZP SOB_1 dla działki 541 (wypis i wyrys z planu), bo to on decyduje o zabudowie, a fakt przeznaczenia i daty uchwały są w danych brakujące.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "mpzp"
+            ]
+          },
+          {
+            "tekst": "Zleć geodecie lub w starostwie powiatowym (geodezja) wyrys z mapy ewidencyjnej, aby ustalić, która część działki 541 leży w pasie linii 110 kV i w przebiegu kanalizacji.",
+            "podstawa": [
+              "dzialka",
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatora sieci o warunki dla linii 110 kV, linii SN, wodociągu i kanalizacji, w tym szerokość pasa technologicznego i ewentualne służebności przesyłu.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Ustal w RDOŚ, czy inwestycja na części działki w otulinie Ślężańskiego Parku Krajobrazowego wymaga oceny oddziaływania na środowisko lub uzgodnień.",
+            "podstawa": [
+              "przyroda",
+              "ustalenia"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Część działki może leżeć w pasie technologicznym linii 110 kV, gdzie zabudowa jest ograniczona, a przez działkę przebiega kanalizacja z możliwym pasem ochronnym.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Działka leży w otulinie Parku Krajobrazowego, a w odległości do 300 m znajduje się obszar Natura 2000, co może wydłużyć procedury inwestycyjne.",
+            "podstawa": [
+              "przyroda"
+            ]
+          },
+          {
+            "tekst": "Brak danych o przeznaczeniu i uchwale planu MPZP SOB_1 uniemożliwia ocenę, co dokładnie można na działce wybudować.",
+            "podstawa": [
+              "mpzp"
+            ]
+          },
+          {
+            "tekst": "Brak sieci gazowej w promieniu 100 m od działki może wiązać się z kosztami alternatywnego ogrzewania.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

@@ -1,7 +1,7 @@
 {
   "version": 2,
   "parcelId": "021303_4.0001.AR_18.19/9",
-  "generatedAt": "2026-10-19T20:28:52.311Z",
+  "generatedAt": "2026-10-23T12:09:16.730Z",
   "parcel": {
     "parcelId": "021303_4.0001.AR_18.19/9",
     "numer": "19/9",
@@ -17,7 +17,8 @@
       "lng": 17.270576
     },
     "geomWkt": "SRID=2180;POLYGON((380016.704837304 408072.050472049,380028.539620789 408035.432738605,380120.674186691 408004.71482447,380110.832659914 408036.507154511,380086.017776065 408028.86937966,380077.946195242 408060.707494303,380066.602200086 408063.021708146,380051.5897317 408066.075795779,380016.704837304 408072.050472049))",
-    "found": true
+    "found": true,
+    "fetchedAt": "2026-10-23T12:09:17.179Z"
   },
   "mpzp": {
     "covered": false,
@@ -26,10 +27,13 @@
     "status": "no_data"
   },
   "pog": {
-    "wroclaw": null,
+    "plan": null,
+    "planStatus": "not_covered",
+    "draft": null,
     "ru": {
       "entry": null,
-      "inForce": false
+      "inForce": false,
+      "draft": null
     },
     "inForce": false,
     "source": "Rejestru Urbanistycznego"
@@ -37,7 +41,7 @@
   "assessment": {
     "verdict": "wz_niemozliwe_brak_pog",
     "title": "Brak obowiązującego planu ogólnego gminy",
-    "text": "Według Rejestru Urbanistycznego (stan na 2026-10-19) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+    "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
     "confidence": "srednia"
   },
   "flood": {
@@ -74,20 +78,27 @@
       "crosses": true
     },
     "woda": {
-      "distanceM": 0,
-      "crosses": true
+      "distanceM": null,
+      "crosses": false
     },
     "kanalizacja": {
       "distanceM": 0,
       "crosses": true
     },
     "gaz": {
-      "distanceM": 11,
+      "distanceM": null,
       "crosses": false
     }
   },
   "gesutStatus": "ok",
   "osm": null,
+  "powerLines": {
+    "lines": [],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2023-12-21",
+    "datasetVersion": "20261023"
+  },
   "sip": null,
   "findings": [
     {
@@ -98,62 +109,200 @@
     {
       "level": "uwaga",
       "basis": "uzbrojenie",
-      "text": "Przez działkę przebiega: sieć elektroenergetyczna, wodociąg, kanalizacja (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+      "text": "Przez działkę przebiega: sieć elektroenergetyczna, kanalizacja (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
     }
   ],
   "sources": [
     {
+      "source": "Dane ewidencyjne – ULDK (GUGiK)",
+      "status": "ok",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T12:09:17.179Z"
+    },
+    {
       "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
       "status": "no_data",
-      "ms": 420,
-      "fetchedAt": "2026-10-19T20:28:53.183Z"
+      "ms": 547,
+      "fetchedAt": "2026-10-23T12:09:17.727Z"
     },
     {
       "source": "Plan ogólny – Rejestr Urbanistyczny",
       "status": "no_data",
-      "ms": 170,
-      "fetchedAt": "2026-10-19T20:28:52.935Z"
+      "ms": 4599,
+      "fetchedAt": "2026-10-23T12:09:21.779Z"
     },
     {
       "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
       "status": "no_data",
-      "ms": 1807,
-      "fetchedAt": "2026-10-19T20:28:54.572Z"
+      "ms": 1341,
+      "fetchedAt": "2026-10-23T12:09:18.522Z"
     },
     {
       "source": "Ochrona przyrody – GDOŚ",
       "status": "ok",
-      "ms": 508,
-      "fetchedAt": "2026-10-19T20:28:53.274Z"
+      "ms": 549,
+      "fetchedAt": "2026-10-23T12:09:17.731Z"
     },
     {
       "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
       "status": "ok",
-      "ms": 541,
-      "fetchedAt": "2026-10-19T20:28:53.314Z"
+      "ms": 675,
+      "fetchedAt": "2026-10-23T12:09:17.863Z"
     },
     {
-      "source": "Linie i rurociągi – OpenStreetMap",
-      "status": "error",
-      "error": "Wszystkie instancje Overpass zawiodły: The operation was aborted due to timeout; Overpass maps.mail.ru: HTTP 504; The operation was aborted due to timeout",
-      "ms": 15005,
-      "fetchedAt": "2026-10-19T20:29:07.780Z"
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "no_data",
+      "ms": 14,
+      "fetchedAt": "2026-10-23T12:09:17.204Z"
     }
   ],
   "utilityMap": "osadzona w HTML",
   "ai": {
     "rekomendacje": [
-      "Potwierdź w urzędzie gminy Milicz aktualny status obowiązywania planu ogólnego i możliwość uzyskania decyzji o warunkach zabudowy. Rejestr Urbanistyczny może być opóźniony – dokładne informacje pozwolą ustalić, czy budowa wymaga uchwalenia nowego planu.",
-      "Uzyskaj od operatorów sieci (elektroenergetycznej, wodociągu, kanalizacji) dokumenty potwierdzające przebieg urządzeń przez działkę, zakresy pasów ochronnych i ograniczenia zabudowy. To jest konieczne do planowania lokalizacji budynków.",
-      "Zwróć się do regionalnej dyrekcji ochrony środowiska o wymagane uzgodnienia i informacje o konieczności oceny oddziaływania na środowisko. Działka znajduje się w obszarach Natura 2000 i Parku Krajobrazowym, co może wymagać specjalnych procedur.",
-      "Rozważ zlecenie geodecie opracowanie mapy uzbrojenia i pasów ochronnych na terenie działki, aby jasno ustalić dostępne powierzchnie do zabudowy poza ograniczeniami technicznych sieci."
+      {
+        "tekst": "Potwierdź w urzędzie gminy Milicz, czy obowiązuje plan ogólny, bo w rejestrze brak wpisu, a od tego zależy możliwość uzyskania decyzji o warunkach zabudowy.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Zamów w starostwie powiatowym (geodezja) wypis z rejestru gruntów oraz sprawdź w księdze wieczystej działki 19/9 ewentualne służebności przesyłu i obciążenia dotyczące sieci przebiegających przez działkę.",
+        "podstawa": [
+          "dzialka",
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatora sieci elektroenergetycznej i urząd gminy o warunki przyłączenia oraz o wymagane pasy ochronne dla sieci i kanalizacji przebiegających przez działkę.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Przed zakupem skontaktuj się z regionalną dyrekcją ochrony środowiska w sprawie wymogu oceny oddziaływania na środowisko, bo część działki leży w obszarze Natura 2000 i w parku krajobrazowym.",
+        "podstawa": [
+          "przyroda",
+          "ustalenia"
+        ]
+      }
     ],
     "ryzyka": [
-      "Położenie działki w obszarze specjalnej ochrony ptaków Natura 2000 i Parku Krajobrazowym stwarza ryzyko wymogów dodatkowych procedur, ograniczeń zabudowy oraz odmowy decyzji administracyjnych niezgodnych z ochroną przyrody.",
-      "Przebieg sieci elektroenergetycznej, wodociągu i kanalizacji przez działkę oznacza pasy ochronne, które mogą znacznie ograniczać możliwą powierzchnię zabudowy i utrudniać prowadzenie prac budowlanych.",
-      "Bliskie sąsiedztwo rezerwatu przyrody i dodatkowego obszaru Natura 2000 w odległości do 300 metrów może wpłynąć na przyszłe możliwości rozbudowy i generuje ryzyko dodatkowych wymogów środowiskowych przy zmianach użytki terenu."
+      {
+        "tekst": "Brak obowiązującego planu ogólnego gminy może uniemożliwić uzyskanie nowej decyzji o warunkach zabudowy, co ogranicza możliwość budowy.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Co najmniej część działki leży w obszarze Natura 2000 i parku krajobrazowym, co może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ.",
+        "podstawa": [
+          "przyroda",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Przez działkę przebiegają sieć elektroenergetyczna i kanalizacja, co może ograniczać zabudowę pasem ochronnym lub służebnością przesyłu.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Brak wodociągu i sieci gazowej w promieniu 100 m od działki może oznaczać wysokie koszty doprowadzenia mediów; zakres danych nie obejmuje linii niskiego napięcia ani kabli, więc stan uzbrojenia wymaga weryfikacji.",
+        "podstawa": [
+          "uzbrojenie",
+          "dzialka"
+        ]
+      }
     ],
-    "model": "claude-haiku-4-5-20251001",
-    "odrzucone": 1
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2386,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 907,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Potwierdź w urzędzie gminy Milicz, czy obowiązuje plan ogólny, bo w rejestrze brak wpisu, a od tego zależy możliwość uzyskania decyzji o warunkach zabudowy.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Zamów w starostwie powiatowym (geodezja) wypis z rejestru gruntów oraz sprawdź w księdze wieczystej działki 19/9 ewentualne służebności przesyłu i obciążenia dotyczące sieci przebiegających przez działkę.",
+            "podstawa": [
+              "dzialka",
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatora sieci elektroenergetycznej i urząd gminy o warunki przyłączenia oraz o wymagane pasy ochronne dla sieci i kanalizacji przebiegających przez działkę.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Przed zakupem skontaktuj się z regionalną dyrekcją ochrony środowiska w sprawie wymogu oceny oddziaływania na środowisko, bo część działki leży w obszarze Natura 2000 i w parku krajobrazowym.",
+            "podstawa": [
+              "przyroda",
+              "ustalenia"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Brak obowiązującego planu ogólnego gminy może uniemożliwić uzyskanie nowej decyzji o warunkach zabudowy, co ogranicza możliwość budowy.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Co najmniej część działki leży w obszarze Natura 2000 i parku krajobrazowym, co może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ.",
+            "podstawa": [
+              "przyroda",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Przez działkę przebiegają sieć elektroenergetyczna i kanalizacja, co może ograniczać zabudowę pasem ochronnym lub służebnością przesyłu.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Brak wodociągu i sieci gazowej w promieniu 100 m od działki może oznaczać wysokie koszty doprowadzenia mediów; zakres danych nie obejmuje linii niskiego napięcia ani kabli, więc stan uzbrojenia wymaga weryfikacji.",
+            "podstawa": [
+              "uzbrojenie",
+              "dzialka"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

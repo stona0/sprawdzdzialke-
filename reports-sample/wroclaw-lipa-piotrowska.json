@@ -1,7 +1,7 @@
 {
   "version": 2,
   "parcelId": "026401_1.0054.888",
-  "generatedAt": "2026-10-19T20:26:50.117Z",
+  "generatedAt": "2026-10-23T12:08:14.038Z",
   "parcel": {
     "parcelId": "026401_1.0054.888",
     "numer": "888",
@@ -17,7 +17,8 @@
       "lng": 16.994124
     },
     "geomWkt": "SRID=2180;POLYGON((359869.831228515 369060.006865905,359868.850734545 369072.439853212,359758.213801065 369067.319967729,359764.67869526 369054.616452317,359869.831228515 369060.006865905))",
-    "found": true
+    "found": true,
+    "fetchedAt": "2026-10-23T12:08:14.756Z"
   },
   "mpzp": {
     "covered": false,
@@ -39,7 +40,7 @@
     "status": "no_data"
   },
   "pog": {
-    "wroclaw": {
+    "plan": {
       "strefy": [
         {
           "oznaczenie": "4080SJ",
@@ -73,8 +74,11 @@
       "uchwala": "XXXVI/872/26",
       "zrodlo": "GIS Urzędu Miejskiego Wrocławia"
     },
+    "planStatus": "ok",
+    "draft": null,
     "ru": {
       "entry": {
+        "actId": 1573,
         "tytul": "Plan ogólny gminy Wrocław",
         "status": "w opracowaniu",
         "obowiazujeOd": "2025-10-23",
@@ -82,7 +86,16 @@
         "terc": "026401",
         "gmina": "Wrocław"
       },
-      "inForce": false
+      "inForce": false,
+      "draft": {
+        "actId": 1573,
+        "tytul": "Plan ogólny gminy Wrocław",
+        "status": "w opracowaniu",
+        "obowiazujeOd": "2025-10-23",
+        "dataPublikacji": "2026-09-15",
+        "terc": "026401",
+        "gmina": "Wrocław"
+      }
     },
     "inForce": true,
     "source": "GIS Urzędu Miejskiego Wrocławia"
@@ -118,6 +131,20 @@
   "gesut": null,
   "gesutStatus": "not_covered",
   "osm": null,
+  "powerLines": {
+    "lines": [
+      {
+        "klasa": "MV",
+        "distanceM": 33,
+        "crosses": false,
+        "status": null
+      }
+    ],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2024-01-03",
+    "datasetVersion": "20261023"
+  },
   "sip": null,
   "findings": [
     {
@@ -138,63 +165,195 @@
   ],
   "sources": [
     {
+      "source": "Dane ewidencyjne – ULDK (GUGiK)",
+      "status": "ok",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T12:08:14.756Z"
+    },
+    {
       "source": "MPZP – GIS UM Wrocławia",
       "status": "no_data",
-      "ms": 298,
-      "fetchedAt": "2026-10-19T20:26:51.268Z"
+      "ms": 363,
+      "fetchedAt": "2026-10-23T12:08:15.120Z"
     },
     {
       "source": "Plan ogólny – GIS UM Wrocławia",
       "status": "ok",
-      "ms": 214,
-      "fetchedAt": "2026-10-19T20:26:51.186Z"
+      "ms": 220,
+      "fetchedAt": "2026-10-23T12:08:14.979Z"
     },
     {
       "source": "Plan ogólny – Rejestr Urbanistyczny",
       "status": "ok",
-      "ms": 193,
-      "fetchedAt": "2026-10-19T20:26:27.033Z"
+      "ms": 271,
+      "fetchedAt": "2026-10-23T12:07:57.782Z"
     },
     {
       "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
       "status": "ok",
-      "ms": 739,
-      "fetchedAt": "2026-10-19T20:26:51.712Z"
+      "ms": 992,
+      "fetchedAt": "2026-10-23T12:08:15.751Z"
     },
     {
       "source": "Ochrona przyrody – GDOŚ",
       "status": "ok",
-      "ms": 312,
-      "fetchedAt": "2026-10-19T20:26:51.288Z"
+      "ms": 322,
+      "fetchedAt": "2026-10-23T12:08:15.082Z"
     },
     {
       "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
       "status": "not_covered",
-      "ms": 800,
-      "fetchedAt": "2026-10-19T20:26:51.785Z"
+      "ms": 975,
+      "fetchedAt": "2026-10-23T12:08:15.740Z"
     },
     {
-      "source": "Linie i rurociągi – OpenStreetMap",
-      "status": "error",
-      "error": "Wszystkie instancje Overpass zawiodły: Overpass overpass-api.de: HTTP 502; Overpass maps.mail.ru: HTTP 504; The operation was aborted due to timeout",
-      "ms": 14946,
-      "fetchedAt": "2026-10-19T20:27:05.933Z"
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "ok",
+      "ms": 9,
+      "fetchedAt": "2026-10-23T12:08:14.778Z"
     }
   ],
   "utilityMap": "osadzona w HTML",
   "ai": {
     "rekomendacje": [
-      "Potwierdź w urzędzie gminy obowiązujące parametry zabudowy dla strefy 4080SJ i warunki wydania decyzji o warunkach zabudowy. Uzyskaj aktualny wypis i wyrys z planu ogólnego albo zaświadczenie o zgodności.",
-      "Sprawdź u operatora sieci warunki przyłączenia do infrastruktury (woda, gaz, energia, kanalizacja), ponieważ dane o uzbrojeniu w KIUT są niedostępne dla tego obszaru. Uzyskaj aktualne warunki techniczne i finansowe.",
-      "Dowiedz się w urzędzie gminy o zakresie prac planistycznych dla Dzielnicy urbanistycznej B – Północ i potencjalnym wpływie na parametry zabudowy działki. Ustal harmonogram zmian.",
-      "Skonsultuj się z regionalną dyrekcją ochrony środowiska w kwestii warunków zabudowy w kontekście sąsiedztwa Natury 2000 – specjalnego obszaru ochrony siedlisk Dolina Widawy. Zidentyfikuj ewentualne ograniczenia."
+      {
+        "tekst": "Zamów w urzędzie gminy wypis i wyrys z planu ogólnego oraz potwierdź możliwość uzyskania decyzji o warunkach zabudowy dla działki 888 w obrębie Lipa Piotrowska.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Sprawdź w urzędzie gminy, czy decyzja o warunkach zabudowy wydana po 1.01.2026 wygaśnie po 5 latach od uprawomocnienia i jakie parametry strefy 4080SJ obowiązują na działce.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Zleć geodecie lub w starostwie powiatowym (geodezja) sprawdzenie położenia linii średniego napięcia względem granicy działki, bo najbliższa jest w odległości 33 m.",
+        "podstawa": [
+          "uzbrojenie",
+          "dzialka"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatora sieci o warunki przyłączenia, ponieważ w KIUT brak danych dla tego obszaru.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      }
     ],
     "ryzyka": [
-      "Działka znajduje się w scenariuszu zniszczenia wału przeciwpowodziowego, chociaż ryzyko powodziowe oceniane jest jako niskie. Zasięg rzeczywistych skutków takiego scenariusza wymaga szczegółowego zbadania z PGW Wody Polskie.",
-      "Sąsiedztwo Natury 2000 – specjalnego obszaru ochrony siedlisk w odległości do 300 metrów może wiązać się z ograniczeniami w realizacji niektórych typów zabudowy lub koniecznością specjalnych procedur.",
-      "Trwające prace planistyczne dla Dzielnicy urbanistycznej B – Północ mogą zmienić obowiązujące parametry zabudowy, strefy użytkowania lub warunki wydania decyzji WZ. Nieznany jest termin finalizacji."
+      {
+        "tekst": "Dla terenu trwają prace planistyczne nad dzielnicą urbanistyczną B Północ, więc ustalenia mogą się zmienić.",
+        "podstawa": [
+          "ustalenia",
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Działka położona jest w zasięgu scenariusza zniszczenia wału przeciwpowodziowego, choć ryzyko określono jako niskie; warto sprawdzić to w PGW Wody Polskie.",
+        "podstawa": [
+          "powodz"
+        ]
+      },
+      {
+        "tekst": "W odległości do 300 m znajduje się obszar Natura 2000 Dolina Widawy, co może wpływać na zakres inwestycji; wymagane jest potwierdzenie w regionalnej dyrekcji ochrony środowiska.",
+        "podstawa": [
+          "przyroda"
+        ]
+      },
+      {
+        "tekst": "Działka nie jest objęta MPZP, a jej zabudowę określa plan ogólny, więc zakres możliwej zabudowy zależy od decyzji o warunkach zabudowy.",
+        "podstawa": [
+          "mpzp",
+          "plan_ogolny",
+          "ocena_zabudowy"
+        ]
+      }
     ],
-    "model": "claude-haiku-4-5-20251001",
-    "odrzucone": 1
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2447,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 817,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Zamów w urzędzie gminy wypis i wyrys z planu ogólnego oraz potwierdź możliwość uzyskania decyzji o warunkach zabudowy dla działki 888 w obrębie Lipa Piotrowska.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Sprawdź w urzędzie gminy, czy decyzja o warunkach zabudowy wydana po 1.01.2026 wygaśnie po 5 latach od uprawomocnienia i jakie parametry strefy 4080SJ obowiązują na działce.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Zleć geodecie lub w starostwie powiatowym (geodezja) sprawdzenie położenia linii średniego napięcia względem granicy działki, bo najbliższa jest w odległości 33 m.",
+            "podstawa": [
+              "uzbrojenie",
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatora sieci o warunki przyłączenia, ponieważ w KIUT brak danych dla tego obszaru.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Dla terenu trwają prace planistyczne nad dzielnicą urbanistyczną B Północ, więc ustalenia mogą się zmienić.",
+            "podstawa": [
+              "ustalenia",
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Działka położona jest w zasięgu scenariusza zniszczenia wału przeciwpowodziowego, choć ryzyko określono jako niskie; warto sprawdzić to w PGW Wody Polskie.",
+            "podstawa": [
+              "powodz"
+            ]
+          },
+          {
+            "tekst": "W odległości do 300 m znajduje się obszar Natura 2000 Dolina Widawy, co może wpływać na zakres inwestycji; wymagane jest potwierdzenie w regionalnej dyrekcji ochrony środowiska.",
+            "podstawa": [
+              "przyroda"
+            ]
+          },
+          {
+            "tekst": "Działka nie jest objęta MPZP, a jej zabudowę określa plan ogólny, więc zakres możliwej zabudowy zależy od decyzji o warunkach zabudowy.",
+            "podstawa": [
+              "mpzp",
+              "plan_ogolny",
+              "ocena_zabudowy"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

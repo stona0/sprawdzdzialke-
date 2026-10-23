@@ -1,7 +1,7 @@
 {
   "version": 2,
   "parcelId": "126104_9.0078.270",
-  "generatedAt": "2026-10-23T09:33:44.816Z",
+  "generatedAt": "2026-10-23T12:10:02.899Z",
   "parcel": {
     "parcelId": "126104_9.0078.270",
     "numer": "270",
@@ -18,7 +18,7 @@
     },
     "geomWkt": "SRID=2180;POLYGON((558023.341589467 236512.573071978,558018.013108195 236513.700163789,558012.985093457 236503.218937219,557981.369205134 236507.921632241,557964.262543223 236499.026765794,557944.574780471 236476.74705161,557923.652051555 236483.075313747,557920.828051517 236484.379352975,557916.860995122 236486.932419307,557914.533737681 236490.968889424,557913.737310925 236494.95632959,557913.525735261 236499.129358105,557913.796813266 236503.945097254,557914.549437274 236515.051742828,557916.533831966 236535.048549384,557906.762810393 236536.696623492,557906.415881544 236530.979138481,557906.481398005 236527.781895892,557906.89611782 236518.255984227,557906.580154815 236515.118517007,557904.234070268 236499.300721801,557903.310220422 236497.586544442,557902.122897599 236496.005276565,557898.746713206 236493.285807199,557896.410039044 236491.693793861,557891.566318459 236490.394616892,557880.897806884 236487.100235038,557872.580722736 236484.098669638,557864.36644365 236493.32601037,557839.535772563 236475.327368743,557856.410775983 236455.505061223,557865.164947062 236474.683233624,557876.63504714 236484.636966691,557906.215922433 236485.378117622,557925.875175277 236473.587770009,557925.469138388 236455.502588837,557948.719603418 236461.192824044,557958.243779081 236473.633718618,557960.54725315 236479.083632413,557961.836435219 236482.836943511,557964.007325364 236487.26363172,557969.163465908 236494.449318792,557974.703294654 236498.87613727,557977.885993473 236500.980624106,557980.236991354 236501.663306651,557985.723749978 236501.72007757,557990.528490573 236500.738928101,557998.278548851 236498.776883353,558000.195564317 236498.118376463,558008.43363308 236494.729835154,558009.657083363 236494.212728716,558009.360213611 236495.594352853,558017.915875969 236506.869706078,558023.341589467 236512.573071978))",
     "found": true,
-    "fetchedAt": "2026-10-23T09:33:45.553Z"
+    "fetchedAt": "2026-10-23T12:10:03.683Z"
   },
   "mpzp": {
     "covered": true,
@@ -81,8 +81,25 @@
       }
     ]
   },
-  "gesut": null,
-  "gesutStatus": "not_covered",
+  "gesut": {
+    "energia": {
+      "distanceM": 0,
+      "crosses": true
+    },
+    "woda": {
+      "distanceM": null,
+      "crosses": false
+    },
+    "kanalizacja": {
+      "distanceM": null,
+      "crosses": false
+    },
+    "gaz": {
+      "distanceM": null,
+      "crosses": false
+    }
+  },
+  "gesutStatus": "ok",
   "osm": null,
   "powerLines": {
     "lines": [
@@ -111,6 +128,11 @@
       "text": "W odległości do 300 m: Park krajobrazowy „Bielańsko-Tyniecki Park Krajobrazowy”; Park krajobrazowy „Bielańsko-Tyniecki Park Krajobrazowy - otulina”."
     },
     {
+      "level": "uwaga",
+      "basis": "uzbrojenie",
+      "text": "Przez działkę przebiega: sieć elektroenergetyczna (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+    },
+    {
       "level": "ryzyko",
       "basis": "uzbrojenie",
       "text": "Linia najwyższego napięcia (220–400 kV) przebiega przez działkę (BDOT10k). Część działki może leżeć w pasie technologicznym linii (typowo ok. 40 m od osi w każdą stronę), gdzie zabudowa jest ograniczona — szerokość pasa i warunki potwierdź u operatora sieci."
@@ -121,59 +143,186 @@
       "source": "Dane ewidencyjne – ULDK (GUGiK)",
       "status": "ok",
       "ms": 0,
-      "fetchedAt": "2026-10-23T09:33:45.553Z"
+      "fetchedAt": "2026-10-23T12:10:03.683Z"
     },
     {
       "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
       "status": "ok",
-      "ms": 241,
-      "fetchedAt": "2026-10-23T09:33:45.796Z"
+      "ms": 236,
+      "fetchedAt": "2026-10-23T12:10:03.920Z"
     },
     {
       "source": "Plan ogólny – Rejestr Urbanistyczny",
       "status": "no_data",
-      "ms": 120,
-      "fetchedAt": "2026-10-23T09:33:45.674Z"
+      "ms": 108,
+      "fetchedAt": "2026-10-23T12:10:03.792Z"
     },
     {
       "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
       "status": "ok",
-      "ms": 2672,
-      "fetchedAt": "2026-10-23T09:33:48.228Z"
+      "ms": 1286,
+      "fetchedAt": "2026-10-23T12:10:04.972Z"
     },
     {
       "source": "Ochrona przyrody – GDOŚ",
       "status": "ok",
-      "ms": 288,
-      "fetchedAt": "2026-10-23T09:33:45.845Z"
+      "ms": 251,
+      "fetchedAt": "2026-10-23T12:10:03.938Z"
     },
     {
       "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
-      "status": "not_covered",
-      "ms": 5587,
-      "fetchedAt": "2026-10-23T09:33:51.148Z"
+      "status": "ok",
+      "ms": 1038,
+      "fetchedAt": "2026-10-23T12:10:04.730Z"
     },
     {
       "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
       "status": "ok",
       "ms": 5,
-      "fetchedAt": "2026-10-23T09:33:45.567Z"
+      "fetchedAt": "2026-10-23T12:10:03.698Z"
     }
   ],
   "utilityMap": "osadzona w HTML",
   "ai": {
     "rekomendacje": [
-      "Skontaktuj się z operatorem sieci energetycznej, aby uzyskać dokładne informacje o przebiegu linii najwyższego napięcia przez działkę, szerokości pasa technologicznego oraz warunkach zabudowy w jego obrębie. Warunki przyłączenia lub inne ograniczenia trzeba znać przed podjęciem decyzji o zakupie.",
-      "Poinformuj się w urzędzie gminy o wymaganiach wynikających z bliskości Bielańsko-Tynieckiego Parku Krajobrazowego i jego otuliny w odległości do 300 m. Ustal, czy planuowana inwestycja wymaga uzgodnienia z regionalną dyrekcją ochrony środowiska.",
-      "Upewnij się u PGW Wody Polskie co do warunków i procedur mających zastosowanie w scenariuszu zniszczenia wału przeciwpowodziowego, mimo że ryzyko jest niskie. Zweryfikuj, czy ten scenariusz może wpłynąć na ubezpieczalność nieruchomości lub możliwość kredytowania zakupu."
+      {
+        "tekst": "Zamów w urzędzie gminy wypis i wyrys z MPZP dla działki 270 w obrębie P-78 oraz sprawdź ustalenia dla symbolu 34.R.2, zanim podejmiesz decyzję o zakupie.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "mpzp"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatora sieci o warunki i przebieg sieci elektroenergetycznej oraz linii najwyższego napięcia przez działkę, w tym szerokość pasa technologicznego i ewentualną służebność przesyłu.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Sprawdź w starostwie powiatowym (geodezja) przebieg granic działki oraz położenie przewodów i linii względem jej części, aby ustalić, która część działki jest objęta ograniczeniami.",
+        "podstawa": [
+          "dzialka",
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Ustal u operatorów sieci wodociągowej, kanalizacyjnej i gazowej możliwość przyłączenia, ponieważ w promieniu 100 m od działki nie stwierdzono tych sieci.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      }
     ],
     "ryzyka": [
-      "Linia najwyższego napięcia przebiegająca przez działkę znacznie ogranicza możliwość zabudowy. Poza pasem technologicznym (tzw. korytarzem) mogą obowiązywać ograniczenia związane z ochroną zdrowia (pola elektromagnetyczne), co może uniemożliwić określone cele inwestycyjne.",
-      "Działka objęta MPZP przewiduje przeznaczenie na tereny rolnicze. Zmiana użytku gruntu lub inwestycja niezgodna z planem może wymagać procedury zmiany MPZP, co jest długotrwałe i niepewne w wyniku.",
-      "Bliskość Bielańsko-Tynieckiego Parku Krajobrazowego i jego otuliny może pociągnąć za sobą dodatkowe wymogi ochrony środowiska, ograniczenia w prowadzeniu prac oraz konieczność uzgodnień z organami ochrony przyrody.",
-      "Działka znajduje się w zasięgu scenariusza zniszczenia wału przeciwpowodziowego, co w skrajnym przypadku stanowi teoretyczne zagrożenie dla nieruchomości. Choć ryzyko oceniono jako niskie, warto sprawdzić, jak fakt ten oceniają firmy ubezpieczeniowe i kredytodawcy."
+      {
+        "tekst": "Linia najwyższego napięcia 220–400 kV przebiega przez działkę, co może istotnie ograniczać zabudowę na części powierzchni 2433 m2.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia",
+          "dzialka"
+        ]
+      },
+      {
+        "tekst": "Działka leży w zasięgu scenariusza zniszczenia wału przeciwpowodziowego, z niskim poziomem ryzyka powodziowego.",
+        "podstawa": [
+          "powodz"
+        ]
+      },
+      {
+        "tekst": "W odległości do 300 m znajdują się Bielańsko-Tyniecki Park Krajobrazowy oraz jego otulina, co może wiązać się z dodatkowymi ograniczeniami przyrodniczymi.",
+        "podstawa": [
+          "przyroda"
+        ]
+      },
+      {
+        "tekst": "Brak wpisu planu ogólnego w rejestrze oraz brak danych o części sieci uzbrojenia wymaga weryfikacji w urzędzie gminy i u operatorów przed zakupem.",
+        "podstawa": [
+          "plan_ogolny",
+          "uzbrojenie"
+        ]
+      }
     ],
-    "model": "claude-haiku-4-5-20251001",
-    "odrzucone": 1
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2573,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 824,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Zamów w urzędzie gminy wypis i wyrys z MPZP dla działki 270 w obrębie P-78 oraz sprawdź ustalenia dla symbolu 34.R.2, zanim podejmiesz decyzję o zakupie.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "mpzp"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatora sieci o warunki i przebieg sieci elektroenergetycznej oraz linii najwyższego napięcia przez działkę, w tym szerokość pasa technologicznego i ewentualną służebność przesyłu.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Sprawdź w starostwie powiatowym (geodezja) przebieg granic działki oraz położenie przewodów i linii względem jej części, aby ustalić, która część działki jest objęta ograniczeniami.",
+            "podstawa": [
+              "dzialka",
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Ustal u operatorów sieci wodociągowej, kanalizacyjnej i gazowej możliwość przyłączenia, ponieważ w promieniu 100 m od działki nie stwierdzono tych sieci.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Linia najwyższego napięcia 220–400 kV przebiega przez działkę, co może istotnie ograniczać zabudowę na części powierzchni 2433 m2.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia",
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Działka leży w zasięgu scenariusza zniszczenia wału przeciwpowodziowego, z niskim poziomem ryzyka powodziowego.",
+            "podstawa": [
+              "powodz"
+            ]
+          },
+          {
+            "tekst": "W odległości do 300 m znajdują się Bielańsko-Tyniecki Park Krajobrazowy oraz jego otulina, co może wiązać się z dodatkowymi ograniczeniami przyrodniczymi.",
+            "podstawa": [
+              "przyroda"
+            ]
+          },
+          {
+            "tekst": "Brak wpisu planu ogólnego w rejestrze oraz brak danych o części sieci uzbrojenia wymaga weryfikacji w urzędzie gminy i u operatorów przed zakupem.",
+            "podstawa": [
+              "plan_ogolny",
+              "uzbrojenie"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

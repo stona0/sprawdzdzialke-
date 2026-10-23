@@ -1,7 +1,7 @@
 {
   "version": 2,
   "parcelId": "146301_1.0180.AR_176.7/2",
-  "generatedAt": "2026-10-23T08:59:20.903Z",
+  "generatedAt": "2026-10-23T12:09:41.897Z",
   "parcel": {
     "parcelId": "146301_1.0180.AR_176.7/2",
     "numer": "7/2",
@@ -18,7 +18,7 @@
     },
     "geomWkt": "SRID=2180;POLYGON((644615.267422053 389641.363774097,644608.486526222 389640.745597758,644587.528011817 389638.85395328,644586.223993497 389674.198567851,644614.016370713 389675.216601894,644614.081871312 389673.548379693,644615.267422053 389641.363774097))",
     "found": true,
-    "fetchedAt": "2026-10-23T08:59:21.649Z"
+    "fetchedAt": "2026-10-23T12:09:42.500Z"
   },
   "mpzp": {
     "covered": false,
@@ -129,6 +129,13 @@
   },
   "gesutStatus": "ok",
   "osm": null,
+  "powerLines": {
+    "lines": [],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2024-01-23",
+    "datasetVersion": "20261023"
+  },
   "sip": null,
   "findings": [
     {
@@ -142,72 +149,194 @@
       "source": "Dane ewidencyjne – ULDK (GUGiK)",
       "status": "ok",
       "ms": 0,
-      "fetchedAt": "2026-10-23T08:59:21.649Z"
+      "fetchedAt": "2026-10-23T12:09:42.500Z"
     },
     {
       "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
       "status": "no_data",
-      "ms": 259,
-      "fetchedAt": "2026-10-23T08:59:21.910Z"
+      "ms": 393,
+      "fetchedAt": "2026-10-23T12:09:42.895Z"
     },
     {
       "source": "Plan ogólny – Rejestr Urbanistyczny",
       "status": "ok",
-      "ms": 473,
-      "fetchedAt": "2026-10-23T08:59:22.123Z"
+      "ms": 255,
+      "fetchedAt": "2026-10-23T12:09:42.756Z"
     },
     {
       "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
       "status": "ok",
-      "ms": 1805,
-      "fetchedAt": "2026-10-23T08:59:23.928Z"
+      "ms": 1670,
+      "fetchedAt": "2026-10-23T12:09:44.426Z"
     },
     {
       "source": "Projekt planu ogólnego – Rejestr Urbanistyczny",
       "status": "no_data",
-      "ms": 276,
-      "fetchedAt": "2026-10-23T08:59:22.401Z"
+      "ms": 145,
+      "fetchedAt": "2026-10-23T12:09:42.903Z"
     },
     {
       "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
       "status": "no_data",
-      "ms": 807,
-      "fetchedAt": "2026-10-23T08:59:22.458Z"
+      "ms": 1159,
+      "fetchedAt": "2026-10-23T12:09:43.662Z"
     },
     {
       "source": "Ochrona przyrody – GDOŚ",
       "status": "ok",
-      "ms": 395,
-      "fetchedAt": "2026-10-23T08:59:22.047Z"
+      "ms": 393,
+      "fetchedAt": "2026-10-23T12:09:42.899Z"
     },
     {
       "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
       "status": "ok",
-      "ms": 2232,
-      "fetchedAt": "2026-10-23T08:59:23.888Z"
+      "ms": 3069,
+      "fetchedAt": "2026-10-23T12:09:45.581Z"
     },
     {
-      "source": "Linie i rurociągi – OpenStreetMap",
-      "status": "error",
-      "error": "Overpass nie odpowiadał w ostatnich minutach — pominięto",
-      "ms": 0,
-      "fetchedAt": "2026-10-23T08:59:21.657Z"
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "no_data",
+      "ms": 4,
+      "fetchedAt": "2026-10-23T12:09:42.517Z"
     }
   ],
   "utilityMap": "osadzona w HTML",
   "ai": {
     "rekomendacje": [
-      "Potwierdź w urzędzie gminy status obszaru uzupełnienia zabudowy i wymogi planu ogólnego dla strefy 1SJ, zwłaszcza maksymalną wysokość 12 m, intensywność zabudowy 1,1 i udział zabudowy 30 proc. Uzyskaj wypis i wyrys z planu ogólnego lub zaświadczenie.",
-      "Sprawdź warunki przyłączenia do sieci elektroenergetycznej, wodociągu, kanalizacji i gazu u operatorów odpowiednich sieci, uwzględniając odległości: elektroenergetyka 100 m, wodociąg 96 m, kanalizacja 73 m, gaz 62 m od granicy działki.",
-      "Zweryfikuj w urzędzie gminy bieżące wymagania dotyczące decyzji o warunkach zabudowy, w tym okres jej ważności od uprawomocnienia i zgodność z planem ogólnym.",
-      "Skonsultuj z geodetą warunki podziału i zabudowy działki o powierzchni 963 m² pod kątem wymogów strefy 1SJ, szczególnie maksymalnego udziału zabudowy 30 proc. i minimalnego pasa biologicznie czynnego 30 proc."
+      {
+        "tekst": "Potwierdź w urzędzie gminy Radom (miasto), czy działka 7/2 w obrębie Krychnowice leży w obszarze uzupełnienia zabudowy i jakie strefy oraz parametry obowiązują, licząc na wypis i wyrys z planu ogólnego. Dopytaj też o możliwość wydania decyzji o warunkach zabudowy oraz jej termin ważności.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Sprawdź w starostwie powiatowym (geodezja) wypis z rejestru gruntów oraz zgodność powierzchni 963 m2 z dokumentami, a w księdze wieczystej potwierdź stan prawny i ewentualne obciążenia.",
+        "podstawa": [
+          "dzialka"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatorów sieci o warunki przyłączenia do wodociągu, kanalizacji, gazu i sieci elektroenergetycznej, ponieważ najbliższe przyłącza znajdują się w odległości od 62 do 100 m od granicy działki.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Zweryfikuj u regionalnej dyrekcji ochrony środowiska, jakie ograniczenia wynikają z sąsiedztwa Obszaru chronionego krajobrazu Lasy Przysusko – Szydłowieckie w odległości do 300 m od działki.",
+        "podstawa": [
+          "przyroda",
+          "ustalenia"
+        ]
+      }
     ],
     "ryzyka": [
-      "Obszar chronionego krajobrazu Lasy Przysusko – Szydłowieckie znajduje się w odległości do 300 m od działki, co może implikować dodatkowe ograniczenia lub wymogi dla zabudowy — potwierdź szczegóły w regionalnej dyrekcji ochrony środowiska.",
-      "Obowiązek budowy od zera sieci podłączeniowych do wszystkich mediów (elektroenergetyka, wodociąg, kanalizacja, gaz) stanowi znaczący koszt — uzyskaj wstępne kosztorysy od operatorów.",
-      "Brak danych na temat linii energetycznych z mapy Otwartych Danych Służb Publicznych uniemożliwia pełną ocenę ryzyka kolizji — sprawdź bezpośrednio u operatora energetyki."
+      {
+        "tekst": "Plan ogólny określa strefę 1SJ z maksymalną wysokością 12 m, intensywnością 1.1 oraz udziałem zabudowy do 30 proc., co ogranicza zakres zabudowy przy projektowaniu inwestycji.",
+        "podstawa": [
+          "plan_ogolny",
+          "ocena_zabudowy"
+        ]
+      },
+      {
+        "tekst": "Decyzja o warunkach zabudowy wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia, więc trzeba zaplanować inwestycję w tym czasie.",
+        "podstawa": [
+          "ocena_zabudowy"
+        ]
+      },
+      {
+        "tekst": "Brak danych o liniach niskiego napięcia i kablach w zakresie BDOT10K oznacza, że dostępność zasilania wymaga osobnej weryfikacji u operatora sieci.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Działka nie jest objęta MPZP, więc o warunkach zabudowy decyduje plan ogólny i decyzja WZ, a nie plan miejscowy.",
+        "podstawa": [
+          "mpzp",
+          "plan_ogolny"
+        ]
+      }
     ],
-    "model": "claude-haiku-4-5-20251001",
-    "odrzucone": 1
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2282,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 950,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Potwierdź w urzędzie gminy Radom (miasto), czy działka 7/2 w obrębie Krychnowice leży w obszarze uzupełnienia zabudowy i jakie strefy oraz parametry obowiązują, licząc na wypis i wyrys z planu ogólnego. Dopytaj też o możliwość wydania decyzji o warunkach zabudowy oraz jej termin ważności.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Sprawdź w starostwie powiatowym (geodezja) wypis z rejestru gruntów oraz zgodność powierzchni 963 m2 z dokumentami, a w księdze wieczystej potwierdź stan prawny i ewentualne obciążenia.",
+            "podstawa": [
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatorów sieci o warunki przyłączenia do wodociągu, kanalizacji, gazu i sieci elektroenergetycznej, ponieważ najbliższe przyłącza znajdują się w odległości od 62 do 100 m od granicy działki.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Zweryfikuj u regionalnej dyrekcji ochrony środowiska, jakie ograniczenia wynikają z sąsiedztwa Obszaru chronionego krajobrazu Lasy Przysusko – Szydłowieckie w odległości do 300 m od działki.",
+            "podstawa": [
+              "przyroda",
+              "ustalenia"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Plan ogólny określa strefę 1SJ z maksymalną wysokością 12 m, intensywnością 1.1 oraz udziałem zabudowy do 30 proc., co ogranicza zakres zabudowy przy projektowaniu inwestycji.",
+            "podstawa": [
+              "plan_ogolny",
+              "ocena_zabudowy"
+            ]
+          },
+          {
+            "tekst": "Decyzja o warunkach zabudowy wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia, więc trzeba zaplanować inwestycję w tym czasie.",
+            "podstawa": [
+              "ocena_zabudowy"
+            ]
+          },
+          {
+            "tekst": "Brak danych o liniach niskiego napięcia i kablach w zakresie BDOT10K oznacza, że dostępność zasilania wymaga osobnej weryfikacji u operatora sieci.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Działka nie jest objęta MPZP, więc o warunkach zabudowy decyduje plan ogólny i decyzja WZ, a nie plan miejscowy.",
+            "podstawa": [
+              "mpzp",
+              "plan_ogolny"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

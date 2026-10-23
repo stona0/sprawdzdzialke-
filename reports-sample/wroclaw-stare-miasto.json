@@ -1,7 +1,7 @@
 {
   "version": 2,
   "parcelId": "026401_1.0001.2395",
-  "generatedAt": "2026-10-19T20:26:26.078Z",
+  "generatedAt": "2026-10-23T12:07:56.684Z",
   "parcel": {
     "parcelId": "026401_1.0001.2395",
     "numer": "2395",
@@ -17,7 +17,8 @@
       "lng": 17.031836
     },
     "geomWkt": "SRID=2180;POLYGON((362255.704471704 362226.773401869,362248.643857016 362211.537782151,362273.736096804 362200.071736079,362273.364949761 362199.242075433,362281.547652733 362195.461178068,362286.136864433 362204.791486001,362288.631005879 362211.340260029,362279.044879079 362215.788999358,362255.704471704 362226.773401869))",
-    "found": true
+    "found": true,
+    "fetchedAt": "2026-10-23T12:07:57.509Z"
   },
   "mpzp": {
     "covered": true,
@@ -51,7 +52,7 @@
     "status": "ok"
   },
   "pog": {
-    "wroclaw": {
+    "plan": {
       "strefy": [
         {
           "oznaczenie": "2460SW",
@@ -85,8 +86,11 @@
       "uchwala": "XXXVI/872/26",
       "zrodlo": "GIS Urzędu Miejskiego Wrocławia"
     },
+    "planStatus": "ok",
+    "draft": null,
     "ru": {
       "entry": {
+        "actId": 1573,
         "tytul": "Plan ogólny gminy Wrocław",
         "status": "w opracowaniu",
         "obowiazujeOd": "2025-10-23",
@@ -94,7 +98,16 @@
         "terc": "026401",
         "gmina": "Wrocław"
       },
-      "inForce": false
+      "inForce": false,
+      "draft": {
+        "actId": 1573,
+        "tytul": "Plan ogólny gminy Wrocław",
+        "status": "w opracowaniu",
+        "obowiazujeOd": "2025-10-23",
+        "dataPublikacji": "2026-09-15",
+        "terc": "026401",
+        "gmina": "Wrocław"
+      }
     },
     "inForce": true,
     "source": "GIS Urzędu Miejskiego Wrocławia"
@@ -118,6 +131,13 @@
   "gesut": null,
   "gesutStatus": "not_covered",
   "osm": null,
+  "powerLines": {
+    "lines": [],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2024-01-03",
+    "datasetVersion": "20261023"
+  },
   "sip": null,
   "findings": [
     {
@@ -128,64 +148,187 @@
   ],
   "sources": [
     {
+      "source": "Dane ewidencyjne – ULDK (GUGiK)",
+      "status": "ok",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T12:07:57.509Z"
+    },
+    {
       "source": "MPZP – GIS UM Wrocławia",
       "status": "ok",
-      "ms": 284,
-      "fetchedAt": "2026-10-19T20:26:27.112Z"
+      "ms": 270,
+      "fetchedAt": "2026-10-23T12:07:57.782Z"
     },
     {
       "source": "Plan ogólny – GIS UM Wrocławia",
       "status": "ok",
-      "ms": 334,
-      "fetchedAt": "2026-10-19T20:26:27.170Z"
+      "ms": 284,
+      "fetchedAt": "2026-10-23T12:07:57.800Z"
     },
     {
       "source": "Plan ogólny – Rejestr Urbanistyczny",
       "status": "ok",
-      "ms": 193,
-      "fetchedAt": "2026-10-19T20:26:27.033Z"
+      "ms": 271,
+      "fetchedAt": "2026-10-23T12:07:57.782Z"
     },
     {
       "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
       "status": "no_data",
-      "ms": 1069,
-      "fetchedAt": "2026-10-19T20:26:27.910Z"
+      "ms": 1133,
+      "fetchedAt": "2026-10-23T12:07:58.650Z"
     },
     {
       "source": "Ochrona przyrody – GDOŚ",
       "status": "no_data",
-      "ms": 337,
-      "fetchedAt": "2026-10-19T20:26:27.182Z"
+      "ms": 367,
+      "fetchedAt": "2026-10-23T12:07:57.887Z"
     },
     {
       "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
       "status": "not_covered",
-      "ms": 735,
-      "fetchedAt": "2026-10-19T20:26:27.588Z"
+      "ms": 865,
+      "fetchedAt": "2026-10-23T12:07:58.391Z"
     },
     {
-      "source": "Linie i rurociągi – OpenStreetMap",
-      "status": "error",
-      "error": "Wszystkie instancje Overpass zawiodły: The operation was aborted due to timeout; Overpass maps.mail.ru: HTTP 504; The operation was aborted due to timeout",
-      "ms": 15008,
-      "fetchedAt": "2026-10-19T20:26:41.862Z"
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "no_data",
+      "ms": 15,
+      "fetchedAt": "2026-10-23T12:07:57.549Z"
     }
   ],
   "utilityMap": "osadzona w HTML",
   "ai": {
     "rekomendacje": [
-      "Przed zakupem uzyskaj w urzędzie gminy wypis i wyrys z MPZP Rynek i Plac Solny (cz. A), aby potwierdzić szczegółowe ustalenia dla terenu 12UA*UC dotyczące warunków zabudowy, gabarytów i funkcji usług.",
-      "Skontaktuj się z wojewódzkim konserwatorem zabytków w celu ustalenia, jakie uzgodnienia konserwatorskie mogą być wymagane dla projektów na działce z uwagi na strefę ochrony konserwatorskiej i strefę ochrony zabytków archeologicznych.",
-      "Sprawdź u operatora sieci (energetyczną, wodno-kanalizacyjną, telekomunikacyjną) warunki przyłączenia i dostępność uzbrojenia, ponieważ w KIUT brak danych dla tego obszaru.",
-      "Zlecenie geodecie weryfikację granic działki i jej stanu prawnego (księga wieczysta, wypis z rejestru gruntów), aby upewnić się co do rzeczywistych możliwości zagospodarowania powierzchni 617 m²."
+      {
+        "tekst": "Przed zakupem uzyskaj w urzędzie gminy wypis i wyrys z planu obowiązującego dla działki 2395 (Rynek i Plac Solny cz. A) i sprawdź ustalenia dla terenu 12UA*UC oraz strefy 2460SW.",
+        "podstawa": [
+          "mpzp",
+          "plan_ogolny",
+          "ocena_zabudowy"
+        ]
+      },
+      {
+        "tekst": "Zapytaj wojewódzkiego konserwatora zabytków o wymagania dla strefy ochrony konserwatorskiej i stref ochrony zabytków archeologicznych, zanim zaplanujesz prace budowlane.",
+        "podstawa": [
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Sprawdź w operatorze sieci warunki przyłączenia, ponieważ w KIUT brak danych dla tego obszaru, a BDOT10k nie pokazuje linii niskiego napięcia ani kabli.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Zweryfikuj w starostwie powiatowym (geodezja) lub w księdze wieczystej powierzchnię 617 m2 i dane ewidencyjne działki 2395 w obrębie Stare Miasto.",
+        "podstawa": [
+          "dzialka"
+        ]
+      }
     ],
     "ryzyka": [
-      "Działka o powierzchni 617 m² w strefie wielofunkcyjnej z maksymalnym udziałem zabudowy do 100% i intensywnością 5 może wiążąc się z wymogiem 30% minimum powierzchni biologicznie czynnej, co zmniejsza potencjał zabudowy.",
-      "Usytuowanie w dwóch strefach ochrony konserwatorskiej (zabytkowej i archeologicznej) może wydłużyć proces projektowania i budowy, wymagając uzgodnień i ekspertyz archeologicznych.",
-      "Przeznaczenie terenu 12UA*UC na usługi administracji i usługi centrotwórcze ogranicza możliwość zabudowy mieszkaniowej lub innych funkcji niż te określone w MPZP.",
-      "Brak danych o sieciach energetycznych i uzbrojeniu w KIUT utrudnia oszacowanie kosztów przyłączenia infrastruktury niezbędnej do zagospodarowania działki."
+      {
+        "tekst": "Działka leży w strefie ochrony konserwatorskiej i strefie ochrony zabytków archeologicznych, co może wymagać uzgodnień konserwatorskich i wpłynąć na zakres lub termin inwestycji.",
+        "podstawa": [
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Brak danych w KIUT dla tego obszaru oraz brak informacji o sieci niskiego napięcia i kablach w BDOT10k oznacza niepewność co do dostępności uzbrojenia.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Dla planu ogólnego strefy 2460SW wskazano maksymalną wysokość 25 m, intensywność 5 oraz minimalny udział powierzchni biologicznie czynnej 30 proc., co ogranicza możliwą zabudowę.",
+        "podstawa": [
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Brak stref zagrożenia powodziowego na mapach ISOK nie oznacza pełnej pewności, dlatego warto potwierdzić to w PGW Wody Polskie przed zakupem.",
+        "podstawa": [
+          "powodz"
+        ]
+      }
     ],
-    "model": "claude-haiku-4-5-20251001",
-    "odrzucone": 0
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2232,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 859,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Przed zakupem uzyskaj w urzędzie gminy wypis i wyrys z planu obowiązującego dla działki 2395 (Rynek i Plac Solny cz. A) i sprawdź ustalenia dla terenu 12UA*UC oraz strefy 2460SW.",
+            "podstawa": [
+              "mpzp",
+              "plan_ogolny",
+              "ocena_zabudowy"
+            ]
+          },
+          {
+            "tekst": "Zapytaj wojewódzkiego konserwatora zabytków o wymagania dla strefy ochrony konserwatorskiej i stref ochrony zabytków archeologicznych, zanim zaplanujesz prace budowlane.",
+            "podstawa": [
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Sprawdź w operatorze sieci warunki przyłączenia, ponieważ w KIUT brak danych dla tego obszaru, a BDOT10k nie pokazuje linii niskiego napięcia ani kabli.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Zweryfikuj w starostwie powiatowym (geodezja) lub w księdze wieczystej powierzchnię 617 m2 i dane ewidencyjne działki 2395 w obrębie Stare Miasto.",
+            "podstawa": [
+              "dzialka"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Działka leży w strefie ochrony konserwatorskiej i strefie ochrony zabytków archeologicznych, co może wymagać uzgodnień konserwatorskich i wpłynąć na zakres lub termin inwestycji.",
+            "podstawa": [
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Brak danych w KIUT dla tego obszaru oraz brak informacji o sieci niskiego napięcia i kablach w BDOT10k oznacza niepewność co do dostępności uzbrojenia.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Dla planu ogólnego strefy 2460SW wskazano maksymalną wysokość 25 m, intensywność 5 oraz minimalny udział powierzchni biologicznie czynnej 30 proc., co ogranicza możliwą zabudowę.",
+            "podstawa": [
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Brak stref zagrożenia powodziowego na mapach ISOK nie oznacza pełnej pewności, dlatego warto potwierdzić to w PGW Wody Polskie przed zakupem.",
+            "podstawa": [
+              "powodz"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

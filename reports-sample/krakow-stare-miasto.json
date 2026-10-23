@@ -1,7 +1,7 @@
 {
   "version": 2,
   "parcelId": "126105_9.0001.580/4",
-  "generatedAt": "2026-10-19T20:29:16.633Z",
+  "generatedAt": "2026-10-23T12:10:09.659Z",
   "parcel": {
     "parcelId": "126105_9.0001.580/4",
     "numer": "580/4",
@@ -17,7 +17,8 @@
       "lng": 19.937404
     },
     "geomWkt": "SRID=2180;POLYGON((566948.548880134 244208.747074719,566959.576454969 244203.493860295,567017.441234474 244175.821200816,567026.888703271 244171.335454557,567044.751191512 244162.466284508,567057.048524834 244153.848014288,567067.124845745 244144.170564646,567075.688014462 244133.132975871,567082.047129944 244121.896420507,567103.204383461 244120.283438159,567105.862821017 244127.782522681,567108.69999308 244134.206695377,567140.254846878 244196.804132174,567145.161874777 244206.572796774,567174.043682619 244263.710199217,567176.14608943 244266.585693648,567179.144751895 244269.965047888,567182.641484565 244273.037826125,567191.429363649 244288.70876513,567188.350748858 244289.436117955,567179.262096234 244292.841774887,567165.960448568 244298.643938137,567121.436068319 244320.185558156,567111.854711751 244324.817674664,567046.466301388 244356.437726011,567037.999362489 244360.519838164,567031.496328552 244349.498785797,566994.957486642 244287.477724173,566989.163223688 244277.615329918,566956.907341331 244222.906924503,566948.548880134 244208.747074719),(567030.97238269 244208.124474604,567051.154041387 244247.433878833,567050.951833701 244247.51844012,567051.688531639 244249.127716277,567058.555789017 244262.227936625,567059.335121526 244263.738382344,567059.517616609 244263.643296132,567073.533738605 244290.900983318,567074.284705617 244292.350686646,567078.233551624 244300.194231832,567079.6131038 244302.810440804,567079.223948597 244303.529817478,567080.071590984 244303.982389754,567080.597302913 244303.016739132,567081.196610571 244302.66288758,567083.793374416 244301.262820422,567091.354965094 244297.01650727,567099.498384912 244292.695795779,567107.413733158 244288.678891154,567107.757594741 244289.2779314,567111.185041948 244287.470223541,567109.437006804 244284.054371084,567109.193501674 244284.187812727,567109.04168467 244283.883832491,567087.896845993 244242.089322179,567088.495618689 244241.755450555,567087.507738141 244239.819539459,567085.464186381 244235.865924896,567084.476305804 244233.930013842,567083.909642821 244234.184767563,567062.069335283 244192.601581547,567061.745988516 244191.98309635,567061.929018471 244191.868030026,567060.149675163 244188.501326577,567056.762189341 244190.31010508,567057.115773651 244190.919402573,567039.029696084 244201.792020937,567039.24930377 244202.177793443,567034.753034944 244205.446469326,567035.0477488 244206.014201979,567030.97238269 244208.124474604),(567092.735109378 244158.082471746,567092.930363448 244158.257651248,567092.883733197 244159.626018367,567092.690713203 244159.740817276,567092.708380746 244160.20116115,567092.855556777 244160.305073186,567092.749096852 244163.161420374,567101.096753123 244163.534856568,567101.308604945 244164.210340101,567101.479867246 244164.534835224,567101.85744344 244164.994817171,567102.102915128 244165.161343887,567102.269803782 244165.275780856,567102.615175807 244165.444982043,567102.90247976 244165.542648311,567103.180863467 244165.600086998,567103.439267108 244165.65699079,567103.699007984 244165.663944414,567103.938768793 244165.670363145,567104.149361842 244165.646009431,567104.369944925 244165.621923167,567104.651270552 244165.569471483,567104.873458318 244165.485445015,567105.085923497 244165.391161066,567105.502735952 244165.132395484,567105.934085041 244164.704066776,567106.248228195 244164.172628361,567106.401193572 244163.686860964,567106.459702046 244163.368517118,567106.500197075 244163.349606838,567106.476565455 244157.510613054,567106.566743206 244157.50303004,567106.551732094 244149.474881621,567106.554674005 244149.36499125,567106.215185789 244148.976009338,567106.035097734 244148.981185335,567098.725696966 244149.035432787,567098.555598949 244149.040876229,567098.187666901 244149.340939196,567098.193645237 244149.491057144,567098.30655792 244154.982539156,567093.053137573 244154.791912025,567092.949084724 244157.558348917,567092.837054784 244157.635327267,567092.735109378 244158.082471746),(566995.654699868 244221.105051318,566999.451383617 244229.404390421,567004.965486826 244226.952742428,567005.859980054 244229.016116269,567010.745073326 244226.907527456,567009.912392393 244224.775828067,567010.448550232 244224.540252112,567010.533646421 244224.7224797,567012.020902331 244224.062492589,567009.379884027 244218.153429113,567007.796770712 244214.552046912,567007.182721976 244213.215978745,566996.679975654 244218.283300446,566997.636816138 244220.258368623,566996.309935688 244220.902654844,566996.272382609 244220.811674778,566995.654699868 244221.105051318))",
-    "found": true
+    "found": true,
+    "fetchedAt": "2026-10-23T12:10:10.526Z"
   },
   "mpzp": {
     "covered": true,
@@ -37,10 +38,13 @@
     "status": "ok"
   },
   "pog": {
-    "wroclaw": null,
+    "plan": null,
+    "planStatus": "not_covered",
+    "draft": null,
     "ru": {
       "entry": null,
-      "inForce": false
+      "inForce": false,
+      "draft": null
     },
     "inForce": false,
     "source": "Rejestru Urbanistycznego"
@@ -69,6 +73,13 @@
   "gesut": null,
   "gesutStatus": "not_covered",
   "osm": null,
+  "powerLines": {
+    "lines": [],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2024-04-22",
+    "datasetVersion": "20261023"
+  },
   "sip": null,
   "findings": [
     {
@@ -79,55 +90,185 @@
   ],
   "sources": [
     {
+      "source": "Dane ewidencyjne – ULDK (GUGiK)",
+      "status": "ok",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T12:10:10.526Z"
+    },
+    {
       "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
       "status": "ok",
-      "ms": 236,
-      "fetchedAt": "2026-10-19T20:29:17.565Z"
+      "ms": 277,
+      "fetchedAt": "2026-10-23T12:10:10.804Z"
     },
     {
       "source": "Plan ogólny – Rejestr Urbanistyczny",
       "status": "no_data",
-      "ms": 144,
-      "fetchedAt": "2026-10-19T20:29:17.476Z"
+      "ms": 170,
+      "fetchedAt": "2026-10-23T12:10:10.696Z"
     },
     {
       "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
       "status": "no_data",
-      "ms": 3822,
-      "fetchedAt": "2026-10-19T20:29:21.155Z"
+      "ms": 1318,
+      "fetchedAt": "2026-10-23T12:10:11.847Z"
     },
     {
       "source": "Ochrona przyrody – GDOŚ",
       "status": "ok",
-      "ms": 302,
-      "fetchedAt": "2026-10-19T20:29:17.638Z"
+      "ms": 548,
+      "fetchedAt": "2026-10-23T12:10:11.079Z"
     },
     {
       "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
       "status": "not_covered",
-      "ms": 694,
-      "fetchedAt": "2026-10-19T20:29:18.037Z"
+      "ms": 1001,
+      "fetchedAt": "2026-10-23T12:10:11.535Z"
     },
     {
-      "source": "Linie i rurociągi – OpenStreetMap",
-      "status": "error",
-      "error": "Wszystkie instancje Overpass zawiodły: The operation was aborted due to timeout; The operation was aborted due to timeout; The operation was aborted due to timeout",
-      "ms": 15005,
-      "fetchedAt": "2026-10-19T20:29:32.350Z"
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "no_data",
+      "ms": 45,
+      "fetchedAt": "2026-10-23T12:10:10.581Z"
     }
   ],
   "utilityMap": "osadzona w HTML",
   "ai": {
     "rekomendacje": [
-      "Skontaktuj się z urzędem gminy w sprawie wpływu otulinę Bielańsko-Tynieckiego Parku Krajobrazowego na możliwości zabudowy oraz ewentualnych ograniczeń dotyczących zagospodarowania działki.",
-      "Sprawdź u operatora sieci (lub w warunkach przyłączenia od operatorów) dostępność przyłączeń do sieci wodociągowej, kanalizacyjnej i elektrycznej, ponieważ w rejestrze brak danych o uzbrojeniu terenu.",
-      "Zlecić geodecie wykonanie mapy do celów projektowych, aby potwierdzić aktualny stan działki i jej granice przed podpisaniem umowy."
+      {
+        "tekst": "Poproś urząd gminy Kraków o wypis i wyrys z MPZP STARE MIASTO (symbol KP.1) dla działki 580/4 i potwierdź, jakie funkcje dopuszcza ten plan.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "mpzp"
+        ]
+      },
+      {
+        "tekst": "Sprawdź w starostwie powiatowym (geodezja) aktualny wypis z rejestru gruntów oraz zgodność powierzchni 26583 m2 z ewidencją działki 580/4 w obrębie S-1.",
+        "podstawa": [
+          "dzialka"
+        ]
+      },
+      {
+        "tekst": "Zleć w operatorze sieci sprawdzenie warunków przyłączenia do wodociągu, kanalizacji, gazu i energii, ponieważ dane o uzbrojeniu w KIUT dla tego obszaru są niedostępne, a z BDOT10k nie wynika obecność linii niskiego napięcia ani kabli.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Przed podpisaniem umowy pobierz z księgi wieczystej wpisy dotyczące działki 580/4 i zleć notariuszowi ich weryfikację.",
+        "podstawa": [
+          "dzialka",
+          "ustalenia"
+        ]
+      }
     ],
     "ryzyka": [
-      "Brak danych o sieciach uzbrojenia terenu w dostępnych rejestrach może oznaczać, że przyłączenia infrastruktury są niedostępne lub wymagają budowy, co istotnie podniesie koszty realizacji inwestycji.",
-      "Otulina parku krajobrazowego może wprowadzić dodatkowe ograniczenia w zakresie typów budynków, ich wysokości, materiałów czy kolorystyki, których szczegóły należy potwierdzić w urzędzie gminy."
+      {
+        "tekst": "Działka leży w odległości do 300 m od otuliny Bielańsko-Tynieckiego Parku Krajobrazowego, co może wiązać się z dodatkowymi ograniczeniami; zakres tych ograniczeń warto potwierdzić w urzędzie gminy lub regionalnej dyrekcji ochrony środowiska.",
+        "podstawa": [
+          "przyroda",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Brak danych w KIUT dla tego obszaru oznacza, że koszt i termin przyłączenia mogą być nieznane przed zakupem.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Przeznaczenie w MPZP to tereny placów miejskich, co ogranicza możliwości zabudowy zgodnie z ustaleniami planu; przed zakupem trzeba ustalić, czy zamierzone użytkowanie jest w nim dopuszczone.",
+        "podstawa": [
+          "mpzp",
+          "ocena_zabudowy"
+        ]
+      },
+      {
+        "tekst": "Brak wpisu planu ogólnego w rejestrze oznacza konieczność potwierdzenia u urzędu gminy, że nie obowiązuje żaden inny dokument planistyczny dla tej działki.",
+        "podstawa": [
+          "plan_ogolny"
+        ]
+      }
     ],
-    "model": "claude-haiku-4-5-20251001",
-    "odrzucone": 2
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2020,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 902,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Poproś urząd gminy Kraków o wypis i wyrys z MPZP STARE MIASTO (symbol KP.1) dla działki 580/4 i potwierdź, jakie funkcje dopuszcza ten plan.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "mpzp"
+            ]
+          },
+          {
+            "tekst": "Sprawdź w starostwie powiatowym (geodezja) aktualny wypis z rejestru gruntów oraz zgodność powierzchni 26583 m2 z ewidencją działki 580/4 w obrębie S-1.",
+            "podstawa": [
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Zleć w operatorze sieci sprawdzenie warunków przyłączenia do wodociągu, kanalizacji, gazu i energii, ponieważ dane o uzbrojeniu w KIUT dla tego obszaru są niedostępne, a z BDOT10k nie wynika obecność linii niskiego napięcia ani kabli.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Przed podpisaniem umowy pobierz z księgi wieczystej wpisy dotyczące działki 580/4 i zleć notariuszowi ich weryfikację.",
+            "podstawa": [
+              "dzialka",
+              "ustalenia"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Działka leży w odległości do 300 m od otuliny Bielańsko-Tynieckiego Parku Krajobrazowego, co może wiązać się z dodatkowymi ograniczeniami; zakres tych ograniczeń warto potwierdzić w urzędzie gminy lub regionalnej dyrekcji ochrony środowiska.",
+            "podstawa": [
+              "przyroda",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Brak danych w KIUT dla tego obszaru oznacza, że koszt i termin przyłączenia mogą być nieznane przed zakupem.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Przeznaczenie w MPZP to tereny placów miejskich, co ogranicza możliwości zabudowy zgodnie z ustaleniami planu; przed zakupem trzeba ustalić, czy zamierzone użytkowanie jest w nim dopuszczone.",
+            "podstawa": [
+              "mpzp",
+              "ocena_zabudowy"
+            ]
+          },
+          {
+            "tekst": "Brak wpisu planu ogólnego w rejestrze oznacza konieczność potwierdzenia u urzędu gminy, że nie obowiązuje żaden inny dokument planistyczny dla tej działki.",
+            "podstawa": [
+              "plan_ogolny"
+            ]
+          }
+        ]
+      }
+    }
   }
 }

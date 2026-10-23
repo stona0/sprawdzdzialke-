@@ -1,7 +1,7 @@
 {
   "version": 2,
   "parcelId": "101408_2.0021.44/2",
-  "generatedAt": "2026-10-23T08:59:32.844Z",
+  "generatedAt": "2026-10-23T12:09:50.485Z",
   "parcel": {
     "parcelId": "101408_2.0021.44/2",
     "numer": "44/2",
@@ -18,7 +18,7 @@
     },
     "geomWkt": "SRID=2180;POLYGON((475671.511702171 415563.973298696,475682.676127047 415562.551261924,475670.96704798 415682.695773701,475632.358690961 415683.463820142,475602.075324802 415683.468332912,475599.405507228 415683.374928177,475596.581517842 415647.902992825,475599.674061329 415646.751292852,475665.847402037 415621.879136836,475671.511702171 415563.973298696))",
     "found": true,
-    "fetchedAt": "2026-10-23T08:59:33.107Z"
+    "fetchedAt": "2026-10-23T12:09:50.739Z"
   },
   "mpzp": {
     "covered": false,
@@ -151,6 +151,20 @@
   },
   "gesutStatus": "ok",
   "osm": null,
+  "powerLines": {
+    "lines": [
+      {
+        "klasa": "MV",
+        "distanceM": 175,
+        "crosses": false,
+        "status": null
+      }
+    ],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2024-04-22",
+    "datasetVersion": "20261023"
+  },
   "sip": null,
   "findings": [
     {
@@ -165,12 +179,12 @@
     },
     {
       "level": "uwaga",
-      "basis": "pog",
+      "basis": "plan_ogolny",
       "text": "Plan ogólny gminy w Rejestrze Urbanistycznym: „w opracowaniu”."
     },
     {
       "level": "uwaga",
-      "basis": "pog",
+      "basis": "plan_ogolny",
       "text": "W projekcie planu ogólnego (w opracowaniu) działka leży w strefie 5SO (strefa otwarta), 1SJ (strefa wielofunkcyjna z zabudową mieszkaniową jednorodzinną), w projektowanym obszarze uzupełnienia zabudowy (18% działki). Projekt nie obowiązuje i może się jeszcze zmienić."
     }
   ],
@@ -179,67 +193,207 @@
       "source": "Dane ewidencyjne – ULDK (GUGiK)",
       "status": "ok",
       "ms": 0,
-      "fetchedAt": "2026-10-23T08:59:33.107Z"
+      "fetchedAt": "2026-10-23T12:09:50.739Z"
     },
     {
       "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
       "status": "no_data",
-      "ms": 219,
-      "fetchedAt": "2026-10-23T08:59:33.327Z"
+      "ms": 267,
+      "fetchedAt": "2026-10-23T12:09:51.007Z"
     },
     {
       "source": "Plan ogólny – Rejestr Urbanistyczny",
       "status": "ok",
-      "ms": 221,
-      "fetchedAt": "2026-10-23T08:59:33.328Z"
+      "ms": 141,
+      "fetchedAt": "2026-10-23T12:09:50.880Z"
     },
     {
       "source": "Projekt planu ogólnego – Rejestr Urbanistyczny",
       "status": "ok",
-      "ms": 1066,
-      "fetchedAt": "2026-10-23T08:59:34.394Z"
+      "ms": 1052,
+      "fetchedAt": "2026-10-23T12:09:51.932Z"
     },
     {
       "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
       "status": "no_data",
-      "ms": 221,
-      "fetchedAt": "2026-10-23T08:59:33.329Z"
+      "ms": 302,
+      "fetchedAt": "2026-10-23T12:09:51.043Z"
     },
     {
       "source": "Ochrona przyrody – GDOŚ",
       "status": "ok",
-      "ms": 315,
-      "fetchedAt": "2026-10-23T08:59:33.424Z"
+      "ms": 289,
+      "fetchedAt": "2026-10-23T12:09:51.033Z"
     },
     {
       "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
       "status": "ok",
-      "ms": 880,
-      "fetchedAt": "2026-10-23T08:59:33.992Z"
+      "ms": 606,
+      "fetchedAt": "2026-10-23T12:09:51.355Z"
     },
     {
-      "source": "Linie i rurociągi – OpenStreetMap",
-      "status": "error",
-      "error": "Overpass nie odpowiadał w ostatnich minutach — pominięto",
-      "ms": 0,
-      "fetchedAt": "2026-10-23T08:59:33.113Z"
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "ok",
+      "ms": 8,
+      "fetchedAt": "2026-10-23T12:09:50.758Z"
     }
   ],
   "utilityMap": "osadzona w HTML",
   "ai": {
     "rekomendacje": [
-      "Potwierdź w urzędzie gminy Sieradz aktualny status planu ogólnego i możliwość uzyskania decyzji o warunkach zabudowy. Rejestr Urbanistyczny może być opóźniony — urzędnik poda wiążące informacje o możliwości zabudowy działki.",
-      "Uzyskaj u operatorów sieci (elektroenergetyki, wodociągów, kanalizacji) dokumenty dotyczące przebiegających przez działkę urządzeń: pasy ochronne, służebności przesyłu i warunki przyłączenia. Te ograniczenia mogą wpłynąć na możliwość i koszt zabudowy.",
-      "Skontaktuj się z Biurem Obsługi Geodety lub starostwem powiatowym w celu uzyskania dokładnego planu przebiegu sieci i stref ochronnych na działce. Określ, jaka część działki jest wolna od ograniczeń.",
-      "Zapoznaj się z projektem planu ogólnego dostępnym w urzędzie gminy, szczególnie ze zmianami przydzielonymi do strefy 5SO (otwarta) i 1SJ. Projekt nie obowiązuje, ale daj wskazania co do potencjalnych warunków zabudowy."
+      {
+        "tekst": "Sprawdź w urzędzie gminy Sieradz, czy plan ogólny gminy rzeczywiście nie obowiązuje i jaki jest aktualny status jego opracowania, ponieważ Rejestr Urbanistyczny może być opóźniony względem uchwał.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Poproś urząd gminy o informację, czy dla działki można uzyskać decyzję o warunkach zabudowy oraz jak wygląda projekt planu ogólnego w części dotyczącej działki 44/2, w tym strefy 1SJ obejmującej około 18% powierzchni.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny",
+          "dzialka"
+        ]
+      },
+      {
+        "tekst": "Zleć geodecie lub sprawdź w starostwie powiatowym (geodezja) przebieg sieci elektroenergetycznej, wodociągu i kanalizacji przez działkę 44/2 oraz wymagane pasy ochronne lub służebności przesyłu.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia",
+          "dzialka"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatora sieci o warunki przyłączenia dla działki 44/2, zwłaszcza w zakresie sieci gazowej, której w promieniu 100 m nie stwierdzono.",
+        "podstawa": [
+          "uzbrojenie",
+          "dzialka"
+        ]
+      }
     ],
     "ryzyka": [
-      "Brak obowiązującego planu ogólnego i MPZP uniemożliwia obecnie zabudowę terenu bez uchwalenia nowego planu. Od września 2026 roku nie można było uzyskać decyzji o warunkach zabudowy — zabudowa wymaga zdecydowanie planu.",
-      "Przebiegające przez działkę sieci elektroenergetyczna, wodociąg i kanalizacja mogą wiązać się z pasami ochronnymi i służebnościami znacząco ograniczającymi możliwość zabudowy i wymagającymi uzgodnień z operatorami.",
-      "Działka położona w pobliżu Obszaru chronionego krajobrazu Nadwarciańskiego (do 300 m) — rozbudowa może wymagać dodatkowych zgód od regionalnej dyrekcji ochrony środowiska i być przedmiotem restrykcji.",
-      "Projekt planu ogólnego jest w opracowaniu i może się zmienić. Obecny podział na strefy (5SO i 1SJ) nie jest wiążący i nie gwarantuje, że ostateczny plan będzie identyczny."
+      {
+        "tekst": "Gmina nie ma obowiązującego planu ogólnego, a według rejestru od 1.09.2026 nowe decyzje o warunkach zabudowy nie będą wydawane, co może uniemożliwić zabudowę działki.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Przez działkę przebiegają sieci elektroenergetyczna, wodociąg i kanalizacja, co może ograniczać zabudowę ze względu na pasy ochronne lub służebności.",
+        "podstawa": [
+          "uzbrojenie",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Projekt planu ogólnego może się jeszcze zmienić, a obecne ustalenia dla strefy 5SO i 1SJ nie są wiążące; część działki jest w projektowanym obszarze uzupełnienia zabudowy.",
+        "podstawa": [
+          "plan_ogolny",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Działka znajduje się w odległości do 300 m od Obszaru chronionego krajobrazu Nadwarciański, a linia średniego napięcia przebiega 175 m od granicy działki, co może wpływać na zakres inwestycji.",
+        "podstawa": [
+          "przyroda",
+          "uzbrojenie"
+        ]
+      }
     ],
-    "model": "claude-haiku-4-5-20251001",
-    "odrzucone": 0
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2712,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 1054,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Sprawdź w urzędzie gminy Sieradz, czy plan ogólny gminy rzeczywiście nie obowiązuje i jaki jest aktualny status jego opracowania, ponieważ Rejestr Urbanistyczny może być opóźniony względem uchwał.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Poproś urząd gminy o informację, czy dla działki można uzyskać decyzję o warunkach zabudowy oraz jak wygląda projekt planu ogólnego w części dotyczącej działki 44/2, w tym strefy 1SJ obejmującej około 18% powierzchni.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny",
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Zleć geodecie lub sprawdź w starostwie powiatowym (geodezja) przebieg sieci elektroenergetycznej, wodociągu i kanalizacji przez działkę 44/2 oraz wymagane pasy ochronne lub służebności przesyłu.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia",
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatora sieci o warunki przyłączenia dla działki 44/2, zwłaszcza w zakresie sieci gazowej, której w promieniu 100 m nie stwierdzono.",
+            "podstawa": [
+              "uzbrojenie",
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Sprawdź w księdze wieczystej i wypisie z rejestru gruntów, czy na działce nie ma innych obciążeń, a przed zakupem skonsultuj umowę z notariuszem.",
+            "podstawa": [
+              "dzialka",
+              "ustalenia"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Gmina nie ma obowiązującego planu ogólnego, a według rejestru od 1.09.2026 nowe decyzje o warunkach zabudowy nie będą wydawane, co może uniemożliwić zabudowę działki.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Przez działkę przebiegają sieci elektroenergetyczna, wodociąg i kanalizacja, co może ograniczać zabudowę ze względu na pasy ochronne lub służebności.",
+            "podstawa": [
+              "uzbrojenie",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Projekt planu ogólnego może się jeszcze zmienić, a obecne ustalenia dla strefy 5SO i 1SJ nie są wiążące; część działki jest w projektowanym obszarze uzupełnienia zabudowy.",
+            "podstawa": [
+              "plan_ogolny",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Działka znajduje się w odległości do 300 m od Obszaru chronionego krajobrazu Nadwarciański, a linia średniego napięcia przebiega 175 m od granicy działki, co może wpływać na zakres inwestycji.",
+            "podstawa": [
+              "przyroda",
+              "uzbrojenie"
+            ]
+          }
+        ]
+      }
+    }
   }
 }
