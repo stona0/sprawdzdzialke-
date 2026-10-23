@@ -7,6 +7,7 @@
  * „API KEY REQUIRED”, a GESUT był pobierany z integracja02.gugik.gov.pl (puste odpowiedzi).
  */
 import { parseWkt, toWgs84 } from './geo'
+import { fetchWithRetry } from './http'
 import { networkMasks, type Rgb } from './kiut-raster'
 
 const ORTO_BASE = 'https://mapy.geoportal.gov.pl/wss/service/PZGIK/ORTO/WMS'
@@ -86,7 +87,9 @@ function parcelRingsWgs84(wkt: string): Array<Array<{ lat: number; lng: number }
 async function wmsPng(base: string, params: Record<string, string>, timeoutMs: number, size = { width: W, height: H }): Promise<Buffer | null> {
   const q = new URLSearchParams({ SERVICE: 'WMS', VERSION: '1.3.0', REQUEST: 'GetMap', STYLES: '', CRS: 'EPSG:3857', WIDTH: String(size.width), HEIGHT: String(size.height), ...params })
   try {
-    const res = await fetch(`${base}?${q}`, { signal: AbortSignal.timeout(timeoutMs), cache: 'no-store' })
+    // KIUT przyjmuje 10 zapytań na 2 s, a mapa pyta go razem z gesut.ts — nadmiar dostaje 429 z Retry-After.
+    // Pozostałych usług nie ponawiamy: ortofotomapa ma już zapasowy wariant, a raport ma limit czasu.
+    const res = await fetchWithRetry(`${base}?${q}`, { timeoutMs, retries: base === GESUT_WMS ? 1 : 0 })
     const buf = Buffer.from(await res.arrayBuffer())
     const isPng = buf[0] === 0x89 && buf[1] === 0x50
     const isJpg = buf[0] === 0xff && buf[1] === 0xd8

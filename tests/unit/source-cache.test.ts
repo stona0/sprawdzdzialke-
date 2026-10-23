@@ -61,6 +61,23 @@ describe('trwały cache źródeł (source_cache)', () => {
     expect(thrown.stale).toBe(true)
   })
 
+  it('wynik niepotwierdzony (różne odpowiedzi źródła) idzie do raportu świeży, ale nie do bazy ani pamięci', async () => {
+    const unconfirmed = { ...result('ok', { gaz: 4 }), unconfirmed: true }
+    const fn = vi.fn(async () => unconfirmed)
+    expect(await cachedSource('test:u', 60_000, fn)).toEqual(unconfirmed)
+    expect(await sql('SELECT 1 FROM source_cache')).toHaveLength(0)
+    await cachedSource('test:u', 60_000, fn)
+    expect(fn).toHaveBeenCalledTimes(2)
+
+    // przeterminowana kopia nie zastępuje świeżej odpowiedzi — tylko błędu
+    await cachedSource('test:u2', 60_000, async () => result('ok', { gaz: null }))
+    await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 hour'`)
+    clearCache()
+    const r = await cachedSource('test:u2', 60_000, async () => unconfirmed)
+    expect(r).toMatchObject({ data: { gaz: 4 }, unconfirmed: true })
+    expect(r.stale).toBeUndefined()
+  })
+
   it('po keep_until nie używamy starego wyniku', async () => {
     await cachedSource('test:d', 60_000, async () => result('ok', { x: 1 }))
     await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '2 days', keep_until = NOW() - interval '1 day'`)

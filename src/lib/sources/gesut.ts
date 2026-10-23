@@ -11,14 +11,23 @@
  *  - kompletność zależy od powiatu; duże miasta (np. Wrocław, Kraków) nie przekazują
  *    danych do KIUT — wtedy wynik to „brak danych”, a nie „brak sieci”,
  *  - nie rozróżnia napięcia, średnicy ani tego, czy sieć jest czynna i dostępna do przyłączenia.
+ *
+ * Serwer bywa niekompletny: identyczne GetMap zwracają różne wersje danych (Sobótka, 8 zapytań na warstwę:
+ * prąd 26 755 / 7 227 / 1 462 px, gaz 3 417 px albo pusto w 3 z 8; Długołęka: prąd pusto w ~40%).
+ * Dlatego każdą warstwę pobieramy SAMPLES razy i łączymy narysowane piksele, a gdy odpowiedzi się różnią
+ * (albo część nie przyszła), wynik jest `unconfirmed` i nie trafia do cache. Limit usługi: 10 zapytań na 2 s
+ * (429 z Retry-After) — fetchWithRetry czeka, ile każe serwer. Zmierzone 23.10.2026 (scripts/gesut-stability.mts).
  */
 import { bbox, distanceToLine, pointInMultiPolygon, type MultiPolygon, type Pt } from '../geo'
 import { cachedSource, DAY, fetchWithRetry, runSource, type SourceResult } from '../http'
+import { responsesAgree } from '../kiut-raster'
 
 const KIUT = 'https://integracja.gugik.gov.pl/cgi-bin/KrajowaIntegracjaUzbrojeniaTerenu'
 export const GESUT_WINDOW_M = 100
 const COVERAGE_WINDOW_M = 1000
 const MAX_PX = 2000
+/** Odpowiedzi na każdą warstwę. Więcej = mniej braków, ale 4 warstwy × SAMPLES + mapa (4) muszą zmieścić się blisko limitu 10 na 2 s. */
+const SAMPLES = 2
 
 export const NETWORKS = {
   energia: { layer: 'przewod_elektroenergetyczny', label: 'Sieć elektroenergetyczna' },
@@ -61,11 +70,35 @@ async function render(layer: string, x0: number, y0: number, x1: number, y1: num
   return { data, width: info.width, height: info.height, x0, y1, res }
 }
 
-function drawnPixels(r: Raster): Pt[] {
+interface Sampled {
+  /** Piksele narysowane w którejkolwiek odpowiedzi. */
+  pixels: Pt[]
+  /** Przyszły wszystkie odpowiedzi i mają tyle samo pikseli (±10%). */
+  agree: boolean
+}
+
+/** To samo zapytanie SAMPLES razy naraz. Błąd tylko wtedy, gdy nie przyszła żadna odpowiedź. */
+async function renderSampled(layer: string, x0: number, y0: number, x1: number, y1: number, res: number): Promise<Sampled> {
+  const settled = await Promise.allSettled(Array.from({ length: SAMPLES }, () => render(layer, x0, y0, x1, y1, res)))
+  const rasters = settled.flatMap(s => (s.status === 'fulfilled' ? [s.value] : []))
+  if (!rasters.length) throw (settled[0] as PromiseRejectedResult).reason
+  return { pixels: drawnPixels(rasters), agree: rasters.length === SAMPLES && responsesAgree(rasters.map(drawnCount)) }
+}
+
+function drawnCount(r: Raster): number {
+  let n = 0
+  for (let a = 3; a < r.data.length; a += 4) if (r.data[a] > 0) n++
+  return n
+}
+
+/** Odpowiedzi na to samo zapytanie mają tę samą siatkę — piksel jest narysowany, jeśli którakolwiek go ma. */
+function drawnPixels(rs: Raster[]): Pt[] {
+  const [{ width, height, x0, y1, res }] = rs
   const pts: Pt[] = []
-  for (let j = 0; j < r.height; j++) {
-    for (let i = 0; i < r.width; i++) {
-      if (r.data[(j * r.width + i) * 4 + 3] > 0) pts.push([r.x0 + (i + 0.5) * r.res, r.y1 - (j + 0.5) * r.res])
+  for (let j = 0; j < height; j++) {
+    for (let i = 0; i < width; i++) {
+      const a = (j * width + i) * 4 + 3
+      if (rs.some(r => r.data[a] > 0)) pts.push([x0 + (i + 0.5) * res, y1 - (j + 0.5) * res])
     }
   }
   return pts
@@ -93,20 +126,21 @@ export async function queryGesut(parcelId: string, geom: MultiPolygon): Promise<
     const x1 = maxx + GESUT_WINDOW_M, y1 = maxy + GESUT_WINDOW_M
     const res = Math.max(0.5, Math.max(x1 - x0, y1 - y0) / MAX_PX)
 
-    const entries = await Promise.all((Object.keys(NETWORKS) as Network[]).map(async n => {
-      const raster = await render(NETWORKS[n].layer, x0, y0, x1, y1, res)
-      return [n, measure(geom, drawnPixels(raster))] as const
+    const samples = await Promise.all((Object.keys(NETWORKS) as Network[]).map(async n => {
+      const s = await renderSampled(NETWORKS[n].layer, x0, y0, x1, y1, res)
+      return [n, measure(geom, s.pixels), s.agree] as const
     }))
-    const data = Object.fromEntries(entries) as GesutResult
+    const data = Object.fromEntries(samples.map(([n, d]) => [n, d])) as GesutResult
+    const unconfirmed = samples.some(([, , agree]) => !agree)
 
-    if (entries.every(([, d]) => d.distanceM === null)) {
+    if (samples.every(([, d]) => d.distanceM === null)) {
       // Pusto w promieniu 100 m — sprawdzamy, czy KIUT ma tu w ogóle jakiekolwiek dane.
       const cx = (minx + maxx) / 2, cy = (miny + maxy) / 2
       const layers = Object.values(NETWORKS).map(v => v.layer).join(',')
-      const wide = await render(layers, cx - COVERAGE_WINDOW_M, cy - COVERAGE_WINDOW_M, cx + COVERAGE_WINDOW_M, cy + COVERAGE_WINDOW_M, 5)
-      if (!drawnPixels(wide).length) return { status: 'not_covered', data: null }
-      return { status: 'no_data', data }
+      const wide = await renderSampled(layers, cx - COVERAGE_WINDOW_M, cy - COVERAGE_WINDOW_M, cx + COVERAGE_WINDOW_M, cy + COVERAGE_WINDOW_M, 5)
+      if (!wide.pixels.length) return { status: 'not_covered', data: null, unconfirmed: unconfirmed || !wide.agree }
+      return { status: 'no_data', data, unconfirmed: unconfirmed || !wide.agree }
     }
-    return { status: 'ok', data }
+    return { status: 'ok', data, unconfirmed }
   }))
 }

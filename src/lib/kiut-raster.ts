@@ -151,17 +151,20 @@ export interface NetworkMasks {
 /** Udział pikseli, o który mogą się różnić dwie kompletne odpowiedzi (drobne różnice wygładzania). */
 const STABLE_TOLERANCE = 0.1
 
+/** Odpowiedzi na to samo zapytanie potwierdzają się: są co najmniej dwie i mają tyle samo pikseli sieci (±10%). */
+export function responsesAgree(pixelCounts: number[]): boolean {
+  if (pixelCounts.length < 2) return false
+  const hi = Math.max(...pixelCounts)
+  return hi - Math.min(...pixelCounts) <= STABLE_TOLERANCE * hi
+}
+
 /** Połączenie odpowiedzi: piksel należy do sieci, jeśli którakolwiek odpowiedź go narysowała. */
 function union(responses: Rgba[], palette: readonly Rgb[]): { cls: Int8Array; agree: boolean } {
   const per = responses.map(r => classifyPixels(r, palette))
   const cls = new Int8Array(per[0])
   for (const other of per.slice(1)) for (let p = 0; p < cls.length; p++) if (cls[p] < 0) cls[p] = other[p]
-  let agree = per.length >= 2
-  for (let c = 0; c < palette.length && agree; c++) {
-    const counts = per.map(x => x.reduce((k, v) => k + (v === c ? 1 : 0), 0))
-    const hi = Math.max(...counts)
-    if (hi - Math.min(...counts) > STABLE_TOLERANCE * hi) agree = false
-  }
+  let agree = true
+  for (let c = 0; c < palette.length && agree; c++) agree = responsesAgree(per.map(x => x.reduce((k, v) => k + (v === c ? 1 : 0), 0)))
   return { cls, agree }
 }
 

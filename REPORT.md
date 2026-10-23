@@ -151,6 +151,23 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 - **KIMPZP:** „brak wyniku” interpretujemy jako brak MPZP (gmina podłączona, w punkcie brak planu). Gmina może jednak nie przekazywać wszystkich planów. Gminy poza integracją (np. Gdańsk) → „nie ustalono”. Część gmin podaje tylko dane aktu, bez symbolu terenu.
 - **ISOK:** metadane map mają ważność do 21.12.2025, a usługa nie wskazuje nowszych. Mapy nie obejmują podtopień ani małych cieków.
 - **KIUT:** duże miasta nie przekazują danych. Odległość ±2 m z obrazu. Brak informacji o napięciu, średnicy i wolnej mocy.
+- **KIUT zwraca niekompletne obrazy (zmierzone 23.10.2026).** Identyczne zapytania GetMap dają różne wersje danych: część sieci albo pusty obraz. Serwer nie sygnalizuje niepełnej odpowiedzi (HTTP 200, poprawny PNG).
+  - Sobótka (`022307_4.0003.541`), 8 zapytań na warstwę: prąd 26 755 / 7 227 / 1 462 px, gaz 3 417 px albo pusto (3 z 8), wodociąg 6 859 albo 210 px. Ta sama wersja ma zawsze tę samą długość w bajtach, więc za jednym adresem stoi raczej kilka źródeł, a nie losowy szum.
+  - Długołęka: prąd pusty w ok. 40% zapytań. Milicz: raz wynik „brak danych KIUT dla obszaru” (`not_covered`), choć sieci tam są. To wyjaśnia wcześniejszą obserwację, że „KIUT przestał pokazywać okolice Milicza”.
+  - **Skutek przed poprawką.** `gesut.ts` liczył odległość z jednego obrazu na sieć i zapisywał wynik w `source_cache` na dobę. Płatny raport mógł napisać „brak w promieniu ok. 100 m” przy gazie 4 m od działki albo „11 m od granicy działki” przy linii, która nad nią przebiega. Ten sam błędny wynik dostawały wtedy kolejne raporty przez 24 h.
+  - **Poprawka.** Każda warstwa jest pobierana dwa razy równolegle, a narysowane piksele są łączone (tak jak na mapie, sekcja 15). Jeśli odpowiedzi różnią się liczbą pikseli o więcej niż 10% albo jedna nie przyszła, wynik dostaje flagę `unconfirmed`: trafia do raportu, ale nie do cache (`cacheableResult`), więc kolejny raport pyta KIUT od nowa. Przeterminowana kopia z cache nie zastępuje takiego wyniku, tylko błąd źródła. Tak samo działa sprawdzenie pokrycia, które decyduje o `not_covered`.
+  - **Limit KIUT: 10 zapytań na 2 s** na usługę (KIEG ma osobny limit). Nadmiar dostaje HTTP 429 z `Retry-After: 2`. Raport wysyła teraz naraz 8 zapytań z `gesut.ts` i 4 z mapy, więc część dostaje 429. Dlatego `fetchWithRetry` czeka teraz tyle, ile każe `Retry-After` (najwyżej 5 s). Wcześniej czekał 400 ms, więc ponowienie też dostawało 429. Zapytania mapy do KIUT są ponawiane raz.
+  - **Pomiar** (`scripts/gesut-stability.mts`, każde zapytanie bez cache, odległość porównywana z najlepszą ze wszystkich prób ±2 m):
+
+    | | przed | po |
+    |---|---|---|
+    | wyniki sieci gorsze od najlepszego (bez prób zakończonych błędem lub `not_covered`) | 14 / 156 (9%) | 13 / 320 (4%) |
+    | fałszywe `not_covered` | 1 / 50 | 0 / 80 |
+    | próby zakończone błędem 429 | 10 / 50 | 0 / 80 |
+    | błędny wynik zapisany w cache (drugi pomiar po poprawce) | — | 0 / 4 |
+
+    Pomiar „przed” robił zapytania bez przerw, więc część błędów 429 wywołał sam pomiar; pomiar „po” ma 2,5 s przerwy między próbami. 5 działek (Długołęka, Batorz, Milicz, Siechnice, Sobótka) × 10 prób, drugi pomiar po poprawce na 3 niestabilnych działkach.
+  - **Ryzyko szczątkowe.** Gdy obie odpowiedzi zgodnie nie mają sieci, wynik uchodzi za potwierdzony i trafia do cache. Przy częstości braków jak dla gazu w Sobótce (3 z 8) zdarzy się to w ok. 14% raportów. Trzy próby na warstwę (`SAMPLES = 3`) zmniejszyłyby to do ok. 5%, ale dają 16 zapytań naraz przy limicie 10 na 2 s. W niestabilnych okolicach większość wyników nie trafia do cache (8–9 z 10 prób). Każdy raport pyta wtedy KIUT od nowa (ok. 0,4–0,9 s), a przy awarii KIUT nie ma kopii zapasowej.
 - **Niestabilność usług państwowych:** w trakcie sesji ortofotomapa `StandardResolution` przez pewien czas zwracała 404. Wszystkie źródła mają timeout, retry i status w raporcie; awaria pojedynczego źródła daje raport częściowy, nie błąd.
 - **AI (od 23.10.2026 Haiku 5.5, effort low; wcześniej Haiku 4.5):** walidator odrzuca punkty z liczbami spoza danych i bez wskazania podstawy, ale nie łapie błędów semantycznych. Eval (sekcja 13): 34% punktów Haiku 4.5 jest błędnych wg sędziego (głównie spekulacje o kosztach i terminach), Haiku 5.5 low — 11%. Po poprawkach promptu zostały pojedyncze spekulacje (np. Milicz: „położenie nad Baryczą wskazuje na potencjalne zagrożenie hydrologiczne”, choć ISOK nie pokazuje strefy). Kluczowe ustalenia i werdykt w raporcie powstają regułami, nie przez AI.
 
@@ -532,7 +549,7 @@ Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia
 - Identyczne zapytania zwracają różne wersje danych. Sobótka, prąd w 10 odpowiedziach 1200 px: 29 123 / 8 686 / 0 pikseli; kompletny tylko w 4.
 - Mapa pobiera teraz każdą rozdzielczość dwukrotnie (4 równoległe zapytania, ~1,8 s) i łączy odpowiedzi. W 6 kolejnych renderach Sobótki prąd był zawsze obecny (28,5–35,7 tys. px), wcześniej znikał w części renderów.
 - Mapa trafia do cache w Storage tylko wtedy, gdy odpowiedzi się zgadzają. Inaczej jest zapisywana pod jednorazową nazwą i nie zostaje utrwalona dla okolicy. Klucz cache podniesiony do `v5`, więc stare mapy nie są używane.
-- **Do zrobienia:** ten sam problem dotyczy odległości do sieci w tekście raportu (`src/lib/sources/gesut.ts`, jedno zapytanie na sieć, cache na dobę). Raport może wtedy napisać „brak sieci”, choć sieć jest. Nie poprawione; zgłoszone jako osobne zadanie.
+- ~~Do zrobienia: ten sam problem dotyczy odległości do sieci w tekście raportu~~ — poprawione 23.10.2026 w `src/lib/sources/gesut.ts` (dwie odpowiedzi na warstwę, wynik niezgodny bez cache, obsługa limitu 429). Pomiar i ryzyko szczątkowe: sekcja 5, ryzyka danych.
 
 **Testy** (`tests/unit/utility-map.test.ts`, 10 testów na syntetycznych obrazach i prawdziwych odpowiedziach serwera w `tests/fixtures/kiut`):
 - klasyfikacja pikseli;

@@ -17,13 +17,23 @@ export interface SourceResult<T> {
   fetchedAt: string
   /** Wynik z trwałego cache po terminie świeżości — źródło nie odpowiedziało przy tym raporcie. */
   stale?: boolean
+  /** Powtórzone zapytania dały różne odpowiedzi (albo część nie przyszła) — wynik jest ich połączeniem i nie trafia do cache. */
+  unconfirmed?: boolean
 }
 
 export class HttpError extends Error {
-  constructor(public status: number, url: string) {
+  /** Ile czekać przed ponowieniem wg nagłówka Retry-After (429/503). */
+  retryAfterMs?: number
+
+  constructor(public status: number, url: string, retryAfter?: string | null) {
     super(`HTTP ${status} ${new URL(url).host}`)
+    const s = retryAfter ? Number(retryAfter) : NaN
+    if (Number.isFinite(s) && s >= 0) this.retryAfterMs = s * 1000
   }
 }
+
+/** Dłużej nie czekamy, nawet jeśli serwer każe (raport ma limit czasu). */
+const MAX_RETRY_AFTER_MS = 5000
 
 interface RetryInit extends RequestInit {
   timeoutMs?: number
@@ -41,11 +51,13 @@ export async function fetchWithRetry(url: string, init: RetryInit = {}): Promise
         signal: AbortSignal.timeout(timeoutMs),
         cache: 'no-store',
       })
-      if (res.status >= 500 || res.status === 429) throw new HttpError(res.status, url)
+      if (res.status >= 500 || res.status === 429) throw new HttpError(res.status, url, res.headers.get('retry-after'))
       return res
     } catch (e) {
       lastErr = e
-      if (attempt < retries) await new Promise(r => setTimeout(r, 400 * 2 ** attempt))
+      // Limit zapytań (np. KIUT: 10 na 2 s, Retry-After: 2) — ponowienie przed końcem okna też dostałoby 429.
+      const wait = Math.max(400 * 2 ** attempt, Math.min(MAX_RETRY_AFTER_MS, e instanceof HttpError ? e.retryAfterMs ?? 0 : 0))
+      if (attempt < retries) await new Promise(r => setTimeout(r, wait))
     }
   }
   throw lastErr
@@ -116,8 +128,8 @@ function remember(key: string, value: unknown, exp: number) {
 interface StalePolicy<T> {
   /** Oznacza wartość jako kopię (np. flaga widoczna w raporcie). */
   mark: (v: T) => T
-  /** Czy użyć kopii także, gdy fn zwróci wynik odrzucony przez shouldCache (a nie tylko rzuci). */
-  onRejected: boolean
+  /** Czy użyć kopii także zamiast wyniku fn odrzuconego przez shouldCache (a nie tylko, gdy fn rzuci). */
+  replaces?: (v: T) => boolean
 }
 
 async function load<T>(
@@ -144,7 +156,7 @@ async function load<T>(
     if (stale !== undefined) return stale
     throw e
   }
-  if (!shouldCache(value)) return stalePolicy?.onRejected && stale !== undefined ? stale : value
+  if (!shouldCache(value)) return stale !== undefined && stalePolicy?.replaces?.(value) ? stale : value
 
   const now = Date.now()
   remember(key, value, now + ttlMs)
@@ -173,19 +185,20 @@ export interface CacheOptions<T> {
 
 export async function cached<T>(key: string, ttlMs: number, fn: () => Promise<T>, opts: CacheOptions<T> = {}): Promise<T> {
   const { shouldCache = () => true, staleOnThrow, persist = true } = opts
-  return dedupe(key, () => load(key, ttlMs, fn, shouldCache, staleOnThrow && { mark: staleOnThrow, onRejected: false }, persist))
+  return dedupe(key, () => load(key, ttlMs, fn, shouldCache, staleOnThrow && { mark: staleOnThrow }, persist))
 }
 
 /**
  * Cache wyniku źródła danych. Gdy źródło zwróci błąd, a w L2 jest wcześniejszy
  * wynik (do STALE_KEEP_MS), zwracamy go z flagą `stale` — raport pokazuje datę pobrania.
+ * Wynik `unconfirmed` idzie do raportu świeży, ale bez zapisu: kolejny raport zapyta źródło od nowa.
  */
 export async function cachedSource<T>(
   key: string,
   ttlMs: number,
   fn: () => Promise<SourceResult<T>>,
 ): Promise<SourceResult<T>> {
-  return dedupe(key, () => load(key, ttlMs, fn, cacheableResult, { mark: v => ({ ...v, stale: true }), onRejected: true }))
+  return dedupe(key, () => load(key, ttlMs, fn, cacheableResult, { mark: v => ({ ...v, stale: true }), replaces: v => v.status === 'error' }))
 }
 
 // ─── Bezpiecznik ──────────────────────────────────────────────────────────────
@@ -221,12 +234,12 @@ export const DAY = 24 * 60 * 60 * 1000
 /** Uruchamia zapytanie do źródła i zawsze zwraca SourceResult — nigdy nie rzuca. */
 export async function runSource<T>(
   source: string,
-  fn: () => Promise<{ status: SourceStatus; data: T | null }>,
+  fn: () => Promise<{ status: SourceStatus; data: T | null; unconfirmed?: boolean }>,
 ): Promise<SourceResult<T>> {
   const t0 = Date.now()
   try {
-    const { status, data } = await fn()
-    return { source, status, data, ms: Date.now() - t0, fetchedAt: new Date().toISOString() }
+    const { status, data, unconfirmed } = await fn()
+    return { source, status, data, ms: Date.now() - t0, fetchedAt: new Date().toISOString(), ...(unconfirmed ? { unconfirmed } : {}) }
   } catch (e) {
     // Przyczyna trafia do logów funkcji hostingu; „fetch failed” bez cause nic nie mówi.
     const cause = e instanceof Error && e.cause instanceof Error ? ` (${(e.cause as NodeJS.ErrnoException).code ?? ''} ${e.cause.message})` : ''
@@ -242,7 +255,7 @@ export async function runSource<T>(
   }
 }
 
-/** Wynik cache'ujemy tylko gdy źródło odpowiedziało (błędy mają być ponawiane). */
+/** Wynik cache'ujemy tylko gdy źródło odpowiedziało (błędy mają być ponawiane) i odpowiedzi były zgodne. */
 export function cacheableResult<T>(r: SourceResult<T>): boolean {
-  return r.status !== 'error'
+  return r.status !== 'error' && !r.unconfirmed
 }
