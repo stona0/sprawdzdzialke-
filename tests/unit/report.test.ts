@@ -44,7 +44,7 @@ function makeData(over: Partial<ReportData> = {}): ReportData {
     isok: { scenarios: ['Q1'], oszp: true, risk: [], validTo: '2025-12-21' },
     gdos: { onParcel: [{ type: 'Natura 2000 – obszar specjalnej ochrony ptaków (OSO)', name: 'Dolina Baryczy' }], nearby: [] },
     gesut: { energia: { distanceM: 0, crosses: true }, woda: { distanceM: 12, crosses: false }, kanalizacja: { distanceM: null, crosses: false }, gaz: { distanceM: null, crosses: false } },
-    osm: null, ru: null, wPog: null,
+    osm: null, ru: null, plan: null, draft: null,
   })
   return {
     version: 2,
@@ -56,7 +56,7 @@ function makeData(over: Partial<ReportData> = {}): ReportData {
       wspolrzedne: { lat: 51.53, lng: 17.27 }, geomWkt: null, found: true,
     },
     mpzp: { covered: false, wroclaw: null, kimpzp: [], status: 'no_data' },
-    pog: { wroclaw: null, ru: { entry: null, inForce: false, draft: null }, inForce: false, source: 'Rejestru Urbanistycznego' },
+    pog: { plan: null, planStatus: 'not_covered', draft: null, ru: { entry: null, inForce: false, draft: null }, inForce: false, source: 'Rejestru Urbanistycznego' },
     assessment: assessBuildability({ ...base, pogInForce: false, inOuz: null }),
     flood: { scenarios: ['Q1'], oszp: true, risk: [], validTo: '2025-12-21' },
     nature: { onParcel: [{ type: 'Natura 2000 – obszar specjalnej ochrony ptaków (OSO)', name: 'Dolina Baryczy' }], nearby: [] },

@@ -5,9 +5,10 @@ import { queryGesut, NETWORKS, type GesutResult, type Network } from '../sources
 import { queryIsok, SCENARIO_LABEL, type IsokResult } from '../sources/isok'
 import { queryKimpzp, type KimpzpPlan } from '../sources/kimpzp'
 import { queryOsmUtilities, type OsmUtilities } from '../sources/osm'
-import { IN_FORCE_STATUS, queryRejestrPog, type RuPog } from '../sources/rejestr-urbanistyczny'
+import type { Pog } from '../pog'
+import { IN_FORCE_STATUS, queryRejestrPog, queryRuPogZones, type RuPog, type RuPogEntry } from '../sources/rejestr-urbanistyczny'
 import { isWroclawTerc, queryWroclawMpzp, type WroclawMpzp } from '../wroclaw-mpzp'
-import { queryWroclawPog, type Pog } from '../wroclaw-pog'
+import { queryWroclawPog } from '../wroclaw-pog'
 import { assessBuildability, type Assessment } from './assessment'
 
 export interface SipRow {
@@ -45,7 +46,16 @@ export interface ReportData {
     kimpzp: KimpzpPlan[] | null
     status: SourceStatus
   }
-  pog: { wroclaw: Pog | null; ru: RuPog | null; inForce: boolean | null; source: string | null }
+  pog: {
+    /** Obowiązujący plan ogólny na działce (GIS Wrocławia albo geometria z Rejestru Urbanistycznego). */
+    plan: Pog | null
+    planStatus: SourceStatus
+    /** Projekt planu (jeszcze nie obowiązuje) — tylko informacyjnie, nie wpływa na ocenę. */
+    draft: Pog | null
+    ru: RuPog | null
+    inForce: boolean | null
+    source: string | null
+  }
   assessment: Assessment
   flood: IsokResult | null
   nature: GdosResult | null
@@ -89,11 +99,24 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
   const timed = <T>(p: Promise<T>, ms: number, fallback: T) =>
     Promise.race([p, new Promise<T>(r => setTimeout(() => r(fallback), ms))])
 
-  const [wMpzp, wPog, kimpzp, ru, isok, gdos, gesut, osm, sip, utilityMapUrl] = await Promise.all([
+  // Strefy planu ogólnego z Rejestru Urbanistycznego: plan w mocy (do oceny) i projekt
+  // (informacyjnie). Wrocław ma własne, aktualniejsze źródło — RU go pomija.
+  const ruP = queryRejestrPog(parcel.terc)
+  const ruZones = (pick: (r: RuPog) => RuPogEntry | null, name: string): Promise<SourceResult<Pog>> =>
+    wroclaw
+      ? Promise.resolve(skipped<Pog>(name))
+      : ruP.then(r => {
+        const entry = r.data ? pick(r.data) : null
+        return entry ? queryRuPogZones(entry, parcelId, geom) : skipped<Pog>(name)
+      })
+
+  const [wMpzp, wPog, kimpzp, ru, ruPlan, ruDraft, isok, gdos, gesut, osm, sip, utilityMapUrl] = await Promise.all([
     wroclaw ? queryWroclawMpzp(parcelId, geom) : Promise.resolve(skipped<WroclawMpzp>('MPZP – GIS UM Wrocławia')),
     wroclaw ? queryWroclawPog(parcelId, geom) : Promise.resolve(skipped<Pog>('Plan ogólny – GIS UM Wrocławia')),
     wroclaw ? Promise.resolve(skipped<KimpzpPlan[]>('MPZP – Krajowa Integracja MPZP (GUGiK)')) : queryKimpzp(parcelId, geom),
-    queryRejestrPog(parcel.terc),
+    ruP,
+    ruZones(r => (r.inForce ? r.entry : null), 'Plan ogólny (strefy) – Rejestr Urbanistyczny'),
+    ruZones(r => r.draft, 'Projekt planu ogólnego – Rejestr Urbanistyczny'),
     queryIsok(parcelId, geom),
     queryGdos(parcelId, geom),
     queryGesut(parcelId, geom),
@@ -123,7 +146,10 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
     pogSource = 'Rejestru Urbanistycznego'
     pogStatusText = ru.data?.entry?.status ?? 'brak wpisu w rejestrze'
   }
-  const inOuz = wPog.status === 'ok' ? !!wPog.data?.obszar_uzupelnienia_zabudowy : null
+  // Obowiązujący plan na działce: we Wrocławiu z GIS miasta, gdzie indziej z geometrii RU.
+  const planSrc = wroclaw ? wPog : ruPlan
+  const plan = pogInForce && planSrc.status === 'ok' ? planSrc.data : null
+  const inOuz = plan ? !!plan.obszar_uzupelnienia_zabudowy : null
 
   const assessment = assessBuildability({
     mpzpCovered,
@@ -131,12 +157,13 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
     pogSource,
     pogStatusText,
     inOuz,
-    ouzSharePct: wPog.data?.ouzSharePct ?? null,
+    ouzSharePct: plan?.ouzSharePct ?? null,
     asOf: now.toISOString().slice(0, 10),
   })
 
   const findings = buildFindings({
-    wMpzp: wMpzp.data, isok: isok.data, gdos: gdos.data, gesut: gesut.data, osm: osm.data, ru: ru.data, wPog: wPog.data,
+    wMpzp: wMpzp.data, isok: isok.data, gdos: gdos.data, gesut: gesut.data, osm: osm.data, ru: ru.data, plan,
+    draft: ruDraft.status === 'ok' ? ruDraft.data : null,
   })
 
   const { geom: _g, ...parcelPublic } = parcel
@@ -148,7 +175,14 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
     generatedAt: now.toISOString(),
     parcel: parcelPublic,
     mpzp: { covered: mpzpCovered, wroclaw: wMpzp.data, kimpzp: kimpzp.data, status: mpzpSrc.status },
-    pog: { wroclaw: wPog.data, ru: ru.data, inForce: pogInForce, source: pogSource },
+    pog: {
+      plan,
+      planStatus: planSrc.status,
+      draft: ruDraft.status === 'ok' ? ruDraft.data : null,
+      ru: ru.data,
+      inForce: pogInForce,
+      source: pogSource,
+    },
     assessment,
     flood: isok.data,
     nature: gdos.data,
@@ -163,7 +197,7 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
         source: 'Dane ewidencyjne – ULDK (GUGiK)', status: 'ok' as const, ms: 0,
         fetchedAt: parcel.fetchedAt ?? now.toISOString(), ...(parcel.stale ? { stale: true } : {}),
       },
-      ...[wMpzp, wPog, kimpzp, ru, isok, gdos, gesut, osm]
+      ...[wMpzp, wPog, kimpzp, ru, ruPlan, ruDraft, isok, gdos, gesut, osm]
         .filter(s => !(s.status === 'not_covered' && s.ms === 0))
         .map(summary),
     ],
@@ -177,7 +211,8 @@ export function buildFindings(d: {
   gesut: GesutResult | null
   osm: OsmUtilities | null
   ru: RuPog | null
-  wPog: Pog | null
+  plan: Pog | null
+  draft: Pog | null
 }): Finding[] {
   const f: Finding[] = []
   if (d.isok?.oszp) {
@@ -239,8 +274,19 @@ export function buildFindings(d: {
       text: `Napowietrzna linia elektroenergetyczna${hv.voltage ? ` (${Math.round(Number(hv.voltage.split(';')[0]) / 1000)} kV)` : ''} w odległości ${hv.distanceM} m od działki (OSM) — sprawdź pas technologiczny u operatora.`,
     })
   }
-  if (d.ru?.entry && d.ru.entry.status !== IN_FORCE_STATUS && !d.wPog) {
+  if (d.ru?.entry && d.ru.entry.status !== IN_FORCE_STATUS && !d.plan) {
     f.push({ level: 'uwaga', basis: 'pog', text: `Plan ogólny gminy w Rejestrze Urbanistycznym: „${d.ru.entry.status}”.` })
+  }
+  if (d.draft) {
+    const zones = d.draft.strefy.map(s => `${s.oznaczenie} (${s.nazwa ?? s.symbol})`).join(', ')
+    const ouz = d.draft.obszar_uzupelnienia_zabudowy
+      ? `w projektowanym obszarze uzupełnienia zabudowy (${Math.round(d.draft.ouzSharePct)}% działki)`
+      : 'poza projektowanym obszarem uzupełnienia zabudowy'
+    f.push({
+      level: 'uwaga',
+      basis: 'pog',
+      text: `W projekcie planu ogólnego (${d.ru?.draft?.status ?? 'projekt'}) działka leży w strefie ${zones}, ${ouz}. Projekt nie obowiązuje i może się jeszcze zmienić.`,
+    })
   }
   return f
 }

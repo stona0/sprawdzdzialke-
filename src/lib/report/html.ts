@@ -1,8 +1,9 @@
+import type { Pog } from '../pog'
 import { GESUT_WINDOW_M, NETWORKS, type Network } from '../sources/gesut'
 import { NEARBY_M } from '../sources/gdos'
 import { ISOK_MAP_URL, SCENARIO_LABEL } from '../sources/isok'
 import { OSM_RADIUS_M } from '../sources/osm'
-import { RU_PUBLIC_URL } from '../sources/rejestr-urbanistyczny'
+import { RU_PUBLIC_URL, ruPlanUrl } from '../sources/rejestr-urbanistyczny'
 import { NETWORK_STYLES } from '../utility-map'
 import type { AiInsights } from './ai'
 import type { ReportData } from './collect'
@@ -104,32 +105,46 @@ function mpzpSection(d: ReportData): string {
   return section('Miejscowy plan (MPZP)', '📋', body)
 }
 
+function pogZones(p: Pog): string {
+  return p.strefy.map(s => [
+    row(`Strefa ${s.oznaczenie}`, `${esc(s.nazwa)} <span class="muted">(${esc(pl(s.sharePct, '%'))} działki)</span>`),
+    row('Maks. wysokość zabudowy', esc(pl(s.maks_wysokosc, ' m'))),
+    row('Maks. nadziemna intensywność', esc(pl(s.maks_intensywnosc))),
+    row('Maks. udział pow. zabudowy', esc(pl(s.maks_udzial_zabudowy, '%'))),
+    row('Min. udział pow. biol. czynnej', esc(pl(s.min_pbc, '%'))),
+    row('Profil podstawowy', esc(s.profil_podstawowy.join(', '))),
+    row('Profil dodatkowy', esc(s.profil_dodatkowy.join(', '))),
+  ].join('')).join('<hr/>')
+}
+
 function pogSection(d: ReportData): string {
-  const g = d.pog.wroclaw
+  const g = d.pog.plan
+  const e = d.pog.ru?.entry
   let body: string
   if (g) {
-    body = g.strefy.map(s => [
-      row(`Strefa ${s.oznaczenie}`, `${esc(s.nazwa)} <span class="muted">(${esc(pl(s.sharePct, '%'))} działki)</span>`),
-      row('Maks. wysokość zabudowy', esc(pl(s.maks_wysokosc, ' m'))),
-      row('Maks. nadziemna intensywność', esc(pl(s.maks_intensywnosc))),
-      row('Maks. udział pow. zabudowy', esc(pl(s.maks_udzial_zabudowy, '%'))),
-      row('Min. udział pow. biol. czynnej', esc(pl(s.min_pbc, '%'))),
-      row('Profil podstawowy', esc(s.profil_podstawowy.join(', '))),
-      row('Profil dodatkowy', esc(s.profil_dodatkowy.join(', '))),
-    ].join('')).join('<hr/>')
+    body = pogZones(g)
       + row('Obszar uzupełnienia zabudowy', g.obszar_uzupelnienia_zabudowy ? `Tak (${esc(g.obszar_uzupelnienia_zabudowy)}, ${esc(pl(g.ouzSharePct, '%'))} działki)` : 'Nie')
       + row('Obszar zabudowy śródmiejskiej', g.obszar_zabudowy_srodmiejskiej ? `Tak (${esc(g.obszar_zabudowy_srodmiejskiej)})` : 'Nie')
       + row('Obowiązuje od', esc(date(g.obowiazuje_od)))
       + row('Uchwała', esc(g.uchwala))
-      + row('Źródło', esc(g.zrodlo))
-  } else if (d.pog.ru?.entry) {
-    const e = d.pog.ru.entry
+      + row('Źródło', g.url ? link(g.url, g.zrodlo) : esc(g.zrodlo))
+  } else if (e) {
     body = row('Plan', esc(e.tytul)) + row('Status w rejestrze', esc(e.status)) + row('Data w rejestrze', esc(date(e.obowiazujeOd)))
-      + row('Źródło', link(RU_PUBLIC_URL, 'Rejestr Urbanistyczny'))
+      + row('Źródło', link(ruPlanUrl(e.actId), 'Rejestr Urbanistyczny'))
+      + (d.pog.inForce ? '<p class="no-data">Nie udało się ustalić strefy planu ogólnego dla działki — sprawdź na karcie planu w rejestrze lub w urzędzie gminy.</p>' : '')
   } else if (d.pog.inForce === false) {
     body = `<p class="no-data">W ${link(RU_PUBLIC_URL, 'Rejestrze Urbanistycznym')} nie ma opublikowanego planu ogólnego tej gminy.</p>`
   } else {
     body = '<p class="no-data">Nie udało się pobrać informacji o planie ogólnym gminy.</p>'
+  }
+  const p = d.pog.draft
+  const draft = d.pog.ru?.draft
+  if (p && draft) {
+    body += `<div class="sub-title">Projekt planu ogólnego — nie obowiązuje</div>`
+      + zone('warn', '📝', `Status w rejestrze: ${esc(draft.status)}. Ustalenia projektu mogą się zmienić przed uchwaleniem; nie są podstawą do wydania decyzji o warunkach zabudowy.`)
+      + pogZones(p)
+      + row('Projektowany obszar uzupełnienia zabudowy', p.obszar_uzupelnienia_zabudowy ? `Tak (${esc(p.obszar_uzupelnienia_zabudowy)}, ${esc(pl(p.ouzSharePct, '%'))} działki)` : 'Nie')
+      + row('Źródło', link(ruPlanUrl(draft.actId), `Rejestr Urbanistyczny — ${esc(draft.tytul)}`))
   }
   return section('Plan ogólny gminy (POG)', '🗺', body)
 }

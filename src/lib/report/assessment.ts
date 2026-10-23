@@ -86,8 +86,9 @@ export function assessBuildability(i: AssessmentInput): Assessment {
       title: 'Gmina ma plan ogólny — nie ustalono, czy działka jest w OUZ',
       text:
         mpzpNote +
-        `Według ${i.pogSource ?? 'dostępnych danych'} w gminie obowiązuje plan ogólny, ale nie mamy jego geometrii ` +
-        'dla tej gminy. Sprawdź w geoportalu gminy lub w urzędzie, czy działka leży w obszarze uzupełnienia ' +
+        `Według ${i.pogSource ?? 'dostępnych danych'} w gminie obowiązuje plan ogólny, ale nie udało się ustalić ` +
+        'z jego geometrii, czy działka leży w obszarze uzupełnienia zabudowy (źródło nie odpowiedziało albo nie ' +
+        'udostępnia geometrii planu). Sprawdź w geoportalu gminy lub w urzędzie, czy działka leży w obszarze uzupełnienia ' +
         'zabudowy — tylko tam można uzyskać decyzję WZ. ' + VERIFY,
       confidence: 'niska',
     }

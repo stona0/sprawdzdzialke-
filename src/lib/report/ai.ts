@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { NETWORKS, type Network } from '../sources/gesut'
 import { SCENARIO_LABEL } from '../sources/isok'
+import type { Pog } from '../pog'
 import type { ReportData } from './collect'
 
 export const AI_MODEL = 'claude-haiku-4-5'
@@ -40,18 +41,24 @@ function rawFacts(d: ReportData): Record<FactKey, unknown> {
         }
           : (d.mpzp.kimpzp ?? []).map(p => ({ tytul: p.tytul, symbol: p.symbol, przeznaczenie: p.przeznaczenie, uchwala: p.uchwala }))
 
-  const pogW = d.pog.wroclaw
-  const plan_ogolny = pogW
+  const strefy = (p: Pog) => p.strefy.map(s => ({
+    oznaczenie: s.oznaczenie, nazwa: s.nazwa, udzial_proc: s.sharePct, maks_wysokosc_m: s.maks_wysokosc,
+    maks_intensywnosc: s.maks_intensywnosc, maks_udzial_zabudowy_proc: s.maks_udzial_zabudowy, min_pbc_proc: s.min_pbc,
+  }))
+  const projekt = d.pog.draft
     ? {
-      obowiazuje: true,
-      strefy: pogW.strefy.map(s => ({
-        oznaczenie: s.oznaczenie, nazwa: s.nazwa, udzial_proc: s.sharePct, maks_wysokosc_m: s.maks_wysokosc,
-        maks_intensywnosc: s.maks_intensywnosc, maks_udzial_zabudowy_proc: s.maks_udzial_zabudowy, min_pbc_proc: s.min_pbc,
-      })),
-      obszar_uzupelnienia_zabudowy: !!pogW.obszar_uzupelnienia_zabudowy,
+      projekt_planu_nieobowiazujacy_moze_sie_zmienic: {
+        status: d.pog.ru?.draft?.status ?? 'projekt',
+        strefy: strefy(d.pog.draft),
+        w_projektowanym_obszarze_uzupelnienia_zabudowy: !!d.pog.draft.obszar_uzupelnienia_zabudowy,
+      },
     }
+    : {}
+  const plan = d.pog.plan
+  const plan_ogolny = plan
+    ? { obowiazuje: true, zrodlo: plan.zrodlo, strefy: strefy(plan), obszar_uzupelnienia_zabudowy: !!plan.obszar_uzupelnienia_zabudowy, ...projekt }
     : d.pog.inForce === null ? BRAK
-      : { obowiazuje: d.pog.inForce, status_w_rejestrze: d.pog.ru?.entry?.status ?? 'brak wpisu' }
+      : { obowiazuje: d.pog.inForce, status_w_rejestrze: d.pog.ru?.entry?.status ?? 'brak wpisu', ...projekt }
 
   const powodz = d.flood
     ? d.flood.scenarios.length

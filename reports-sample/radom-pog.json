@@ -1,0 +1,213 @@
+{
+  "version": 2,
+  "parcelId": "146301_1.0180.AR_176.7/2",
+  "generatedAt": "2026-10-23T08:59:20.903Z",
+  "parcel": {
+    "parcelId": "146301_1.0180.AR_176.7/2",
+    "numer": "7/2",
+    "powierzchnia": 963,
+    "obreb": "Krychnowice",
+    "gmina": "Radom (miasto)",
+    "teryt": "146301_1",
+    "terc": "146301",
+    "powiat": "powiat Radom",
+    "wojewodztwo": "mazowieckie",
+    "wspolrzedne": {
+      "lat": 51.355123,
+      "lng": 21.077346
+    },
+    "geomWkt": "SRID=2180;POLYGON((644615.267422053 389641.363774097,644608.486526222 389640.745597758,644587.528011817 389638.85395328,644586.223993497 389674.198567851,644614.016370713 389675.216601894,644614.081871312 389673.548379693,644615.267422053 389641.363774097))",
+    "found": true,
+    "fetchedAt": "2026-10-23T08:59:21.649Z"
+  },
+  "mpzp": {
+    "covered": false,
+    "wroclaw": null,
+    "kimpzp": [],
+    "status": "no_data"
+  },
+  "pog": {
+    "plan": {
+      "strefy": [
+        {
+          "oznaczenie": "1SJ",
+          "symbol": "SJ",
+          "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową jednorodzinną",
+          "maks_intensywnosc": 1.1,
+          "maks_udzial_zabudowy": 30,
+          "maks_wysokosc": 12,
+          "min_pbc": 30,
+          "profil_podstawowy": [
+            "teren zabudowy mieszkaniowej jednorodzinnej",
+            "teren usług",
+            "teren komunikacji",
+            "teren zieleni urządzonej",
+            "teren ogrodów działkowych",
+            "teren infrastruktury technicznej"
+          ],
+          "profil_dodatkowy": [
+            "teren zabudowy letniskowej lub rekreacji indywidualnej",
+            "teren zieleni naturalnej",
+            "teren lasu",
+            "teren wód"
+          ],
+          "sharePct": 100
+        }
+      ],
+      "obszar_uzupelnienia_zabudowy": "5OUZ",
+      "ouzSharePct": 100,
+      "obszar_zabudowy_srodmiejskiej": null,
+      "obowiazuje_od": "2026-05-23",
+      "uchwala": "Uchwała nr XLII/427/2026 Rady Miejskiej w Radomiu z dnia 27 kwietnia 2026 r.",
+      "zrodlo": "Rejestr Urbanistyczny",
+      "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/84"
+    },
+    "planStatus": "ok",
+    "draft": null,
+    "ru": {
+      "entry": {
+        "actId": 84,
+        "tytul": "Plan ogólny miasta Radom",
+        "status": "prawnie wiążący lub realizowany",
+        "obowiazujeOd": "2026-05-23",
+        "dataPublikacji": "2026-07-15",
+        "terc": "146301",
+        "gmina": "Radom"
+      },
+      "inForce": true,
+      "draft": {
+        "actId": 3777,
+        "tytul": "Plan ogólny miasta Radomia",
+        "status": "w opracowaniu",
+        "obowiazujeOd": "2026-07-17",
+        "dataPublikacji": "2026-10-05",
+        "terc": "146301",
+        "gmina": "Radom"
+      }
+    },
+    "inForce": true,
+    "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+    "verdict": "wz_mozliwe",
+    "title": "Możliwa decyzja o warunkach zabudowy (działka w OUZ)",
+    "text": "Działka leży w obszarze uzupełnienia zabudowy wyznaczonym w planie ogólnym. Można ubiegać się o decyzję WZ; jej ustalenia muszą być zgodne z planem ogólnym (strefa, parametry). Decyzja WZ wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+    "confidence": "wysoka"
+  },
+  "flood": {
+    "scenarios": [],
+    "oszp": false,
+    "risk": [],
+    "validTo": null
+  },
+  "nature": {
+    "onParcel": [],
+    "nearby": [
+      {
+        "type": "Obszar chronionego krajobrazu",
+        "name": "Lasy Przysusko – Szydłowieckie"
+      }
+    ]
+  },
+  "gesut": {
+    "energia": {
+      "distanceM": 100,
+      "crosses": false
+    },
+    "woda": {
+      "distanceM": 96,
+      "crosses": false
+    },
+    "kanalizacja": {
+      "distanceM": 73,
+      "crosses": false
+    },
+    "gaz": {
+      "distanceM": 62,
+      "crosses": false
+    }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "sip": null,
+  "findings": [
+    {
+      "level": "uwaga",
+      "basis": "przyroda",
+      "text": "W odległości do 300 m: Obszar chronionego krajobrazu „Lasy Przysusko – Szydłowieckie”."
+    }
+  ],
+  "sources": [
+    {
+      "source": "Dane ewidencyjne – ULDK (GUGiK)",
+      "status": "ok",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T08:59:21.649Z"
+    },
+    {
+      "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+      "status": "no_data",
+      "ms": 259,
+      "fetchedAt": "2026-10-23T08:59:21.910Z"
+    },
+    {
+      "source": "Plan ogólny – Rejestr Urbanistyczny",
+      "status": "ok",
+      "ms": 473,
+      "fetchedAt": "2026-10-23T08:59:22.123Z"
+    },
+    {
+      "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+      "status": "ok",
+      "ms": 1805,
+      "fetchedAt": "2026-10-23T08:59:23.928Z"
+    },
+    {
+      "source": "Projekt planu ogólnego – Rejestr Urbanistyczny",
+      "status": "no_data",
+      "ms": 276,
+      "fetchedAt": "2026-10-23T08:59:22.401Z"
+    },
+    {
+      "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+      "status": "no_data",
+      "ms": 807,
+      "fetchedAt": "2026-10-23T08:59:22.458Z"
+    },
+    {
+      "source": "Ochrona przyrody – GDOŚ",
+      "status": "ok",
+      "ms": 395,
+      "fetchedAt": "2026-10-23T08:59:22.047Z"
+    },
+    {
+      "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+      "status": "ok",
+      "ms": 2232,
+      "fetchedAt": "2026-10-23T08:59:23.888Z"
+    },
+    {
+      "source": "Linie i rurociągi – OpenStreetMap",
+      "status": "error",
+      "error": "Overpass nie odpowiadał w ostatnich minutach — pominięto",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T08:59:21.657Z"
+    }
+  ],
+  "utilityMap": "osadzona w HTML",
+  "ai": {
+    "rekomendacje": [
+      "Potwierdź w urzędzie gminy status obszaru uzupełnienia zabudowy i wymogi planu ogólnego dla strefy 1SJ, zwłaszcza maksymalną wysokość 12 m, intensywność zabudowy 1,1 i udział zabudowy 30 proc. Uzyskaj wypis i wyrys z planu ogólnego lub zaświadczenie.",
+      "Sprawdź warunki przyłączenia do sieci elektroenergetycznej, wodociągu, kanalizacji i gazu u operatorów odpowiednich sieci, uwzględniając odległości: elektroenergetyka 100 m, wodociąg 96 m, kanalizacja 73 m, gaz 62 m od granicy działki.",
+      "Zweryfikuj w urzędzie gminy bieżące wymagania dotyczące decyzji o warunkach zabudowy, w tym okres jej ważności od uprawomocnienia i zgodność z planem ogólnym.",
+      "Skonsultuj z geodetą warunki podziału i zabudowy działki o powierzchni 963 m² pod kątem wymogów strefy 1SJ, szczególnie maksymalnego udziału zabudowy 30 proc. i minimalnego pasa biologicznie czynnego 30 proc."
+    ],
+    "ryzyka": [
+      "Obszar chronionego krajobrazu Lasy Przysusko – Szydłowieckie znajduje się w odległości do 300 m od działki, co może implikować dodatkowe ograniczenia lub wymogi dla zabudowy — potwierdź szczegóły w regionalnej dyrekcji ochrony środowiska.",
+      "Obowiązek budowy od zera sieci podłączeniowych do wszystkich mediów (elektroenergetyka, wodociąg, kanalizacja, gaz) stanowi znaczący koszt — uzyskaj wstępne kosztorysy od operatorów.",
+      "Brak danych na temat linii energetycznych z mapy Otwartych Danych Służb Publicznych uniemożliwia pełną ocenę ryzyka kolizji — sprawdź bezpośrednio u operatora energetyki."
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "odrzucone": 1
+  }
+}

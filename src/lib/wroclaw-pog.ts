@@ -6,6 +6,7 @@
  * nie mają obowiązującego POG Wrocławia, dlatego dla Wrocławia źródłem jest GIS miasta.
  */
 import type { MultiPolygon } from './geo'
+import type { Pog } from './pog'
 import { cachedSource, DAY, runSource, type SourceResult } from './http'
 import { num, queryByParcel, str } from './sources/arcgis'
 
@@ -18,30 +19,7 @@ const LAYERS = {
 
 export const WROCLAW_POG_UCHWALA = 'XXXVI/872/26'
 
-export interface PogStrefa {
-  oznaczenie: string
-  symbol: string | null
-  nazwa: string | null
-  maks_intensywnosc: number | null
-  maks_udzial_zabudowy: number | null
-  maks_wysokosc: number | null
-  min_pbc: number | null
-  profil_podstawowy: string[]
-  profil_dodatkowy: string[]
-  sharePct: number
-}
-
-export interface Pog {
-  /** Strefy planistyczne przecinające działkę, od największego udziału. */
-  strefy: PogStrefa[]
-  /** Oznaczenie OUZ, gdy działka (choćby częściowo) w nim leży. */
-  obszar_uzupelnienia_zabudowy: string | null
-  ouzSharePct: number
-  obszar_zabudowy_srodmiejskiej: string | null
-  obowiazuje_od: string | null
-  uchwala: string | null
-  zrodlo: string
-}
+export type { Pog, PogStrefa } from './pog'
 
 function list(v: string | number | null | undefined): string[] {
   return (str(v) ?? '').split(',').map(s => s.trim()).filter(Boolean)

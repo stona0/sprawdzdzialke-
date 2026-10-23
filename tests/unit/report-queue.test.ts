@@ -33,7 +33,7 @@ async function newReport(): Promise<string> {
   return r.id
 }
 const built = (over: { mpzp?: string; pogInForce?: boolean | null } = {}) =>
-  ({ data: { mpzp: { status: over.mpzp ?? 'ok' }, pog: { inForce: over.pogInForce === undefined ? true : over.pogInForce } }, insights: {}, html: '<html>raport</html>' }) as unknown as BuiltReport
+  ({ data: { mpzp: { status: over.mpzp ?? 'ok' }, pog: { inForce: over.pogInForce === undefined ? true : over.pogInForce, planStatus: 'ok' } }, insights: {}, html: '<html>raport</html>' }) as unknown as BuiltReport
 const job = async (reportId: string) => (await sql<{ status: string; attempts: number; run_after: Date; last_error: string | null }>('SELECT * FROM report_jobs WHERE report_id = $1', [reportId]))[0]
 const report = async (id: string) => (await sql<{ status: string; html_content: string | null }>('SELECT status, html_content FROM reports WHERE id = $1', [id]))[0]
 const makeDue = (reportId: string) => sql(`UPDATE report_jobs SET run_after = NOW() - interval '1 second' WHERE report_id = $1`, [reportId])

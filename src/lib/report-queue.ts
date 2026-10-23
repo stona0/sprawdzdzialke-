@@ -60,7 +60,9 @@ export function isJobDue(job: ReportJob, now = Date.now()): boolean {
 }
 
 function criticalSourceFailed(r: BuiltReport): boolean {
-  return r.data.mpzp.status === 'error' || r.data.pog.inForce === null
+  const { mpzp, pog } = r.data
+  // Plan ogólny w mocy, ale jego geometria nie odpowiedziała → nie wiemy, czy działka jest w OUZ.
+  return mpzp.status === 'error' || pog.inForce === null || (pog.inForce === true && pog.planStatus === 'error')
 }
 
 /**

@@ -23,7 +23,10 @@ describe.each(TEST_PARCELS)('$slug — $opis', ({ id, expect: exp }) => {
 
     if (exp.mpzpCovered !== undefined) expect(d.mpzp.covered).toBe(exp.mpzpCovered)
     if (exp.pogInForce !== undefined) expect(d.pog.inForce).toBe(exp.pogInForce)
-    if (exp.inOuz !== undefined) expect(!!d.pog.wroclaw?.obszar_uzupelnienia_zabudowy).toBe(exp.inOuz)
+    if (exp.inOuz !== undefined) expect(!!d.pog.plan?.obszar_uzupelnienia_zabudowy).toBe(exp.inOuz)
+    if (exp.pogZone !== undefined) expect(d.pog.plan?.strefy[0]?.oznaczenie).toBe(exp.pogZone)
+    if (exp.draftOuz !== undefined) expect(!!d.pog.draft?.obszar_uzupelnienia_zabudowy).toBe(exp.draftOuz)
+    if (exp.verdict !== undefined) expect(d.assessment.verdict).toBe(exp.verdict)
     if (exp.flood !== undefined) expect(d.flood?.scenarios).toEqual(exp.flood)
     if (exp.natureOnParcel !== undefined) expect((d.nature?.onParcel.length ?? 0) > 0).toBe(exp.natureOnParcel)
     if (exp.gesut !== undefined) expect(d.gesutStatus).toBe(exp.gesut)

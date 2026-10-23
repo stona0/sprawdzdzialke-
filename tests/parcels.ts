@@ -12,6 +12,11 @@ export interface TestParcel {
     mpzpCovered?: boolean | null
     pogInForce?: boolean
     inOuz?: boolean
+    /** Oznaczenie strefy planu ogólnego o największym udziale. */
+    pogZone?: string
+    /** Działka w OUZ projektu planu ogólnego (gmina bez planu w mocy). */
+    draftOuz?: boolean
+    verdict?: string
     flood?: string[]
     natureOnParcel?: boolean
     gesut?: 'ok' | 'not_covered'
@@ -53,6 +58,26 @@ export const TEST_PARCELS: TestParcel[] = [
     id: '021303_4.0001.AR_18.19/9', slug: 'milicz-natura2000',
     opis: 'Działka w obszarze Natura 2000 i Parku Krajobrazowym Dolina Baryczy',
     expect: { gminaContains: 'Milicz', natureOnParcel: true, gesut: 'ok' },
+  },
+  {
+    id: '022308_5.0021.24', slug: 'siechnice-ouz',
+    opis: 'Gmina z planem ogólnym w Rejestrze Urbanistycznym, bez MPZP — strefa SJ, w obszarze uzupełnienia zabudowy',
+    expect: { gminaContains: 'Siechnice', mpzpCovered: false, pogInForce: true, inOuz: true, pogZone: '685SJ', verdict: 'wz_mozliwe' },
+  },
+  {
+    id: '022308_5.0010.11', slug: 'siechnice-poza-ouz',
+    opis: 'Gmina z planem ogólnym (RU), działka poza OUZ, objęta MPZP',
+    expect: { gminaContains: 'Siechnice', mpzpCovered: true, pogInForce: true, inOuz: false, pogZone: '1SR', verdict: 'mpzp' },
+  },
+  {
+    id: '146301_1.0180.AR_176.7/2', slug: 'radom-pog',
+    opis: 'POG w mocy i nowsza wersja w opracowaniu — wcześniej raport mówił „brak planu ogólnego”',
+    expect: { gminaContains: 'Radom', pogInForce: true, inOuz: true, pogZone: '1SJ' },
+  },
+  {
+    id: '101408_2.0021.44/2', slug: 'sieradz-projekt-pog',
+    opis: 'Gmina bez planu w mocy, projekt planu ogólnego w RU — OUZ w projekcie (informacyjnie)',
+    expect: { gminaContains: 'Sieradz', pogInForce: false, draftOuz: true, verdict: 'wz_niemozliwe_brak_pog' },
   },
   {
     id: '126105_9.0001.580/4', slug: 'krakow-stare-miasto',
