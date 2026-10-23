@@ -76,7 +76,8 @@ test('pełna ścieżka: logowanie → działka → darmowy raport → płatny ra
   await page.getByRole('button', { name: 'Generuj darmowy raport' }).click()
   await page.waitForURL(/\/report\/[0-9a-f-]{36}$/, { timeout: 200_000 })
   const report = page.frameLocator('iframe')
-  await expect(report.getByText('Podsumowanie')).toBeVisible()
+  // tytuł sekcji — „Podsumowanie” występuje też w „Podstawa: …” przy rekomendacjach
+  await expect(report.locator('.section-title', { hasText: 'Podsumowanie' })).toBeVisible()
   await expect(report.getByText('Działka objęta miejscowym planem (MPZP)')).toBeVisible()
   await expect(report.getByText('Źródła danych i ich status')).toBeVisible()
 
