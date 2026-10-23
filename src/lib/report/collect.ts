@@ -93,7 +93,7 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
     wroclaw ? queryWroclawMpzp(parcelId, geom) : Promise.resolve(skipped<WroclawMpzp>('MPZP – GIS UM Wrocławia')),
     wroclaw ? queryWroclawPog(parcelId, geom) : Promise.resolve(skipped<Pog>('Plan ogólny – GIS UM Wrocławia')),
     wroclaw ? Promise.resolve(skipped<KimpzpPlan[]>('MPZP – Krajowa Integracja MPZP (GUGiK)')) : queryKimpzp(parcelId, geom),
-    queryRejestrPog(parcel.terc, parcel.gmina),
+    queryRejestrPog(parcel.terc),
     queryIsok(parcelId, geom),
     queryGdos(parcelId, geom),
     queryGesut(parcelId, geom),
