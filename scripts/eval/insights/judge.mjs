@@ -63,7 +63,9 @@ export function judgeInput({ facts, assessment, findings, rekomendacje, ryzyka }
     'USTALENIA z poziomem „ryzyko” (do sprawdzenia pokrycia):',
     findings.map((f, i) => `U${i + 1}: ${f.text}`).join('\n') || '(brak)', '',
     'REKOMENDACJE do oceny:', list('R', rekomendacje), '',
-    'RYZYKA do oceny:', list('Z', ryzyka),
+    'RYZYKA do oceny:', list('Z', ryzyka), '',
+    `Oceń osobno każdy z ${rekomendacje.length + ryzyka.length} punktów, także powtarzające się: `
+      + `${rekomendacje.length} rekomendacji i ${ryzyka.length} ryzyk, z identyfikatorami jak wyżej.`,
   ].join('\n')
 }
 
@@ -96,26 +98,26 @@ export async function judgeInsights(client, input, { model = JUDGE_MODEL } = {})
  *  konkretne — odsetek konkretnych rekomendacji
  *  fallback  — 1, gdy raport dostał rekomendacje z reguł zamiast AI
  */
-export function gradeFromVerdict(verdict, { fallback, nItems, nFindings }) {
-  const items = [...verdict.rekomendacje, ...verdict.ryzyka]
-  if (items.length !== nItems) throw new Error(`sędzia ocenił ${items.length} punktów zamiast ${nItems}`)
-  // Liczą się tylko ustalenia z listy (U1..Un); pozycje spoza niej sędzia czasem dopisuje z faktów.
-  const ids = Array.from({ length: nFindings }, (_, i) => `U${i + 1}`)
-  const pokrycie = ids.map(id => verdict.pokrycie.find(p => p.id === id))
-  const missing = ids.filter((_, i) => !pokrycie[i])
-  if (missing.length) throw new Error(`sędzia nie ocenił pokrycia ustaleń: ${missing.join(', ')}`)
+export function gradeFromVerdict(verdict, { fallback, nRek, nRyz, nFindings }) {
+  // Oceny dobieramy po identyfikatorach (R1.., Z1.., U1..): sędzia czasem łączy powtórzone
+  // punkty albo dopisuje ustalenia z faktów spoza listy — liczy się dokładnie to, co dostał.
+  const pick = (list, prefix, n) => Array.from({ length: n }, (_, i) => [`${prefix}${i + 1}`, list.find(x => x.id === `${prefix}${i + 1}`)])
+  const rek = pick(verdict.rekomendacje, 'R', nRek), ryz = pick(verdict.ryzyka, 'Z', nRyz), pok = pick(verdict.pokrycie, 'U', nFindings)
+  const missing = [...rek, ...ryz, ...pok].filter(([, x]) => !x).map(([id]) => id)
+  if (missing.length) throw new Error(`sędzia nie ocenił: ${missing.join(', ')}`)
+  const [rekomendacje, items, pokrycie] = [rek.map(([, x]) => x), [...rek, ...ryz].map(([, x]) => x), pok.map(([, x]) => x)]
   const bad = items.filter(i => i.ocena !== 'zgodny')
   const grade = {
     ok: !fallback && bad.length === 0 ? 1 : 0,
     bledne: items.length ? bad.length / items.length : 0,
     pokrycie: nFindings ? pokrycie.filter(p => p.pokryte).length / nFindings : 1,
-    konkretne: verdict.rekomendacje.length ? verdict.rekomendacje.filter(r => r.konkretna).length / verdict.rekomendacje.length : 0,
+    konkretne: rekomendacje.length ? rekomendacje.filter(r => r.konkretna).length / rekomendacje.length : 0,
     fallback: fallback ? 1 : 0,
   }
   const explanation = {
     ok: bad.map(b => `${b.id} ${b.ocena}: ${b.uzasadnienie}`).join(' | ') || 'wszystkie punkty zgodne z faktami',
     pokrycie: pokrycie.filter(p => !p.pokryte).map(p => `${p.id}: ${p.uzasadnienie}`).join(' | ') || '—',
-    konkretne: verdict.rekomendacje.filter(r => !r.konkretna).map(r => `${r.id}: ${r.uzasadnienie}`).join(' | ') || '—',
+    konkretne: rekomendacje.filter(r => !r.konkretna).map(r => `${r.id}: ${r.uzasadnienie}`).join(' | ') || '—',
   }
   return { grade, explanation }
 }

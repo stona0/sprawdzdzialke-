@@ -208,7 +208,7 @@ async function gradeCase(input, run, ref, ctx) {
   });
   try {
     const { grade, explanation } = gradeFromVerdict(j.verdict, {
-      fallback: ins.model === null, nItems: ins.rekomendacje.length + ins.ryzyka.length, nFindings: findings.length,
+      fallback: ins.model === null, nRek: ins.rekomendacje.length, nRyz: ins.ryzyka.length, nFindings: findings.length,
     });
     run.transcript.push({ role: 'tool_call', name: 'sędzia', content: JSON.stringify(j.verdict, null, 2) });
     return { grade, explanation, judge_model: j.judge_model, judge_usage: j.judge_usage };
