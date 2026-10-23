@@ -173,6 +173,25 @@ describe('AI – tylko fakty z danych', () => {
     expect(r.ryzyka).toEqual([{ tekst: expect.stringMatching(/Q1%/), podstawa: ['powodz'] }])
   })
 
+  it('domyślnie Haiku 5.5 z effort low, bez parametrów próbkowania; jawny model bez effort (Haiku 4.5 go nie ma)', async () => {
+    const calls: Record<string, unknown>[] = []
+    const fake = {
+      messages: {
+        create: async (body: Record<string, unknown>) => {
+          calls.push(body)
+          return { model: body.model, stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify({ rekomendacje: [], ryzyka: [] }) }] }
+        },
+      },
+    } as unknown as Anthropic
+    await generateInsights(makeData(), fake)
+    await generateInsights(makeData(), fake, { model: 'claude-haiku-4-5', maxTokens: 2000 })
+    expect(calls[0]).toMatchObject({ model: 'claude-haiku-5-5', max_tokens: 8000, output_config: { effort: 'low' } })
+    expect(calls[0]).not.toHaveProperty('temperature')
+    expect(calls[0]).not.toHaveProperty('thinking')
+    expect(calls[1]).toMatchObject({ model: 'claude-haiku-4-5', max_tokens: 2000 })
+    expect(calls[1].output_config).not.toHaveProperty('effort')
+  })
+
   it('reguły zalecają weryfikację, gdy brak POG', () => {
     expect(ruleBasedInsights(makeData()).rekomendacje[0].tekst).toMatch(/urzędzie gminy/)
   })

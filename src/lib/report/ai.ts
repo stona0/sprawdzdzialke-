@@ -5,7 +5,12 @@ import { LINE_LABEL } from '../sources/power-lines'
 import type { Pog } from '../pog'
 import type { ReportData } from './collect'
 
-export const AI_MODEL = 'claude-haiku-4-5'
+// Eval 23.10.2026 (REPORT.md sekcja 13): Haiku 5.5 przy effort low — 11% błędnych punktów
+// wobec 34% u Haiku 4.5, ~4,5 s, zwykle bez myślenia; high nie był istotnie lepszy.
+export const AI_MODEL = 'claude-haiku-5-5'
+export const AI_EFFORT = 'low'
+/** Myślenie wlicza się do max_tokens; przy low odpowiedź ma ~1 tys. tokenów. */
+const AI_MAX_TOKENS = 8000
 
 const FACT_KEYS = ['dzialka', 'ocena_zabudowy', 'mpzp', 'plan_ogolny', 'powodz', 'przyroda', 'uzbrojenie', 'ustalenia'] as const
 export type FactKey = (typeof FACT_KEYS)[number]
@@ -37,7 +42,7 @@ export interface AiInsights {
 
 export interface InsightsOptions {
   model?: string
-  /** Tylko modele z parametrem effort (Haiku 4.5 go nie ma). */
+  /** Tylko modele z parametrem effort (Haiku 4.5 go nie ma). Bez `model` domyślnie AI_EFFORT. */
   effort?: 'low' | 'medium' | 'high'
   maxTokens?: number
 }
@@ -243,13 +248,14 @@ export async function generateInsights(d: ReportData, client?: Anthropic, opts: 
   const facts = buildFacts(d)
   const fallback = (odrzucone: number, meta?: AiInsights['meta']): AiInsights => ({ ...ruleBasedInsights(d), model: null, odrzucone, ...(meta ? { meta } : {}) })
   if (!client && !process.env.ANTHROPIC_API_KEY) return fallback(0)
+  const effort = opts.effort ?? (opts.model ? undefined : AI_EFFORT)
   try {
     const anthropic = client ?? new Anthropic()
     const response = await anthropic.messages.create({
       model: opts.model ?? AI_MODEL,
-      max_tokens: opts.maxTokens ?? 2000,
+      max_tokens: opts.maxTokens ?? AI_MAX_TOKENS,
       system: AI_SYSTEM_PROMPT,
-      output_config: { format: { type: 'json_schema', schema: OUTPUT_SCHEMA }, ...(opts.effort ? { effort: opts.effort } : {}) },
+      output_config: { format: { type: 'json_schema', schema: OUTPUT_SCHEMA }, ...(effort ? { effort } : {}) },
       messages: [{ role: 'user', content: factsMessage(facts) }],
     }, { timeout: 30_000, maxRetries: 1 })
     const base = { servedModel: response.model, usage: response.usage, stopReason: response.stop_reason, raw: null }

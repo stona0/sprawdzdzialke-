@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { cached } from './http'
-import { AI_MODEL, buildFacts, generateInsights, type AiInsights } from './report/ai'
+import { AI_EFFORT, AI_MODEL, buildFacts, generateInsights, type AiInsights } from './report/ai'
 import { collectReportData, type ReportData, type SipRow } from './report/collect'
 import { buildReportHtml } from './report/html'
 import { enablePersistentCache } from './source-cache'
@@ -38,7 +38,7 @@ export async function buildReport(parcelId: string, gmina: string, svc: Supabase
   // Rekomendacji z reguł (AI niedostępne) nie zapisujemy — następnym razem spróbujemy AI.
   const factsHash = createHash('sha256').update(JSON.stringify(buildFacts(data))).digest('hex').slice(0, 32)
   // „ai2”: punkty z podstawą (InsightItem); wpisy „ai:” mają same teksty i nie pasują do HTML.
-  const insights = await cached(`ai2:${AI_MODEL}:${factsHash}`, AI_TTL_MS, () => generateInsights(data), { shouldCache: i => i.model !== null })
+  const insights = await cached(`ai2:${AI_MODEL}:${AI_EFFORT}:${factsHash}`, AI_TTL_MS, () => generateInsights(data), { shouldCache: i => i.model !== null })
 
   return { data, insights, html: buildReportHtml(data, insights) }
 }

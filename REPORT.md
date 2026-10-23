@@ -152,7 +152,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 - **ISOK:** metadane map mają ważność do 21.12.2025, a usługa nie wskazuje nowszych. Mapy nie obejmują podtopień ani małych cieków.
 - **KIUT:** duże miasta nie przekazują danych. Odległość ±2 m z obrazu. Brak informacji o napięciu, średnicy i wolnej mocy.
 - **Niestabilność usług państwowych:** w trakcie sesji ortofotomapa `StandardResolution` przez pewien czas zwracała 404. Wszystkie źródła mają timeout, retry i status w raporcie; awaria pojedynczego źródła daje raport częściowy, nie błąd.
-- **AI (Haiku 4.5):** walidator odrzuca punkty z liczbami spoza danych i bez wskazania podstawy, ale nie łapie błędów semantycznych. Eval (sekcja 13): 34% punktów Haiku 4.5 jest błędnych wg sędziego (głównie spekulacje o kosztach i terminach), Haiku 5.5 low — 11%. Po poprawkach promptu zostały pojedyncze spekulacje (np. Milicz: „położenie nad Baryczą wskazuje na potencjalne zagrożenie hydrologiczne”, choć ISOK nie pokazuje strefy). Kluczowe ustalenia i werdykt w raporcie powstają regułami, nie przez AI.
+- **AI (od 23.10.2026 Haiku 5.5, effort low; wcześniej Haiku 4.5):** walidator odrzuca punkty z liczbami spoza danych i bez wskazania podstawy, ale nie łapie błędów semantycznych. Eval (sekcja 13): 34% punktów Haiku 4.5 jest błędnych wg sędziego (głównie spekulacje o kosztach i terminach), Haiku 5.5 low — 11%. Po poprawkach promptu zostały pojedyncze spekulacje (np. Milicz: „położenie nad Baryczą wskazuje na potencjalne zagrożenie hydrologiczne”, choć ISOK nie pokazuje strefy). Kluczowe ustalenia i werdykt w raporcie powstają regułami, nie przez AI.
 
 **Ryzyka bezpieczeństwa (poza zakresem zmian w kodzie)**
 - **Token GitHub (PAT) zapisany jawnym tekstem w URL remote'a `origin`** w `.git/config`. Należy go natychmiast unieważnić i ustawić remote bez tokenu (credential helper).
@@ -207,7 +207,7 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 
 1. Projekt Supabase z `.env.local` traktuję jako **produkcję**: zero zapisów (także do Storage). E2E i przykładowe raporty działają bez niego (mock, mapy jako data URI).
 2. Nie używałem kluczy Stripe (live). Webhook testowany na fałszywym sekrecie z podpisem wygenerowanym przez bibliotekę Stripe.
-3. Rekomendacje zostają na **Claude Haiku 4.5** — wybór właściciela opisany w HANDOFF. Do parsowania PDF wybrałem **`claude-opus-5-5`** w miejsce wycofanego Sonnet 4. Parsowania PDF nie uruchomiłem na prawdziwym dokumencie (koszt, panel admina).
+3. Rekomendacje były na **Claude Haiku 4.5** (wybór właściciela z HANDOFF); 23.10.2026 właściciel zdecydował o przejściu na **Claude Haiku 5.5 z effort low** na podstawie evala (sekcja 13). Do parsowania PDF wybrałem **`claude-opus-5-5`** w miejsce wycofanego Sonnet 4. Parsowania PDF nie uruchomiłem na prawdziwym dokumencie (koszt, panel admina).
 4. Warstwy ArcGIS UM Wrocławia z „PROJEKT” w nazwie traktuję jako dane obowiązujące. Mają status „prawnie wiążący” i datę 19.09.2026; to te same warstwy, z których korzysta geoportal miasta.
 5. „Obszar szczególnego zagrożenia powodzią” = strefa Q10% lub Q1%. Pas między wałem a rzeką nie jest wykrywany.
 6. Status POG „prawnie wiążący lub realizowany” w Rejestrze Urbanistycznym = POG obowiązuje.
@@ -222,14 +222,14 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 2. ~~**Trwały cache i kolejka (2–3 dni).**~~ Zrobione w kodzie 20–23.10.2026 (sekcja 10). Do zrobienia: migracja na stagingu i produkcji, `CRON_SECRET` na hostingu, weryfikacja funkcji zaplanowanej.
 3. ~~**Geometria planów ogólnych z Rejestru Urbanistycznego (3–5 dni).**~~ Zrobione 23.10.2026 (sekcja 11).
 4. ~~**Własny ETL linii energetycznych (3–5 dni).**~~ Zrobione 23.10.2026 z BDOT10k (sekcja 12). Do zrobienia: pierwszy pełny przebieg ETL i upload na stagingu.
-5. ~~**Jakość AI: eval i lepszy model (1–2 dni).**~~ Eval, poprawka walidatora i podstawa w raporcie zrobione 23.10.2026 (sekcja 13). Do zrobienia: doładować konto Anthropic, potwierdzający bieg po poprawce walidatora i decyzja o przejściu na Haiku 5.5.
+5. ~~**Jakość AI: eval i lepszy model (1–2 dni).**~~ Eval, poprawka walidatora i podstawa w raporcie zrobione 23.10.2026 (sekcja 13). Model przełączony na Haiku 5.5 low (decyzja właściciela). Do zrobienia: doładować konto Anthropic i wykonać bieg potwierdzający po poprawce walidatora.
 
 ## Jak uruchomić weryfikację
 
 ```bash
 npm install
 npm run typecheck
-npm test                 # 106 testów: fixture'y + SQL kolejki, cache i Storage na PGlite (bez sieci)
+npm test                 # 107 testów: fixture'y + SQL kolejki, cache i Storage na PGlite (bez sieci)
 npm run test:live        # 14 działek na żywych usługach (~3 min); z POWER_LINES_URL=./data/power-lines także linie BDOT10k
 npm run etl:power-lines -- --powiaty 0223,0264,0208,0213,1261,1463,1014,0605   # kafle BDOT10k dla działek testowych (~30 s); bez --powiaty cały kraj
 npm run test:e2e         # Playwright + mock Supabase na PGlite, 5 testów (~1,5 min; wymaga ANTHROPIC_API_KEY w .env.local, inaczej rekomendacje regułowe)
@@ -440,7 +440,13 @@ OSM (Geofabrik) wymagałby parsera PBF i pobrania 1,8 GB, a dawałby głównie n
 
 **Niedokończone**
 - **W trakcie biegu wyczerpały się środki na koncie Anthropic.** 10 przypadków wariantu high się nie wykonało: jest 72 z 82. Jeśli produkcja używa tego samego konta, raporty dostają teraz rekomendacje z reguł zamiast AI, aż do doładowania.
-- **Produkcja nadal używa Haiku 4.5.** Zmiana modelu czeka na decyzję i na potwierdzający bieg po poprawce walidatora: baseline i Haiku 5.5 low, ok. $3,50.
+- **Przejście na Haiku 5.5 low** (decyzja właściciela, bez biegu potwierdzającego):
+  - kod używa dokładnie konfiguracji wariantu v1 z evala: `claude-haiku-5-5`, `effort: low`, `max_tokens` 8000, bez `temperature` i budżetu myślenia;
+  - klucz cache AI zawiera model i effort;
+  - działa po wdrożeniu;
+  - **nie wykonałem ani jednego wywołania produkcyjnej ścieżki na żywo**, bo konto nie ma środków; parametry żądania sprawdza test jednostkowy;
+  - bieg potwierdzający (baseline i v1 po poprawce walidatora, ok. $3,50) warto zrobić po doładowaniu konta;
+  - przykłady w `reports-sample/` są jeszcze z Haiku 4.5, sprzed zmiany.
 - **Ograniczenia oceny:**
   - sędzia to też model, a jego kontrola obejmuje tylko 4 przypadki;
   - nikt nie oznaczył ręcznie całego zestawu;
