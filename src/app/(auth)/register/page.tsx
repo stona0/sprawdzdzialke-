@@ -4,18 +4,24 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { authErrorMessage, callbackUrl, safeNext } from '@/lib/auth-redirect'
+import { startGoogleLogin } from '@/lib/auth-google'
+
+const redirectTarget = () => new URLSearchParams(window.location.search).get('redirectTo')
 
 export default function RegisterPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [info, setInfo] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError('')
+    setInfo('')
 
     if (password.length < 8) {
       setError('Hasło musi mieć co najmniej 8 znaków.')
@@ -24,33 +30,33 @@ export default function RegisterPage() {
     }
 
     const supabase = createClient()
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      // link aktywacyjny wraca przez callback (wymiana code na sesję), nie na Site URL projektu
+      options: { emailRedirectTo: callbackUrl(window.location.origin, redirectTarget()) },
+    })
 
     if (error) {
-      setError(error.message)
+      setError(authErrorMessage(error.code, error.message))
       setLoading(false)
       return
     }
 
-    router.push('/dashboard')
+    // Przy włączonym potwierdzaniu adresu Supabase nie zwraca sesji — konto zadziała po kliknięciu linku.
+    if (!data.session) {
+      setInfo(`Wysłaliśmy link aktywacyjny na ${email}. Kliknij go, żeby dokończyć rejestrację.`)
+      setLoading(false)
+      return
+    }
+
+    router.push(safeNext(redirectTarget()))
   }
 
   async function handleGoogleLogin() {
-    const supabase = createClient()
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        skipBrowserRedirect: false,
-      },
-    })
-    if (error) {
-      setError('Nie udało się połączyć z Google. Spróbuj ponownie.')
-      return
-    }
-    if (data?.url) {
-      window.location.href = data.url
-    }
+    setError('')
+    const message = await startGoogleLogin(redirectTarget())
+    if (message) setError(message)
   }
 
   return (
@@ -109,8 +115,13 @@ export default function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
                 {error}
+              </p>
+            )}
+            {info && (
+              <p role="status" className="text-sm text-green-800 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                {info}
               </p>
             )}
 

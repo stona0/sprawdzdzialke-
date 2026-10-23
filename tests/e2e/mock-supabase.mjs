@@ -222,6 +222,8 @@ async function handle(req, res, port) {
     return u ? send(res, 200, publicUser(u)) : send(res, 401, { code: 401, msg: 'invalid JWT', error_code: 'bad_jwt' })
   }
   if (p === '/auth/v1/logout') return send(res, 204, undefined)
+  // Jak nowy projekt stagingu bez skonfigurowanego Google (sprawdzone 23.10.2026: external.google = false).
+  if (p === '/auth/v1/settings') return send(res, 200, { external: { email: true, google: false }, disable_signup: false, mailer_autoconfirm: false })
 
   const rpcMatch = p.match(/^\/rest\/v1\/rpc\/([a-z_]+)$/)
   if (rpcMatch) return rpc(req, res, rpcMatch[1])
