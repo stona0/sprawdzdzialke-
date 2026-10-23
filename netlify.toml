@@ -2,6 +2,12 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  # Zmienne NEXT_PUBLIC_* Next.js wbudowuje w kod strony — są publiczne z założenia
+  # (dane chroni RLS). Netlify oznacza je jako sekrety po imporcie pliku .env i przerywa
+  # build. Skanowanie pozostałych zmiennych (service role, Stripe, Anthropic, CRON) zostaje.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_APP_URL,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"
+
 [functions]
   # Extend timeout for report generation (Playwright + AI calls can take 30-50s)
   node_bundler = "nft"
