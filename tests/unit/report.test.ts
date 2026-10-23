@@ -93,6 +93,40 @@ describe('AI – tylko fakty z danych', () => {
     expect(r.rejected).toBe(1)
   })
 
+  it('numer działki jako odwołanie przechodzi, jako wartość nie', () => {
+    const r = validateItems([
+      { tekst: 'Zamów wypis i wyrys z planu ogólnego dla działki 19/9.', podstawa: ['plan_ogolny'] },
+      { tekst: 'Sprawdź księgę wieczystą działki nr 19/9 w obrębie Milicz.', podstawa: ['dzialka'] },
+      { tekst: 'Zapytaj operatora o pas ochronny sieci na działce 19/9.', podstawa: ['uzbrojenie'] },
+      { tekst: 'Linia przebiega 9 m od granicy.', podstawa: ['uzbrojenie'] },
+      { tekst: 'Działka 19/9 ha jest duża.', podstawa: ['dzialka'] },
+    ], facts)
+    expect(r.ok).toHaveLength(3)
+    expect(r.rejected).toBe(2)
+  })
+
+  it('data ISO w faktach odpowiada dacie słownie i ISO w tekście', () => {
+    const f = { ...facts, plan_ogolny: { stan_rejestru: '2026-10-23' } }
+    const r = validateItems([
+      { tekst: 'Rejestr Urbanistyczny z 23 października 2026 nie wykazuje planu ogólnego.', podstawa: ['plan_ogolny'] },
+      { tekst: 'Stan rejestru na 2026-10-23 może być nieaktualny.', podstawa: ['plan_ogolny'] },
+      { tekst: 'Rejestr z 24 października 2026 nie wykazuje planu.', podstawa: ['plan_ogolny'] },
+    ], f)
+    expect(r.ok).toHaveLength(2)
+    expect(r.rejected).toBe(1)
+  })
+
+  it('data słownie odpowiada dacie z faktów (1.09.2026)', () => {
+    expect(facts.ocena_zabudowy).toMatchObject({ opis: expect.stringContaining('1.09.2026') })
+    const r = validateItems([
+      { tekst: 'Od 1 września 2026 r. decyzję WZ można wydać tylko w obszarze uzupełnienia zabudowy.', podstawa: ['ocena_zabudowy'] },
+      { tekst: 'Od września 2026 gmina bez planu ogólnego nie wyda WZ.', podstawa: ['ocena_zabudowy'] },
+      { tekst: 'Od 1 marca 2026 obowiązują nowe zasady.', podstawa: ['ocena_zabudowy'] },
+    ], facts)
+    expect(r.ok).toHaveLength(2)
+    expect(r.rejected).toBe(1)
+  })
+
   it('odrzuca punkt bez podstawy', () => {
     expect(validateItems([{ tekst: 'Coś.', podstawa: [] }], facts).rejected).toBe(1)
   })

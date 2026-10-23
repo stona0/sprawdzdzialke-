@@ -167,19 +167,39 @@ export interface RawItem {
 }
 
 const NUM = /\d+(?:[.,]\d+)*/g
+const MONTHS = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia']
+const DATE_WORDS = new RegExp(`\\b(\\d{1,2})\\s+(${MONTHS.join('|')})\\s+(\\d{4})`, 'giu')
+const DATE_NUM = /^0?(\d{1,2})\.(\d{2})\.(\d{4})$/
+const DATE_ISO = /\b(\d{4})-(\d{2})-(\d{2})\b/g
+const isoToPl = (s: string) => s.replace(DATE_ISO, (_, y: string, m: string, d: string) => `${+d}.${m}.${y}`)
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/**
+ * Tekst punktu w postaci porównywalnej z faktami: „1 września 2026” i „2026-09-01” → „1.09.2026”,
+ * a odwołanie „działki 440/1” / „na działce 440/1” traci numer — to identyfikator, nie wartość. Numer z jednostką („działka 24 ha”) zostaje i musi wynikać z faktów.
+ */
+function comparable(tekst: string, numer: unknown): string {
+  const t = isoToPl(tekst).replace(DATE_WORDS, (_, d: string, m: string, y: string) =>
+    `${+d}.${String(MONTHS.indexOf(m.toLowerCase()) + 1).padStart(2, '0')}.${y}`)
+  if (!numer) return t
+  const ref = new RegExp(`(dział[kc]\\p{L}*\\s+(?:nr\\.?\\s*|numer\\s+)?)${escapeRe(String(numer))}(?![\\d/]|[.,]\\d)(?!\\s*(?:%|(?:m²|m2|m|ha|km|kV)(?!\\p{L})))`, 'giu')
+  return t.replace(ref, '$1')
+}
 
 /** Odrzuca punkty bez podstawy w faktach lub z liczbami, których w faktach nie ma. */
 export function validateItems(items: RawItem[], facts: Record<string, unknown>): { ok: string[]; rejected: number } {
   // Numer działki to identyfikator, nie wartość — „9” z „19/9” nie może uwiarygodnić „9 m”.
   const { dzialka, ...rest } = facts as Record<string, unknown> & { dzialka?: Record<string, unknown> }
   const values = { ...rest, dzialka: { ...(dzialka ?? {}), numer: undefined } }
-  const norm = (n: string) => n.replace(/,/g, '.')
-  const known = new Set((JSON.stringify(values).match(NUM) ?? []).map(norm))
+  const norm = (n: string) => n.replace(/,/g, '.').replace(DATE_NUM, (_, d: string, m: string, y: string) => `${+d}.${m}.${y}`)
+  const known = new Set((isoToPl(JSON.stringify(values)).match(NUM) ?? []).map(norm))
+  // Rok z daty w faktach („od września 2026”) też jest znany.
+  for (const n of [...known]) { const y = DATE_NUM.exec(n)?.[3]; if (y) known.add(y) }
   const ok: string[] = []
   let rejected = 0
   for (const it of items) {
     const basisOk = it.podstawa.length > 0 && it.podstawa.every(k => (FACT_KEYS as readonly string[]).includes(k))
-    const nums = (it.tekst.match(NUM) ?? []).map(norm)
+    const nums = (comparable(it.tekst, dzialka?.numer).match(NUM) ?? []).map(norm)
     const numsOk = nums.every(n => known.has(n))
     if (basisOk && numsOk && it.tekst.trim()) ok.push(it.tekst.trim())
     else rejected++
