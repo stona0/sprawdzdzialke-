@@ -1,6 +1,6 @@
 # SprawdzDziałkę.com — raport z naprawy (branch `fix/autonomous-recovery`)
 
-Stan na 19.10.2026. Nic nie zostało wdrożone na produkcję, nic nie zostało zapisane do produkcyjnej bazy ani do konta Stripe.
+Stan na 19.10.2026, uzupełniony 23.10.2026 o trwały cache i kolejkę (sekcja 10). Nic nie zostało wdrożone na produkcję, nic nie zostało zapisane do produkcyjnej bazy ani do konta Stripe.
 
 ## 1. Podsumowanie
 
@@ -102,7 +102,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 - `npm run test:live`: 8/8 działek zgodnych z ręczną weryfikacją źródeł.
 - `npm run test:e2e`: 3/3.
 - `reports-sample/*.html|json`: przykładowe raporty.
-- Generowanie raportu trwa 22–25 s, z czego ~15 s to czekanie na OSM.
+- Generowanie raportu trwa 22–25 s, z czego ~15 s to czekanie na OSM. Po zmianach z sekcji 10: powtórny raport tej samej działki pobiera źródła z bazy w ~10 ms, a przy awarii Overpass czekamy na timeout raz na 5 min, nie w każdym raporcie.
 
 ## 4. Lista zmian
 
@@ -123,6 +123,12 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 | `92e8a66` | Krytyczne podatności Next (m.in. obejście proxy/middleware — a autoryzacja stoi na `proxy.ts`), sharp, ws, undici | Next 16.4.2, sharp 0.35.5, `npm audit fix`; regresja: tsc, testy, build, e2e |
 | `99efbfd` | Artykuł blogowy o WZ sprzeczny z prawem od 1.09.2026 | Ramka aktualizacji, poprawiona sekcja o nowelizacji i FAQ |
 | `a84a721` | AI nadinterpretowało dane (zła instytucja, „gaz dostępny” przy braku, „cała działka”, ucięte zdania) | Jednoznaczne fakty, lista dopuszczalnych instytucji, poziom ryzyka powodziowego; przykładowe raporty |
+| `f087147` | Mock e2e w pamięci przyjmował dowolne kolumny i nie wykonywał SQL | Mock na PGlite (Postgres w procesie) ze `schema.sql` i migracjami |
+| `ded6dd8` | Brak trwałego cache i kolejki | Migracja `20261020`: `source_cache`, `report_jobs`, funkcje kolejki (SKIP LOCKED, dzierżawa, atomowy zapis) |
+| `7e27e7b` | Godziny w raporcie w UTC (serverless) | `timeZone: 'Europe/Warsaw'` |
+| `f075f61` | Cache tylko w pamięci instancji; awaria źródła = „brak danych” | L2 w Postgres, kopia ≤ 30 dni przy awarii (oznaczona w raporcie), cache rekomendacji AI |
+| `932844c` | Każdy raport czekał 15 s na niedziałający Overpass | Bezpiecznik 5 min współdzielony przez instancje |
+| `73e73f2` | `after()` ginie z funkcją, nic nie ponawia | Kolejka `report_jobs`: ponowienia, wznawianie przez polling i cron |
 
 **Usunięta funkcjonalność i powód**
 - `wrosip-mpzp.ts` (MPZP Długołęki z koloru piksela): plan wybierany po przybliżonym prostokącie (±200 m), a legenda kolorów pochodziła z jednego planu (#40) i była stosowana do wszystkich. Przykład błędu: działkę w Kiełczowie przypisywało do planu „Obręb wsi Długołęka”, podczas gdy krajowa integracja pokazuje rzeczywisty plan „Kiełczów część B”. Zastąpione przez KIMPZP.
@@ -136,9 +142,9 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 |---|---|---|---|---|
 | B1 | **OSM/Overpass niedostępny** podczas całej sesji (bez linii WN z napięciem) | Publiczne instancje przeciążone: overpass-api.de 502/406/timeout, kumi i private.coffee timeout, mail.ru ~18 s | Zmiana instancji, równoległe zapytania, nagłówki UA/Accept, limit 15 s | Własny ekstrakt OSM (Geofabrik `poland-latest`) → tabela linii energetycznych w PostGIS, odświeżanie co miesiąc. Wtedy Overpass jest zbędny |
 | B2 | Stripe Checkout nieprzetestowany | W `.env.local` są tylko klucze live; tworzenie sesji live w ramach testu = efekt uboczny na produkcji | Przetestowany webhook (podpis, idempotencja, generowanie); dialog płatności w e2e | Dodać klucze testowe Stripe (`sk_test_…`) do środowiska dev/staging i dopisać krok checkout do e2e |
-| B3 | Zachowanie na hostingu niezweryfikowane | Brak dostępu do Netlify/Vercel i logów. Netlify: limit czasu funkcji synchronicznych jest krótki (zależnie od planu); wsparcie `after()`/`waitUntil` trzeba potwierdzić. Generowanie trwa ~25 s | `after()` + `maxDuration = 60` + detekcja zawieszonych raportów | Wdrożyć branch na staging. Jeśli limit czasu nie wystarcza: Vercel (Fluid compute) albo kolejka (Netlify Background Function / Supabase queue) |
+| B3 | Zachowanie na hostingu niezweryfikowane | Brak dostępu do Netlify/Vercel i logów. Netlify: limit czasu funkcji synchronicznych jest krótki (zależnie od planu); wsparcie `after()`/`waitUntil` trzeba potwierdzić. Generowanie trwa ~25 s | `after()` + `maxDuration = 60`; od `73e73f2` kolejka z ponowieniami i wznawianiem przerwanych zadań (sekcja 10) | Wdrożyć branch na staging i sprawdzić `after()`, funkcję zaplanowaną Netlify i limity czasu |
 | B4 | Geometria OUZ poza Wrocławiem | Krajowa usługa GUGiK `PlanyOgolneGmin` nie zwraca nic nawet dla gmin z POG w mocy (Siechnice, Przemęt, Radlin, Strzeleczki), a na skali kraju nic nie rysuje | GetFeatureInfo HTML/JSON/text, GetMap całej Polski | Pobierać GML planów ogólnych z Rejestru Urbanistycznego (API ma download) do własnej bazy, analogicznie do Wrocławia |
-| B5 | Brak stagingu i trwałego cache | Jedyny projekt Supabase = produkcja; zakaz modyfikacji bazy | Cache w pamięci procesu (TTL, deduplikacja zapytań) | Osobny projekt Supabase na staging; tabela `source_cache` lub Upstash |
+| B5 | Brak stagingu i trwałego cache | Jedyny projekt Supabase = produkcja; zakaz modyfikacji bazy | Cache w pamięci procesu; od `f075f61` tabela `source_cache` (kod gotowy, migracja nieuruchomiona) | Osobny projekt Supabase na staging; tam najpierw migracja `20261020` |
 
 **Ryzyka danych**
 - **Rejestr Urbanistyczny bywa opóźniony.** 19.10.2026 POG Wrocławia był w nim „w opracowaniu”, choć obowiązuje od 19.09.2026. Raport mówi to wprost i każe potwierdzić w urzędzie.
@@ -151,7 +157,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 **Ryzyka bezpieczeństwa (poza zakresem zmian w kodzie)**
 - **Token GitHub (PAT) zapisany jawnym tekstem w URL remote'a `origin`** w `.git/config`. Należy go natychmiast unieważnić i ustawić remote bez tokenu (credential helper).
 - Klucze **live** Stripe w lokalnym `.env.local`. Development powinien używać kluczy testowych.
-- Rate limiter i cache w pamięci nie są współdzielone między instancjami serverless.
+- Rate limiter jest w pamięci i nie jest współdzielony między instancjami serverless (cache źródeł już jest — sekcja 10).
 - Pozostały 2 umiarkowane podatności (`postcss-selector-parser` przez `@tailwindcss/typography`; tylko czas budowania).
 
 ## 6. Luki konkurencyjne: linie energetyczne i wod-kan
@@ -211,7 +217,7 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 ## 9. Top 5 kolejnych kroków
 
 1. **Staging i sekrety (1–2 dni).** Unieważnić PAT z `.git/config`, osobny projekt Supabase i klucze testowe Stripe dla dev/staging, wdrożyć ten branch na staging i sprawdzić `after()` i limity czasu na docelowym hostingu (B2, B3). Bez tego nie da się bezpiecznie wypuścić żadnej poprawki.
-2. **Trwały cache i kolejka (2–3 dni).** Usługi państwowe są wolne i niestabilne; wspólny cache (tabela w Postgres lub Redis) skraca raport do kilku sekund przy powtórzeniach i chroni przed awariami. Kolejka usuwa zależność od limitu czasu funkcji.
+2. ~~**Trwały cache i kolejka (2–3 dni).**~~ Zrobione w kodzie 20–23.10.2026 (sekcja 10). Do zrobienia: migracja na stagingu i produkcji, `CRON_SECRET` na hostingu, weryfikacja funkcji zaplanowanej.
 3. **Geometria planów ogólnych z Rejestru Urbanistycznego (3–5 dni).** Po 1.09.2026 to najważniejsza informacja dla kupującego (czy w ogóle dostanie WZ), a dziś mamy ją tylko dla Wrocławia.
 4. **Własny ETL linii energetycznych z OSM i BDOT10k (3–5 dni).** Zamyka lukę konkurencyjną z napięciem i dokładną odległością, bez zależności od publicznego Overpass (B1).
 5. **Jakość AI: eval i lepszy model (1–2 dni).** Zbudować zestaw ewaluacyjny z działek testowych (sprawdzanie zgodności z faktami), porównać Haiku 4.5 z nowszym modelem i pokazywać w raporcie „podstawę” każdej rekomendacji. Błędy semantyczne AI to dziś największe ryzyko jakości treści. Koszt modelu na raport jest pomijalny przy cenie 29 PLN.
@@ -221,8 +227,60 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 ```bash
 npm install
 npm run typecheck
-npm test                 # 48 testów jednostkowych (fixture'y)
+npm test                 # 74 testy: fixture'y + SQL kolejki i cache na PGlite (bez sieci)
 npm run test:live        # 8 działek na żywych usługach (~2 min)
-npm run test:e2e         # Playwright + mock Supabase (~1 min; wymaga ANTHROPIC_API_KEY w .env.local, inaczej rekomendacje regułowe)
+npm run test:e2e         # Playwright + mock Supabase na PGlite, 5 testów (~1,5 min; wymaga ANTHROPIC_API_KEY w .env.local, inaczej rekomendacje regułowe)
+npx tsx --tsconfig tsconfig.json scripts/cache-benchmark.mts   # pomiar cache: zimny start / nowa instancja / awaria usług (~1 min)
 npx tsx --env-file=.env.local --tsconfig tsconfig.json scripts/generate-sample-reports.mts   # reports-sample/
 ```
+
+## 10. Trwały cache i kolejka (20–23.10.2026)
+
+**Co zostało zrobione**
+
+1. **Cache dwupoziomowy** (`src/lib/http.ts`, `src/lib/source-cache.ts`): pamięć instancji (L1) + tabela `source_cache` (L2) wspólna dla wszystkich instancji. Klucz to wersja formatu + źródło + działka (`v1:kimpzp:<id>`). Świeżość jak dotąd: 1 doba, Rejestr Urbanistyczny 6 h. Błędów nie zapisujemy. Awaria lub timeout bazy (2,5 s) nie psuje raportu.
+2. **Kopia przy awarii źródła.** Gdy usługa nie odpowiada, a w L2 jest wynik sprzed ≤ 30 dni, raport go używa. W tabeli źródeł pokazuje wtedy „źródło nie odpowiedziało — użyto wcześniej pobranych danych” i oryginalną datę pobrania. Dotyczy też ULDK, które było pojedynczym punktem awarii. ULDK jest teraz w tabeli źródeł.
+3. **Cache rekomendacji AI** po skrócie faktów (30 dni), żeby ponowiona próba nie płaciła drugi raz za model.
+4. **Bezpiecznik Overpass.** Po awarii OSM jest pomijane przez 5 min we wszystkich instancjach.
+5. **Kolejka** (`report_jobs`, `src/lib/report-queue.ts`).
+   - Każdy raport (darmowy i po webhooku) to zadanie z dzierżawą 90 s.
+   - Pierwsza próba rusza od razu w `after()`.
+   - Ponowienia po 15 s / 60 s / 180 s, maks. 4 próby. Nieistniejąca działka to błąd trwały.
+   - Gdy przy pierwszej próbie nie odpowie MPZP lub plan ogólny, jest jeszcze jedna próba po 20 s.
+   - Zadanie, na które czeka użytkownik, wznawia polling statusu albo odświeżanie strony raportu. Pozostałe wznawia cron co 5 min (`/api/cron/report-jobs` + `netlify/functions/report-jobs-cron.mts`).
+   - Zapis raportu i porażka (raport `failed`, zwrot darmowego raportu) dzieją się atomowo w SQL.
+   - Dzięki L2 każda kolejna próba zaczyna od tego, co poprzednia zdążyła pobrać, więc limit czasu funkcji przestaje blokować raport.
+6. **Mock e2e na PGlite.** Migracje i zapytania aplikacji są testowane na prawdziwym Postgresie (schemat z repo), bez dotykania produkcji.
+
+**Dowody**
+- `npm test`: 74/74, w tym 13 testów funkcji SQL kolejki, 6 testów workera i 7 testów cache/bezpiecznika na PGlite.
+- `npm run test:e2e`: 5/5. Obejmuje pełną ścieżkę (raport przez kolejkę, wpisy w `source_cache`), wznowienie zadania z wygasłą dzierżawą przez stronę raportu (gotowe po 6,2 s) oraz cron (401 bez sekretu, wykonanie zaległego zadania).
+- `tsc`, `next build`: OK.
+- `scripts/cache-benchmark.mts`, 23.10.2026, prawdziwe usługi, baza lokalna (sam zbiór danych, bez mapy i AI):
+
+| Działka | Zimny start | Nowa instancja (pusta pamięć, baza z danymi) | Awaria wszystkich usług, cache po terminie |
+|---|---|---|---|
+| Wrocław Stare Miasto | 16,1 s | 11 ms | 2,4 s — wszystko z kopii, werdykt ten sam |
+| Wrocław Lipa Piotrowska | 17,5 s | 8 ms | 2,4 s — werdykt ten sam |
+| Wrocław Pilczyce | 3,6 s | 6 ms | 2,4 s — werdykt ten sam |
+| Kłodzko | 1,9 s | 6 ms | 2,4 s — werdykt ten sam |
+
+Pierwsze dwa zimne starty to ~15 s czekania na Overpass; potem działa bezpiecznik. Przed bezpiecznikiem „nowa instancja” trwała 10–15 s. Przy awarii OSM i tak jest „niedostępne”, chyba że wcześniej odpowiedziało.
+
+**Wdrożenie — kolejność ma znaczenie**
+1. Na stagingu (a potem na produkcji) uruchomić `supabase/migrations/20261020_source_cache_report_jobs.sql`. **Najpierw migracja, potem kod.** Bez tabeli `report_jobs` trasa generowania zwraca 500, a webhook 500 (Stripe będzie ponawiał).
+2. Ustawić `CRON_SECRET` (losowy ciąg) w zmiennych hostingu.
+3. Po wdrożeniu sprawdzić w logach Netlify, że funkcja `report-jobs-cron` uruchamia się co 5 min i dostaje HTTP 200.
+4. Awaryjnie: `SOURCE_CACHE=off` wyłącza L2 (kolejka działa dalej).
+
+**Czego nie zweryfikowałem**
+- Migracji nie uruchomiłem na żadnym projekcie Supabase. Testowana na PGlite (Postgres 18) ze `schema.sql` z repo. Jeśli produkcyjny schemat odbiega od `schema.sql`, różnica wyjdzie dopiero na stagingu.
+- Uprawnień: w Supabase domyślne uprawnienia dają `EXECUTE` także `anon`/`authenticated`, a migracja je odbiera. Tego zachowania nie sprawdziłem na prawdziwym Supabase.
+- Hostingu: działanie `after()`, `maxDuration` i funkcji zaplanowanej Netlify (B3). Gdyby hostingiem był Vercel, cron trzeba dodać w `vercel.json`. Trasa przyjmuje nagłówek Vercel Cron, ale plan Hobby pozwala na cron raz na dobę.
+- Mock PostgREST obsługuje tylko podzbiór API używany przez aplikację (filtry eq/neq/lt/gt/ilike/is/in, upsert, rpc). Zapytania z osadzaniem relacji (`profiles(email)` w panelu admina) nie są w e2e.
+
+**Ryzyka i założenia**
+- Kopia awaryjna ma do 30 dni. W tym czasie plan mógł się zmienić. Raport oznacza takie dane, ale werdykt liczony jest z kopii.
+- `source_cache` rośnie o kilka KB na działkę (26 wpisów ≈ 16 KB). Cron usuwa wpisy po `keep_until`.
+- Raport, którego wszystkie próby przepadły, kończy się `failed` po ok. 4–6 min (ponowienia po 15 + 60 + 180 s, a próba przerwana przez platformę czeka dodatkowo na koniec dzierżawy 90 s). Wcześniej było to 5 min bez żadnej ponownej próby.
+
