@@ -1,6 +1,6 @@
 # SprawdzDziałkę.com — raport z naprawy (branch `fix/autonomous-recovery`)
 
-Stan na 19.10.2026, uzupełniony 23.10.2026 o trwały cache i kolejkę (sekcja 10). Nic nie zostało wdrożone na produkcję, nic nie zostało zapisane do produkcyjnej bazy ani do konta Stripe.
+Stan na 19.10.2026, uzupełniony 23.10.2026 o trwały cache i kolejkę (sekcja 10) oraz plany ogólne z Rejestru Urbanistycznego (sekcja 11). Nic nie zostało wdrożone na produkcję, nic nie zostało zapisane do produkcyjnej bazy ani do konta Stripe.
 
 ## 1. Podsumowanie
 
@@ -73,7 +73,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 | 3 | Walidacja ID | ID bez kropek → komunikat; nieistniejące → „Nie znaleziono działki” | DZIAŁA | DZIAŁA (e2e) |
 | 4 | Geometria działki | punkt wewnątrz działki z błędem < 1 m względem referencji ULDK EPSG:4326 | **NIE DZIAŁA** (błąd 19–25 km; link „Pokaż na mapie Google” prowadził obok) | DZIAŁA (test jednostkowy na 4 działkach, < 1 m) |
 | 5 | MPZP | dla działki objętej planem: plan + teren; dla nieobjętej: „brak MPZP”; gdy brak danych: „nie ustalono” | **NIE DZIAŁA** (Wrocław zawsze „brak”, fallbacki zgadywały) | DZIAŁA: Wrocław (GIS miasta, wszystkie tereny z udziałem %), gminy w KIMPZP. CZĘŚCIOWO: gminy spoza KIMPZP → „nie ustalono” |
-| 6 | Plan ogólny i ścieżka do zabudowy | werdykt MPZP / WZ możliwe / WZ niemożliwe / nieustalone, zgodny ze stanem prawnym od 1.09.2026 | NIE DZIAŁA | DZIAŁA dla Wrocławia (strefa, OUZ). CZĘŚCIOWO poza Wrocławiem: status POG gminy z Rejestru Urbanistycznego, bez geometrii OUZ |
+| 6 | Plan ogólny i ścieżka do zabudowy | werdykt MPZP / WZ możliwe / WZ niemożliwe / nieustalone, zgodny ze stanem prawnym od 1.09.2026 | NIE DZIAŁA | DZIAŁA dla Wrocławia (GIS miasta) i od `c311e4f` dla gmin z POG w mocy w Rejestrze Urbanistycznym (strefa, parametry, OUZ — sekcja 11) |
 | 7 | Ochrona przyrody | rozróżnienie „na działce” i „do 300 m” | NIE DZIAŁA (złe miejsce) | DZIAŁA (live: Milicz, Pilczyce) |
 | 8 | Powódź | scenariusze Q10/Q1/Q0,2/wał/budowla + OSZP | NIE DZIAŁA (tylko link) | DZIAŁA (live: Kłodzko, Pilczyce, Lipa Piotrowska) |
 | 9 | Uzbrojenie | odległość od granicy działki do sieci lub jawne „brak danych” | NIE DZIAŁA | CZĘŚCIOWO: KIUT działa tam, gdzie powiat przekazuje dane (nie Wrocław, nie Kraków); OSM zależny od przeciążonego publicznego Overpass |
@@ -143,7 +143,7 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 | B1 | **OSM/Overpass niedostępny** podczas całej sesji (bez linii WN z napięciem) | Publiczne instancje przeciążone: overpass-api.de 502/406/timeout, kumi i private.coffee timeout, mail.ru ~18 s | Zmiana instancji, równoległe zapytania, nagłówki UA/Accept, limit 15 s | Własny ekstrakt OSM (Geofabrik `poland-latest`) → tabela linii energetycznych w PostGIS, odświeżanie co miesiąc. Wtedy Overpass jest zbędny |
 | B2 | Stripe Checkout nieprzetestowany | W `.env.local` są tylko klucze live; tworzenie sesji live w ramach testu = efekt uboczny na produkcji | Przetestowany webhook (podpis, idempotencja, generowanie); dialog płatności w e2e | Dodać klucze testowe Stripe (`sk_test_…`) do środowiska dev/staging i dopisać krok checkout do e2e |
 | B3 | Zachowanie na hostingu niezweryfikowane | Brak dostępu do Netlify/Vercel i logów. Netlify: limit czasu funkcji synchronicznych jest krótki (zależnie od planu); wsparcie `after()`/`waitUntil` trzeba potwierdzić. Generowanie trwa ~25 s | `after()` + `maxDuration = 60`; od `73e73f2` kolejka z ponowieniami i wznawianiem przerwanych zadań (sekcja 10) | Wdrożyć branch na staging i sprawdzić `after()`, funkcję zaplanowaną Netlify i limity czasu |
-| B4 | Geometria OUZ poza Wrocławiem | Krajowa usługa GUGiK `PlanyOgolneGmin` nie zwraca nic nawet dla gmin z POG w mocy (Siechnice, Przemęt, Radlin, Strzeleczki), a na skali kraju nic nie rysuje | GetFeatureInfo HTML/JSON/text, GetMap całej Polski | Pobierać GML planów ogólnych z Rejestru Urbanistycznego (API ma download) do własnej bazy, analogicznie do Wrocławia |
+| B4 | ~~Geometria OUZ poza Wrocławiem~~ — rozwiązane w `c311e4f` (geometria z API Rejestru Urbanistycznego, sekcja 11) | Krajowa usługa GUGiK `PlanyOgolneGmin` nie zwraca nic nawet dla gmin z POG w mocy (Siechnice, Przemęt, Radlin, Strzeleczki), a na skali kraju nic nie rysuje | GetFeatureInfo HTML/JSON/text, GetMap całej Polski | Pobierać GML planów ogólnych z Rejestru Urbanistycznego (API ma download) do własnej bazy, analogicznie do Wrocławia |
 | B5 | Brak stagingu i trwałego cache | Jedyny projekt Supabase = produkcja; zakaz modyfikacji bazy | Cache w pamięci procesu; od `f075f61` tabela `source_cache` (kod gotowy, migracja nieuruchomiona) | Osobny projekt Supabase na staging; tam najpierw migracja `20261020` |
 
 **Ryzyka danych**
@@ -196,7 +196,7 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 - Artykuł blogowy o WZ zaktualizowany.
 
 **Do zrobienia**
-1. Geometria OUZ i stref POG dla wszystkich gmin z GML Rejestru Urbanistycznego (B4). Bez tego poza Wrocławiem werdykt dla gmin z POG to „nieustalone”.
+1. ~~Geometria OUZ i stref POG dla wszystkich gmin z Rejestru Urbanistycznego (B4).~~ Zrobione 23.10.2026 (sekcja 11).
 2. Pozostałe artykuły bloga (01, 02, 03, 05) wspominają studium i stare zasady WZ — do przeredagowania.
 3. Import MPZP w panelu admina: zamiast parsowania PDF przez Claude pobierać GML aktów (APP) z Rejestru Urbanistycznego — dane oficjalne, z geometrią.
 4. Link do wypisu/wyrysu (e-usługi gminy, Rejestr Urbanistyczny) w raporcie.
@@ -218,7 +218,7 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 
 1. **Staging i sekrety (1–2 dni).** Unieważnić PAT z `.git/config`, osobny projekt Supabase i klucze testowe Stripe dla dev/staging, wdrożyć ten branch na staging i sprawdzić `after()` i limity czasu na docelowym hostingu (B2, B3). Bez tego nie da się bezpiecznie wypuścić żadnej poprawki.
 2. ~~**Trwały cache i kolejka (2–3 dni).**~~ Zrobione w kodzie 20–23.10.2026 (sekcja 10). Do zrobienia: migracja na stagingu i produkcji, `CRON_SECRET` na hostingu, weryfikacja funkcji zaplanowanej.
-3. **Geometria planów ogólnych z Rejestru Urbanistycznego (3–5 dni).** Po 1.09.2026 to najważniejsza informacja dla kupującego (czy w ogóle dostanie WZ), a dziś mamy ją tylko dla Wrocławia.
+3. ~~**Geometria planów ogólnych z Rejestru Urbanistycznego (3–5 dni).**~~ Zrobione 23.10.2026 (sekcja 11).
 4. **Własny ETL linii energetycznych z OSM i BDOT10k (3–5 dni).** Zamyka lukę konkurencyjną z napięciem i dokładną odległością, bez zależności od publicznego Overpass (B1).
 5. **Jakość AI: eval i lepszy model (1–2 dni).** Zbudować zestaw ewaluacyjny z działek testowych (sprawdzanie zgodności z faktami), porównać Haiku 4.5 z nowszym modelem i pokazywać w raporcie „podstawę” każdej rekomendacji. Błędy semantyczne AI to dziś największe ryzyko jakości treści. Koszt modelu na raport jest pomijalny przy cenie 29 PLN.
 
@@ -227,8 +227,8 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 ```bash
 npm install
 npm run typecheck
-npm test                 # 74 testy: fixture'y + SQL kolejki i cache na PGlite (bez sieci)
-npm run test:live        # 8 działek na żywych usługach (~2 min)
+npm test                 # 84 testy: fixture'y + SQL kolejki i cache na PGlite (bez sieci)
+npm run test:live        # 12 działek na żywych usługach (~3 min)
 npm run test:e2e         # Playwright + mock Supabase na PGlite, 5 testów (~1,5 min; wymaga ANTHROPIC_API_KEY w .env.local, inaczej rekomendacje regułowe)
 npx tsx --tsconfig tsconfig.json scripts/cache-benchmark.mts   # pomiar cache: zimny start / nowa instancja / awaria usług (~1 min)
 npx tsx --env-file=.env.local --tsconfig tsconfig.json scripts/generate-sample-reports.mts   # reports-sample/
@@ -283,4 +283,39 @@ Pierwsze dwa zimne starty to ~15 s czekania na Overpass; potem działa bezpieczn
 - Kopia awaryjna ma do 30 dni. W tym czasie plan mógł się zmienić. Raport oznacza takie dane, ale werdykt liczony jest z kopii.
 - `source_cache` rośnie o kilka KB na działkę (26 wpisów ≈ 16 KB). Cron usuwa wpisy po `keep_until`.
 - Raport, którego wszystkie próby przepadły, kończy się `failed` po ok. 4–6 min (ponowienia po 15 + 60 + 180 s, a próba przerwana przez platformę czeka dodatkowo na koniec dzierżawy 90 s). Wcześniej było to 5 min bez żadnej ponownej próby.
+
+## 11. Plany ogólne z Rejestru Urbanistycznego (23.10.2026)
+
+**Co zostało zrobione**
+- Rejestr Urbanistyczny ma publiczne API z geometrią planów. To te same endpointy, których używa jego strona; ustaliłem je z kodu frontendu:
+  - `GET /api/public/published-details/{id}/geometries`: strefy planistyczne i obszary OUZ/OZS jako poligony WGS84;
+  - `GET …/planning-zones?symbol=SJ&pageSize=1000`: parametry stref (wysokość, intensywność, udział zabudowy, PBC, profile);
+  - `GET …/{id}`: dane uchwały.
+- Dla działki spoza Wrocławia raport pobiera plan gminy (0,7–2,3 MB gzip, ok. 1 s), przecina strefy i OUZ z obrysem działki i pokazuje to samo, co dotąd tylko dla Wrocławia: strefy z udziałem %, parametry, OUZ z udziałem %, OZS, datę wejścia w życie i uchwałę z linkiem do karty planu w RU. Wynik dla działki trafia do trwałego cache.
+- Werdykt „WZ możliwe / poza OUZ” działa we wszystkich gminach z POG w mocy w RU. Na 23.10.2026 to 388 gmin. Wcześniej poza Wrocławiem werdykt brzmiał zawsze „nieustalone”.
+- Projekt planu (status „w opracowaniu” lub „w trakcie przyjmowania”) raport pokazuje osobno: w sekcji POG z ostrzeżeniem, że nie obowiązuje, oraz jako ustalenie „uwaga”. **Nie wpływa na werdykt.** Kupujący widzi, czy w projekcie działka trafia do OUZ.
+- **Naprawiony błąd** (`5f6c312`): raport brał najnowszy wpis gminy w RU. W Radomiu i Barczewie plan ogólny obowiązuje, ale nowszy wpis to wersja „w opracowaniu”, więc raport podawał „brak planu ogólnego → WZ niemożliwe”. Teraz plan w mocy ma pierwszeństwo, a RU jest odpytywany po kodzie TERC, a nie po nazwie gminy.
+
+**Dowody**
+- `npm test`: 84/84, w tym `tests/unit/ru-pog.test.ts` na fixture planu Siechnic (strefa, OUZ ~76%, dwie strefy poza OUZ, działka poza zasięgiem planu, wybór wpisu na przykładzie Radomia).
+- `npm run test:live`: 11/12. Nowe działki, każda z oczekiwaniami sprawdzonymi ręcznie:
+
+| Działka | Plan ogólny | Strefa | OUZ | Werdykt |
+|---|---|---|---|---|
+| Siechnice `022308_5.0021.24` | w mocy (RU) | 685SJ, 100%; 12 m, PBC 50% | 75,7% działki | WZ możliwe |
+| Siechnice `022308_5.0010.11` | w mocy (RU) | 1SR 62% + 68SO 38% | nie | MPZP |
+| Radom `146301_1.0180.AR_176.7/2` | w mocy (wcześniej błędnie „brak”) | 1SJ | 100% | WZ możliwe |
+| gmina Sieradz `101408_2.0021.44/2` | brak; projekt w opracowaniu | w projekcie 5SO 82% + 1SJ 18% | w projekcie 18% | brak POG + informacja o projekcie |
+
+  Jedyny nieudany test live to Milicz, i nie z powodu tej zmiany: KIUT od 23.10 zwraca dla okolic Milicza pusty obraz na wszystkich trzech hostach (`integracja`, `integracja01`, `integracja02`). Raport pokazuje wtedy „brak danych w KIUT dla tego obszaru”. Oczekiwania w teście nie zmieniałem, bo dane mogą wrócić.
+- `npm run test:e2e`: 5/5.
+- Przykładowe raporty: `reports-sample/siechnice-ouz`, `siechnice-poza-ouz`, `radom-pog`, `sieradz-projekt-pog`.
+
+**Ograniczenia i ryzyka**
+- **RU bywa opóźniony.** Wrocław nadal figuruje w nim jako „w opracowaniu”, dlatego dla Wrocławia źródłem pozostaje GIS miasta. W innych gminach raport opiera się na RU i każe potwierdzić stan w urzędzie.
+- **API jest nieudokumentowane.** To wewnętrzne API strony rejestru, które może się zmienić bez zapowiedzi. Przy zbyt częstych zapytaniach odpowiada 429. `fetchWithRetry` ponawia, a wynik działki trzymamy w cache przez dobę.
+- **Duże miasta.** Największy sprawdzony plan (Radom, 304 obszary) ma 6,5 MB JSON. Planów największych miast nie mierzyłem; przy bardzo dużych plikach warto będzie trzymać geometrię gminy w bazie (PostGIS) zamiast pobierać ją przy każdej nowej działce.
+- **Zmiany planu.** Gdy gmina ma więcej niż jeden plan w mocy (np. zmianę jako osobny akt), raport bierze najnowszy w mocy. Na 23.10.2026 taki przypadek nie występuje.
+- **Wartości liczbowe.** Wysokość w RU to tekst („12 m”), z którego raport bierze pierwszą liczbę. Strefy bez parametrów (np. SO — strefa otwarta) mają w raporcie „—”.
+- **AI.** W nowych przykładach zostały pojedyncze błędy semantyczne z kategorii opisanej w kroku 5: instytucja spoza listy („Biuro Obsługi Geodety”) i błędna nazwa źródła OSM. Werdykt i ustalenia powstają regułami, nie przez AI.
 
