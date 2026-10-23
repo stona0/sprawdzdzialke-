@@ -603,3 +603,17 @@ Braki, które blokują uruchomienie płatnej usługi dla konsumentów. Tu też z
 - `public/{file,globe,next,vercel,window}.svg`: pliki z create-next-app, nigdzie nieużywane.
 - `src/app/favicon.ico` w wersji domyślnej Next.js (25 931 B, ta sama data co reszta szablonu): przeglądarki i wyszukiwarki pokazywały ikonę Next zamiast znaku serwisu. Zastąpiona plikiem z `public/favicon.svg`.
 - `public/og-image.png`: ciemna grafika niepasująca do jasnej strony, w dodatku ze zmyślonymi danymi (Długołęka 556/6, MN, 9 m, 30%), których prawdziwy raport nie podaje. Zastąpiona przez `src/app/opengraph-image.tsx`, który pokazuje tylko, z jakich części składa się raport.
+
+### Strony prawne
+Dodane `/regulamin`, `/polityka-prywatnosci` i `/kontakt` (grupa `src/app/(legal)`) oraz ich adresy w `sitemap.ts`. Dane firmy pochodzą z `src/lib/company.ts`. **Teksty to wzór napisany bez prawnika.** Dopóki `LEGAL_DRAFT = true` (`src/lib/legal.ts`), strony pokazują baner i uwagi „Do weryfikacji”.
+
+Ustalenia, które zmieniły treść względem założeń:
+- **Supabase nie jest w UE.** Produkcja i staging stoją w regionie `eu-central-2`, czyli w Zurychu (Szwajcaria, decyzja KE o adekwatności). Polityka podaje Szwajcarię.
+- **Baner cookies nie jest potrzebny.** Serwis nie ma analityki ani Stripe.js, a strony publiczne nie ustawiają cookies. Po zalogowaniu działają tylko `sb-<ref>-auth-token` (sesja, do 400 dni) i `…-code-verifier` (PKCE). To cookies niezbędne, zwolnione ze zgody (art. 399 PKE). Jeśli dojdzie analityka, baner zgody stanie się konieczny.
+
+### Otwarte blokery (po stronie właściciela)
+1. **Weryfikacja regulaminu i polityki przez prawnika**, potem `LEGAL_DRAFT = false` i usunięcie uwag `DraftNote`.
+2. **Potwierdzenie umowy na trwałym nośniku.** Wyłączenie prawa odstąpienia (art. 38 ust. 1 pkt 13 upk) wymaga przesłania konsumentowi potwierdzenia ze zgodą, np. e-mailem. Serwis nie ma dostawcy poczty transakcyjnej, a e-mail od Stripe nie zawiera treści zgody. Bez tego zgoda zbierana przed płatnością może nie wyłączyć prawa odstąpienia.
+3. **Zwrot za nieudany płatny raport** robi się dziś ręcznie w panelu Stripe. Kolejka zwraca tylko darmowy limit.
+4. **Umowy powierzenia (DPA) i podstawy transferu**: Supabase, Netlify, Stripe, Anthropic. Do ustalenia, który podmiot Anthropic obsługuje klientów z UE.
+5. **Skrzynka kontakt@lintel.pl** musi odbierać pocztę, bo jest jedynym kanałem reklamacji, odstąpień, faktur i RODO.
