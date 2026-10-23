@@ -126,9 +126,10 @@ async function load<T>(
   fn: () => Promise<T>,
   shouldCache: (v: T) => boolean,
   stalePolicy?: StalePolicy<T>,
+  persist = true,
 ): Promise<T> {
   const l2Key = `${CACHE_VERSION}:${key}`
-  const entry = await l2('odczyt', s => s.get(l2Key))
+  const entry = persist ? await l2('odczyt', s => s.get(l2Key)) : null
   if (entry && entry.freshUntil > Date.now()) {
     remember(key, entry.value, entry.freshUntil)
     return entry.value as T
@@ -147,7 +148,7 @@ async function load<T>(
 
   const now = Date.now()
   remember(key, value, now + ttlMs)
-  await l2('zapis', s => s.set(l2Key, { value, freshUntil: now + ttlMs, keepUntil: now + Math.max(ttlMs, STALE_KEEP_MS), createdAt: now }))
+  if (persist) await l2('zapis', s => s.set(l2Key, { value, freshUntil: now + ttlMs, keepUntil: now + Math.max(ttlMs, STALE_KEEP_MS), createdAt: now }))
   return value
 }
 
@@ -161,18 +162,18 @@ function dedupe<T>(key: string, run: () => Promise<T>): Promise<T> {
   return p
 }
 
-/**
- * @param staleOnThrow gdy podane, a fn rzuci (źródło nie odpowiada), zwracamy
- *   przeterminowany wpis z L2 (do STALE_KEEP_MS) oznaczony tą funkcją.
- */
-export async function cached<T>(
-  key: string,
-  ttlMs: number,
-  fn: () => Promise<T>,
-  shouldCache: (v: T) => boolean = () => true,
-  staleOnThrow?: (v: T) => T,
-): Promise<T> {
-  return dedupe(key, () => load(key, ttlMs, fn, shouldCache, staleOnThrow && { mark: staleOnThrow, onRejected: false }))
+export interface CacheOptions<T> {
+  /** Czy wynik zapisać (domyślnie zawsze). */
+  shouldCache?: (v: T) => boolean
+  /** Gdy fn rzuci (źródło nie odpowiada), zwróć przeterminowany wpis z L2 (do STALE_KEEP_MS) oznaczony tą funkcją. */
+  staleOnThrow?: (v: T) => T
+  /** false = tylko pamięć procesu (duże albo pomocnicze dane, których nie warto trzymać w bazie). */
+  persist?: boolean
+}
+
+export async function cached<T>(key: string, ttlMs: number, fn: () => Promise<T>, opts: CacheOptions<T> = {}): Promise<T> {
+  const { shouldCache = () => true, staleOnThrow, persist = true } = opts
+  return dedupe(key, () => load(key, ttlMs, fn, shouldCache, staleOnThrow && { mark: staleOnThrow, onRejected: false }, persist))
 }
 
 /**

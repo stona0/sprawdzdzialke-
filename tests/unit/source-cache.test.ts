@@ -71,12 +71,12 @@ describe('trwały cache źródeł (source_cache)', () => {
   it('ULDK: kopia tylko przy awarii, nie przy odpowiedzi „brak działki”', async () => {
     type P = { found: boolean; stale?: boolean }
     const mark = (p: P) => ({ ...p, stale: true })
-    await cached<P>('uldk:t', 60_000, async () => ({ found: true }), p => p.found, mark)
+    await cached<P>('uldk:t', 60_000, async () => ({ found: true }), { shouldCache: p => p.found, staleOnThrow: mark })
     await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 hour'`)
     clearCache()
-    expect(await cached<P>('uldk:t', 60_000, async () => ({ found: false }), p => p.found, mark)).toEqual({ found: false })
+    expect(await cached<P>('uldk:t', 60_000, async () => ({ found: false }), { shouldCache: p => p.found, staleOnThrow: mark })).toEqual({ found: false })
     clearCache()
-    expect(await cached<P>('uldk:t', 60_000, async () => { throw new Error('ULDK: HTTP 503') }, p => p.found, mark)).toEqual({ found: true, stale: true })
+    expect(await cached<P>('uldk:t', 60_000, async () => { throw new Error('ULDK: HTTP 503') }, { shouldCache: p => p.found, staleOnThrow: mark })).toEqual({ found: true, stale: true })
   })
 
   it('bezpiecznik: awaria usługi w jednej instancji wyłącza ją na chwilę w innych', async () => {
@@ -87,6 +87,14 @@ describe('trwały cache źródeł (source_cache)', () => {
     await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 second' WHERE key = 'v1:circuit:overpass'`)
     clearCache()
     expect(await isTripped('overpass')).toBe(false)
+  })
+
+  it('persist: false — tylko pamięć procesu, nic w bazie', async () => {
+    const fn = vi.fn(async () => ({ duze: 'dane' }))
+    await cached('kafel:t', 60_000, fn, { persist: false })
+    await cached('kafel:t', 60_000, fn, { persist: false })
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(await sql('SELECT 1 FROM source_cache')).toHaveLength(0)
   })
 
   it('niedostępna baza nie psuje pobierania', async () => {

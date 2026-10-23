@@ -44,7 +44,7 @@ export function tercFromParcelId(parcelId: string): string {
 
 export async function getParcelData(parcelId: string, gmina: string): Promise<ParcelData> {
   // Brak działki to odpowiedź, nie awaria — kopii używamy tylko, gdy ULDK nie odpowiada.
-  return cached(`uldk:${parcelId}`, DAY, () => fetchParcel(parcelId, gmina), p => p.found, p => ({ ...p, stale: true }))
+  return cached(`uldk:${parcelId}`, DAY, () => fetchParcel(parcelId, gmina), { shouldCache: p => p.found, staleOnThrow: p => ({ ...p, stale: true }) })
 }
 
 async function fetchParcel(parcelId: string, gmina: string): Promise<ParcelData> {

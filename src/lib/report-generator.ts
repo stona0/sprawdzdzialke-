@@ -37,7 +37,7 @@ export async function buildReport(parcelId: string, gmina: string, svc: Supabase
   // Te same fakty → te same rekomendacje; ponowiona próba nie płaci drugi raz za wywołanie modelu.
   // Rekomendacji z reguł (AI niedostępne) nie zapisujemy — następnym razem spróbujemy AI.
   const factsHash = createHash('sha256').update(JSON.stringify(buildFacts(data))).digest('hex').slice(0, 32)
-  const insights = await cached(`ai:${AI_MODEL}:${factsHash}`, AI_TTL_MS, () => generateInsights(data), i => i.model !== null)
+  const insights = await cached(`ai:${AI_MODEL}:${factsHash}`, AI_TTL_MS, () => generateInsights(data), { shouldCache: i => i.model !== null })
 
   return { data, insights, html: buildReportHtml(data, insights) }
 }
