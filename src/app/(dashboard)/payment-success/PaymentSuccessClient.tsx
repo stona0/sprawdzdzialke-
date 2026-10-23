@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, Loader2, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { COMPANY } from '@/lib/company'
 
 interface Props {
   reportId: string | null
@@ -104,7 +105,11 @@ export default function PaymentSuccessClient({
             ) : status === 'failed' ? (
               <div className="space-y-3">
                 <p className="text-red-600 text-sm">
-                  Wystąpił błąd podczas generowania raportu. Skontaktuj się z nami.
+                  Nie udało się wygenerować raportu. Napisz na{' '}
+                  <a href={`mailto:${COMPANY.email}`} className="underline underline-offset-2">{COMPANY.email}</a>
+                  {parcelId ? <> i podaj działkę <span className="font-mono">{parcelId}</span></> : null}. Wygenerujemy
+                  raport ponownie albo zwrócimy płatność.{' '}
+                  <Link href="/kontakt" className="underline underline-offset-2">Kontakt</Link>
                 </p>
                 <Link href="/dashboard">
                   <Button variant="outline" className="w-full">Wróć do dashboardu</Button>
