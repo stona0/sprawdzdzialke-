@@ -2,6 +2,7 @@
  * Reusable JSON-LD structured data components for SEO & GEO.
  * Renderowane server-side w layout.tsx lub page.tsx.
  */
+import { COMPANY } from '@/lib/company'
 
 // ─── WebApplication schema ──────────────────────────────────────────────────
 export function WebApplicationJsonLd() {
@@ -41,8 +42,8 @@ export function WebApplicationJsonLd() {
     ],
     creator: {
       '@type': 'Organization',
-      name: 'Stona Consulting',
-      url: 'https://sprawdzdzialke.com',
+      name: COMPANY.name,
+      url: COMPANY.url,
     },
     inLanguage: 'pl',
   }
@@ -61,15 +62,25 @@ export function OrganizationJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'SprawdzDziałkę.com',
-    legalName: 'Stona Consulting',
-    url: 'https://sprawdzdzialke.com',
-    // logo: 'https://sprawdzdzialke.com/logo.png',  // TODO: dodać logo
+    legalName: COMPANY.name,
+    url: COMPANY.url,
+    logo: `${COMPANY.url}/logo.png`,
     description:
       'Profesjonalna analiza planistyczna działek budowlanych w Polsce. Dane z oficjalnych rejestrów: GUGiK, GDOŚ, WFS gmin.',
     foundingDate: '2026',
+    vatID: `PL${COMPANY.nip}`,
+    taxID: COMPANY.nip,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: COMPANY.street,
+      postalCode: COMPANY.postalCode,
+      addressLocality: COMPANY.city,
+      addressCountry: 'PL',
+    },
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer support',
+      email: COMPANY.email,
       availableLanguage: 'Polish',
     },
     sameAs: [
