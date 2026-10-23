@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://sprawdzdzialke.com"),
 
   title: {
-    default: "SprawdzDziałkę.com — Sprawdź działkę budowlaną online w 60 sekund",
+    default: "SprawdzDziałkę.com — Sprawdź działkę online w 60 sekund",
     template: "%s | SprawdzDziałkę.com",
   },
   description:
