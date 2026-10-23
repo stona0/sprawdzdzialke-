@@ -12,7 +12,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 // Minimalne odpowiedniki tego, co Supabase ma poza schematem public.
 // auth.uid() zwraca NULL — PGlite działa jako superuser, więc RLS i tak nie jest
 // egzekwowane (jak przy kluczu service role).
-const SUPABASE_STUBS = `
+export const SUPABASE_STUBS = `
   CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role;
   CREATE SCHEMA auth;
   CREATE TABLE auth.users (id UUID PRIMARY KEY, email TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());

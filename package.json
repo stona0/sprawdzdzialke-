@@ -13,7 +13,10 @@
     "test:live": "vitest run tests/live",
     "test:e2e": "playwright test",
     "etl:power-lines": "tsx --tsconfig tsconfig.json scripts/etl/bdot-power-lines.mts",
-    "etl:power-lines:upload": "tsx --tsconfig tsconfig.json scripts/etl/upload-power-lines.mts"
+    "etl:power-lines:upload": "tsx --tsconfig tsconfig.json scripts/etl/upload-power-lines.mts",
+    "staging:bootstrap": "node scripts/staging/build-bootstrap.mjs",
+    "staging:check-env": "node scripts/staging/check-env.mjs",
+    "staging:smoke": "node scripts/staging/smoke.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.94.0",
