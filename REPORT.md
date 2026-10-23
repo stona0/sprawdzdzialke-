@@ -594,3 +594,11 @@ Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia
 - `npm test` 156/156; `npm run build` OK.
 
 **Nie sprawdzono:** pełnej ścieżki Google (wymaga konfiguracji właściciela i jego konta Google) ani resetu hasła z prawdziwym mailem.
+
+## Blokery startu (gałąź `chore/launch-blockers`, 23.10.2026)
+
+Braki, które blokują uruchomienie płatnej usługi dla konsumentów. Tu też zapisuję usunięte funkcje i pliki z powodem. Nic nie wdrożone, nic nie wypchnięte.
+
+### Usunięte
+- `public/{file,globe,next,vercel,window}.svg`: pliki z create-next-app, nigdzie nieużywane.
+- `src/app/favicon.ico` w wersji domyślnej Next.js (25 931 B, ta sama data co reszta szablonu): przeglądarki i wyszukiwarki pokazywały ikonę Next zamiast znaku serwisu. Zastąpiona plikiem z `public/favicon.svg`.
