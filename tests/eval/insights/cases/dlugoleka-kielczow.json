@@ -1,0 +1,174 @@
+{
+ "id": "dlugoleka-kielczow",
+ "tags": [
+  "mpzp",
+  "powodz"
+ ],
+ "opis": "Dolny Śląsk, gmina podmiejska Wrocławia — MPZP z krajowej integracji, brak POG w rejestrze",
+ "parcelId": "022302_2.0020.440/1",
+ "data": {
+  "version": 2,
+  "parcelId": "022302_2.0020.440/1",
+  "generatedAt": "2026-10-23T09:48:46.279Z",
+  "parcel": {
+   "parcelId": "022302_2.0020.440/1",
+   "numer": "440/1",
+   "powierzchnia": 14914,
+   "obreb": "Kiełczów",
+   "gmina": "Długołęka",
+   "teryt": "022302_2",
+   "terc": "022302",
+   "powiat": "powiat wrocławski",
+   "wojewodztwo": "dolnośląskie",
+   "wspolrzedne": {
+    "lat": 51.126725,
+    "lng": 17.190359
+   },
+   "geomWkt": "SRID=2180;POLYGON((373453.202579166 363656.26738235,373404.281956213 363940.23650035,373359.711270874 363894.099760405,373411.047391406 363603.980078844,373453.202579166 363656.26738235))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:48:47.038Z"
+  },
+  "mpzp": {
+   "covered": true,
+   "wroclaw": null,
+   "kimpzp": [
+    {
+     "tytul": "Miejscowy plan zagospodarowania przestrzennego terenów w obrębie Kiełczów w gminie Długołęka - część „B”",
+     "symbol": null,
+     "przeznaczenie": null,
+     "uchwala": "Uchwała nr XXXVIII/664/2006 Rady Gminy Długołęka z dnia 31 stycznia 2006 r. w sprawie uchwalenia miejscowego planu zagospodarowania przestrzennego terenów w obrębie Kiełczów w gminie Długołęka - część „B”",
+     "obowiazujeOd": "2/21/25, 12:00 AM",
+     "status": "Prawnie wiążący lub realizowany",
+     "link": "https://www.gov.pl/zagospodarowanieprzestrzenne/app/AktPlanowaniaPrzestrzennego/PL.ZIPPZP.2649/022302-MPZP/mpzp_KIE-2/20250221T000001",
+     "warstwa": "app.AktPlanowaniaPrzestrzennego.MPZP"
+    }
+   ],
+   "status": "ok"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "mpzp",
+   "title": "Działka objęta miejscowym planem (MPZP)",
+   "text": "O tym, co i jak można zbudować, decydują ustalenia obowiązującego MPZP — dla terenów objętych planem nie wydaje się decyzji o warunkach zabudowy. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [
+    "WAL"
+   ],
+   "oszp": false,
+   "risk": [
+    {
+     "scenario": "WAL",
+     "level": "niskie ryzyko"
+    }
+   ],
+   "validTo": "2025-12-21"
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Lasy Grędzińskie"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 126,
+    "crosses": false
+   },
+   "woda": {
+    "distanceM": null,
+    "crosses": false
+   },
+   "kanalizacja": {
+    "distanceM": 120,
+    "crosses": false
+   },
+   "gaz": {
+    "distanceM": null,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-11-08",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "powodz",
+    "text": "Działka w zasięgu scenariusza: scenariusz zniszczenia wału przeciwpowodziowego."
+   },
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Lasy Grędzińskie”."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:48:47.038Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "ok",
+    "ms": 2131,
+    "fetchedAt": "2026-10-23T09:48:49.170Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 65,
+    "fetchedAt": "2026-10-23T09:48:47.103Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "ok",
+    "ms": 585,
+    "fetchedAt": "2026-10-23T09:48:47.624Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 292,
+    "fetchedAt": "2026-10-23T09:48:47.332Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 877,
+    "fetchedAt": "2026-10-23T09:48:47.921Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 4,
+    "fetchedAt": "2026-10-23T09:48:47.048Z"
+   }
+  ]
+ }
+}

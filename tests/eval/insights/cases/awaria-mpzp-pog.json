@@ -1,0 +1,162 @@
+{
+ "id": "awaria-mpzp-pog",
+ "tags": [
+  "nieustalone",
+  "powodz",
+  "awaria-zrodla"
+ ],
+ "opis": "Długołęka, Kiełczów (awaria KIMPZP i Rejestru Urbanistycznego)",
+ "parcelId": "022302_2.0020.440/1",
+ "data": {
+  "version": 2,
+  "parcelId": "022302_2.0020.440/1",
+  "generatedAt": "2026-10-23T09:50:22.578Z",
+  "parcel": {
+   "parcelId": "022302_2.0020.440/1",
+   "numer": "440/1",
+   "powierzchnia": 14914,
+   "obreb": "Kiełczów",
+   "gmina": "Długołęka",
+   "teryt": "022302_2",
+   "terc": "022302",
+   "powiat": "powiat wrocławski",
+   "wojewodztwo": "dolnośląskie",
+   "wspolrzedne": {
+    "lat": 51.126725,
+    "lng": 17.190359
+   },
+   "geomWkt": "SRID=2180;POLYGON((373453.202579166 363656.26738235,373404.281956213 363940.23650035,373359.711270874 363894.099760405,373411.047391406 363603.980078844,373453.202579166 363656.26738235))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:50:23.273Z"
+  },
+  "mpzp": {
+   "covered": null,
+   "wroclaw": null,
+   "kimpzp": null,
+   "status": "error"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": null,
+   "inForce": null,
+   "source": null
+  },
+  "assessment": {
+   "verdict": "nieustalone",
+   "title": "Nie udało się ustalić ścieżki do zabudowy",
+   "text": "Nie udało się ustalić, czy działkę obejmuje MPZP. Jeżeli plan obowiązuje, to on rozstrzyga o zabudowie. Nie udało się pobrać informacji o planie ogólnym gminy. Od 1.09.2026 decyzję WZ można wydać tylko w gminie z obowiązującym planem ogólnym i tylko w obszarze uzupełnienia zabudowy. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "niska"
+  },
+  "flood": {
+   "scenarios": [
+    "WAL"
+   ],
+   "oszp": false,
+   "risk": [
+    {
+     "scenario": "WAL",
+     "level": "niskie ryzyko"
+    }
+   ],
+   "validTo": "2025-12-21"
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Lasy Grędzińskie"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 126,
+    "crosses": false
+   },
+   "woda": {
+    "distanceM": null,
+    "crosses": false
+   },
+   "kanalizacja": {
+    "distanceM": 120,
+    "crosses": false
+   },
+   "gaz": {
+    "distanceM": null,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-11-08",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "powodz",
+    "text": "Działka w zasięgu scenariusza: scenariusz zniszczenia wału przeciwpowodziowego."
+   },
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Lasy Grędzińskie”."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:50:23.273Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "error",
+    "error": "fetch failed (symulowana awaria źródła)",
+    "ms": 408,
+    "fetchedAt": "2026-10-23T09:50:23.682Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "error",
+    "error": "fetch failed (symulowana awaria źródła)",
+    "ms": 1211,
+    "fetchedAt": "2026-10-23T09:50:24.484Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "ok",
+    "ms": 744,
+    "fetchedAt": "2026-10-23T09:50:24.018Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 431,
+    "fetchedAt": "2026-10-23T09:50:23.705Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 1936,
+    "fetchedAt": "2026-10-23T09:50:25.214Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 2,
+    "fetchedAt": "2026-10-23T09:50:23.282Z"
+   }
+  ]
+ }
+}

@@ -1,0 +1,200 @@
+{
+ "id": "gdansk-centrum",
+ "tags": [
+  "wz_niemozliwe_brak_pog",
+  "projekt-pog"
+ ],
+ "opis": "Gdańsk, śródmieście",
+ "parcelId": "226101_1.0089.474/27",
+ "data": {
+  "version": 2,
+  "parcelId": "226101_1.0089.474/27",
+  "generatedAt": "2026-10-23T09:49:47.422Z",
+  "parcel": {
+   "parcelId": "226101_1.0089.474/27",
+   "numer": "474/27",
+   "powierzchnia": 2009,
+   "obreb": "089",
+   "gmina": "Gdańsk (miasto)",
+   "teryt": "226101_1",
+   "terc": "226101",
+   "powiat": "powiat Gdańsk",
+   "wojewodztwo": "pomorskie",
+   "wspolrzedne": {
+    "lat": 54.347996,
+    "lng": 18.653157
+   },
+   "geomWkt": "SRID=2180;POLYGON((477436.397580151 720506.057842667,477433.147724033 720498.897817624,477425.986017145 720486.526112088,477427.793475078 720485.710901923,477428.164053614 720484.356372731,477481.399793691 720462.822516042,477482.012458812 720464.442948868,477483.092648712 720467.316072287,477484.329388848 720470.656722248,477485.492921052 720473.768534361,477486.666729327 720476.900189945,477487.861231461 720480.081525092,477489.024905432 720483.203329773,477488.885859317 720483.265269578,477488.969485054 720483.523943504,477495.85021176 720481.017650773,477495.75659342 720480.759118577,477495.378716869 720480.894408057,477494.235028131 720477.77231995,477493.236479764 720475.017974052,477501.017107822 720472.538896465,477503.144034893 720480.154610597,477496.005059522 720482.77450684,477490.864676875 720484.6664337,477491.500586969 720486.516412952,477482.645079263 720490.020192116,477485.736754066 720497.30239553,477486.878317011 720500.274594567,477480.565184615 720502.632912628,477474.083595138 720505.093566154,477467.765572199 720507.811759843,477463.433740093 720509.632251461,477461.2070248 720504.846428548,477456.260753255 720507.035441052,477451.234257375 720509.205602198,477451.71049932 720510.368217641,477447.260598292 720512.320313927,477440.614094656 720515.133118255,477436.397580151 720506.057842667))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:47.908Z"
+  },
+  "mpzp": {
+   "covered": null,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "not_covered"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": {
+    "strefy": [
+     {
+      "oznaczenie": "1377SW",
+      "symbol": "SW",
+      "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową wielorodzinną",
+      "maks_intensywnosc": null,
+      "maks_udzial_zabudowy": null,
+      "maks_wysokosc": null,
+      "min_pbc": null,
+      "profil_podstawowy": [],
+      "profil_dodatkowy": [],
+      "sharePct": 100
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": null,
+    "ouzSharePct": 0,
+    "obszar_zabudowy_srodmiejskiej": "65OZS",
+    "obowiazuje_od": null,
+    "uchwala": null,
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/4011"
+   },
+   "ru": {
+    "entry": {
+     "actId": 4011,
+     "tytul": "Plan ogólny miasta Gdańska",
+     "status": "w opracowaniu",
+     "obowiazujeOd": "2026-10-07",
+     "dataPublikacji": "2026-10-07",
+     "terc": "226101",
+     "gmina": "Gdańsk"
+    },
+    "inForce": false,
+    "draft": {
+     "actId": 4011,
+     "tytul": "Plan ogólny miasta Gdańska",
+     "status": "w opracowaniu",
+     "obowiazujeOd": "2026-10-07",
+     "dataPublikacji": "2026-10-07",
+     "terc": "226101",
+     "gmina": "Gdańsk"
+    }
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Nie udało się ustalić, czy działkę obejmuje MPZP. Jeżeli plan obowiązuje, to on rozstrzyga o zabudowie. Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: w opracowaniu). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": []
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "woda": {
+    "distanceM": 1,
+    "crosses": false
+   },
+   "kanalizacja": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "gaz": {
+    "distanceM": 0,
+    "crosses": true
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-10-30",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć elektroenergetyczna, kanalizacja, sieć gazowa (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   },
+   {
+    "level": "uwaga",
+    "basis": "pog",
+    "text": "Plan ogólny gminy w Rejestrze Urbanistycznym: „w opracowaniu”."
+   },
+   {
+    "level": "uwaga",
+    "basis": "pog",
+    "text": "W projekcie planu ogólnego (w opracowaniu) działka leży w strefie 1377SW (strefa wielofunkcyjna z zabudową mieszkaniową wielorodzinną), poza projektowanym obszarem uzupełnienia zabudowy. Projekt nie obowiązuje i może się jeszcze zmienić."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:47.908Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "not_covered",
+    "ms": 233,
+    "fetchedAt": "2026-10-23T09:49:48.141Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 58,
+    "fetchedAt": "2026-10-23T09:49:47.966Z"
+   },
+   {
+    "source": "Projekt planu ogólnego – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 2359,
+    "fetchedAt": "2026-10-23T09:49:50.325Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 241,
+    "fetchedAt": "2026-10-23T09:49:48.150Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "no_data",
+    "ms": 296,
+    "fetchedAt": "2026-10-23T09:49:48.206Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 1458,
+    "fetchedAt": "2026-10-23T09:49:49.369Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 23,
+    "fetchedAt": "2026-10-23T09:49:47.934Z"
+   }
+  ]
+ }
+}

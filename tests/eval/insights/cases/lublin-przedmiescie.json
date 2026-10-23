@@ -1,0 +1,122 @@
+{
+ "id": "lublin-przedmiescie",
+ "tags": [
+  "wz_niemozliwe_brak_pog"
+ ],
+ "opis": "Lublin, dzielnica mieszkaniowa",
+ "parcelId": "066301_1.0030.AR_7.24/17",
+ "data": {
+  "version": 2,
+  "parcelId": "066301_1.0030.AR_7.24/17",
+  "generatedAt": "2026-10-23T09:49:51.539Z",
+  "parcel": {
+   "parcelId": "066301_1.0030.AR_7.24/17",
+   "numer": "24/17",
+   "powierzchnia": 5680,
+   "obreb": "Rury Wizytkowskie",
+   "gmina": "Lublin (miasto)",
+   "teryt": "066301_1",
+   "terc": "066301",
+   "powiat": "powiat Lublin",
+   "wojewodztwo": "lubelskie",
+   "wspolrzedne": {
+    "lat": 51.229946,
+    "lng": 22.530373
+   },
+   "geomWkt": "SRID=2180;POLYGON((746427.601992233 379643.602843926,746426.599196763 379651.843671049,746375.745209702 379661.497246073,746359.99547372 379657.577013114,746355.159841512 379632.059218426,746362.222158856 379586.243773306,746366.14398223 379571.646805567,746413.967286093 379562.047195607,746417.115588783 379576.294214808,746427.601992233 379643.602843926))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:52.045Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": []
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-02-01",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:52.045Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 291,
+    "fetchedAt": "2026-10-23T09:49:52.337Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 51,
+    "fetchedAt": "2026-10-23T09:49:52.096Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 1080,
+    "fetchedAt": "2026-10-23T09:49:53.126Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "no_data",
+    "ms": 323,
+    "fetchedAt": "2026-10-23T09:49:52.370Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 817,
+    "fetchedAt": "2026-10-23T09:49:52.867Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 4,
+    "fetchedAt": "2026-10-23T09:49:52.055Z"
+   }
+  ]
+ }
+}

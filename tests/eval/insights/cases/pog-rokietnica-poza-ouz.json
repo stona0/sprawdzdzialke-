@@ -1,0 +1,200 @@
+{
+ "id": "pog-rokietnica-poza-ouz",
+ "tags": [
+  "mpzp",
+  "pog-ru"
+ ],
+ "opis": "Rokietnica: plan ogólny w mocy (RU), strefa SN, poza OUZ",
+ "parcelId": "302113_2.0004.255",
+ "data": {
+  "version": 2,
+  "parcelId": "302113_2.0004.255",
+  "generatedAt": "2026-10-23T09:49:16.949Z",
+  "parcel": {
+   "parcelId": "302113_2.0004.255",
+   "numer": "255",
+   "powierzchnia": 3896,
+   "obreb": "Kobylniki",
+   "gmina": "Rokietnica",
+   "teryt": "302113_2",
+   "terc": "302113",
+   "powiat": "powiat poznański",
+   "wojewodztwo": "wielkopolskie",
+   "wspolrzedne": {
+    "lat": 52.470466,
+    "lng": 16.741554
+   },
+   "geomWkt": "SRID=2180;POLYGON((346684.981861 514024.892858,346653.100944 514059.623048,346647.456306 514061.343039,346600.670488 514020.775149,346600.951423 514015.984188,346633.433482 513979.332952,346640.506701 513978.758319,346684.866958 514018.09095,346684.981861 514024.892858))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:17.757Z"
+  },
+  "mpzp": {
+   "covered": true,
+   "wroclaw": null,
+   "kimpzp": [
+    {
+     "tytul": "Miejscowy plan zagospodarowania przestrzennego wsi Kobylniki rejon ul. Działkowej gmina Rokietnica",
+     "symbol": null,
+     "przeznaczenie": null,
+     "uchwala": "Uchwała nr XVIII/157/99 Rady Gminy Rokietnica z dnia 30 listopada 1999 r. w sprawie miejscowego planu zagospodarowania przestrzennego wsi Kobylniki rejon ul. Działkowej gmina Rokietnica",
+     "obowiazujeOd": "12/14/01, 12:00 AM",
+     "status": "Prawnie wiążący lub realizowany",
+     "link": "https://www.gov.pl/zagospodarowanieprzestrzenne/app/AktPlanowaniaPrzestrzennego/PL.ZIPPZP.3393/302113-MPZP/mpzp_16/20011214T071700",
+     "warstwa": "app.AktPlanowaniaPrzestrzennego.MPZP"
+    }
+   ],
+   "status": "ok"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "1SN",
+      "symbol": "SN",
+      "nazwa": "strefa zieleni i rekreacji",
+      "maks_intensywnosc": 0.6,
+      "maks_udzial_zabudowy": 30,
+      "maks_wysokosc": 10,
+      "min_pbc": 50,
+      "profil_podstawowy": [
+       "teren zieleni urządzonej",
+       "teren plaży",
+       "teren wód",
+       "teren komunikacji",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren usług sportu i rekreacji",
+       "teren usług kultury i rozrywki",
+       "teren zieleni naturalnej",
+       "teren lasu"
+      ],
+      "sharePct": 99.8
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": null,
+    "ouzSharePct": 0,
+    "obszar_zabudowy_srodmiejskiej": null,
+    "obowiazuje_od": "2026-09-23",
+    "uchwala": "Uchwała NR XLI/341/2026 Rady Gminy Rokietnica z dnia 31 sierpnia 2026 r. w sprawie: Planu ogólnego gminy Rokietnica",
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/5354"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 5354,
+     "tytul": "Plan ogólny gminy Rokietnica",
+     "status": "prawnie wiążący lub realizowany",
+     "obowiazujeOd": "2026-09-23",
+     "dataPublikacji": "2026-10-20",
+     "terc": "302113",
+     "gmina": "Rokietnica"
+    },
+    "inForce": true,
+    "draft": null
+   },
+   "inForce": true,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "mpzp",
+   "title": "Działka objęta miejscowym planem (MPZP)",
+   "text": "O tym, co i jak można zbudować, decydują ustalenia obowiązującego MPZP — dla terenów objętych planem nie wydaje się decyzji o warunkach zabudowy. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Dolina Samicy"
+    }
+   ]
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 95,
+     "crosses": false,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-01-09",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Natura 2000 – obszar specjalnej ochrony ptaków (OSO) „Dolina Samicy”."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:17.757Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "ok",
+    "ms": 329,
+    "fetchedAt": "2026-10-23T09:49:18.086Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 48,
+    "fetchedAt": "2026-10-23T09:49:17.805Z"
+   },
+   {
+    "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 459,
+    "fetchedAt": "2026-10-23T09:49:18.264Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 184,
+    "fetchedAt": "2026-10-23T09:49:17.941Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 277,
+    "fetchedAt": "2026-10-23T09:49:18.035Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 1185,
+    "fetchedAt": "2026-10-23T09:49:18.943Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 4,
+    "fetchedAt": "2026-10-23T09:49:17.763Z"
+   }
+  ]
+ }
+}

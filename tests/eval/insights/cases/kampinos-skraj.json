@@ -1,0 +1,172 @@
+{
+ "id": "kampinos-skraj",
+ "tags": [
+  "wz_niemozliwe_brak_pog",
+  "powodz",
+  "natura"
+ ],
+ "opis": "Skraj Puszczy Kampinoskiej",
+ "parcelId": "141402_2.0002.118/1",
+ "data": {
+  "version": 2,
+  "parcelId": "141402_2.0002.118/1",
+  "generatedAt": "2026-10-23T09:49:43.239Z",
+  "parcel": {
+   "parcelId": "141402_2.0002.118/1",
+   "numer": "118/1",
+   "powierzchnia": 175291,
+   "obreb": "Aleksandrów",
+   "gmina": "Czosnów",
+   "teryt": "141402_2",
+   "terc": "141402",
+   "powiat": "powiat nowodworski",
+   "wojewodztwo": "mazowieckie",
+   "wspolrzedne": {
+    "lat": 52.330586,
+    "lng": 20.628983
+   },
+   "geomWkt": "SRID=2180;POLYGON((610785.796353689 497549.64282882,610757.513653313 497543.691592819,610725.82131085 497537.016176229,610690.271648483 497529.534212423,610940.442966395 497011.270543945,610968.715072961 497022.670905429,610995.326025872 497033.395418547,611071.618154196 497064.161235332,611152.52554432 497095.444590095,611237.954284725 497128.472769549,611234.28131029 497136.190492925,611014.060893502 497598.228026775,610785.796353689 497549.64282882))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:43.629Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [
+    "WAL"
+   ],
+   "oszp": false,
+   "risk": [
+    {
+     "scenario": "WAL",
+     "level": "niskie ryzyko"
+    }
+   ],
+   "validTo": "2025-12-21"
+  },
+  "nature": {
+   "onParcel": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Puszcza Kampinoska"
+    },
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Puszcza Kampinoska"
+    },
+    {
+     "type": "Park narodowy",
+     "name": "Kampinoski Park Narodowy"
+    }
+   ],
+   "nearby": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Dolina Środkowej Wisły"
+    },
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Kampinoska Dolina Wisły"
+    },
+    {
+     "type": "Park narodowy",
+     "name": "Kampinoski Park Narodowy - otulina"
+    },
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Warszawski"
+    }
+   ]
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-01-10",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "powodz",
+    "text": "Działka w zasięgu scenariusza: scenariusz zniszczenia wału przeciwpowodziowego."
+   },
+   {
+    "level": "ryzyko",
+    "basis": "przyroda",
+    "text": "Działka leży w obszarze chronionym: Natura 2000 – obszar specjalnej ochrony ptaków (OSO) „Puszcza Kampinoska”; Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Puszcza Kampinoska”; Park narodowy „Kampinoski Park Narodowy”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:43.629Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 111,
+    "fetchedAt": "2026-10-23T09:49:43.740Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 52,
+    "fetchedAt": "2026-10-23T09:49:43.681Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "ok",
+    "ms": 953,
+    "fetchedAt": "2026-10-23T09:49:44.583Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 701,
+    "fetchedAt": "2026-10-23T09:49:44.332Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 2418,
+    "fetchedAt": "2026-10-23T09:49:46.051Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 2,
+    "fetchedAt": "2026-10-23T09:49:43.635Z"
+   }
+  ]
+ }
+}

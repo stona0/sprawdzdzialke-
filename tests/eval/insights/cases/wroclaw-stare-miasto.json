@@ -1,0 +1,208 @@
+{
+ "id": "wroclaw-stare-miasto",
+ "tags": [
+  "mpzp"
+ ],
+ "opis": "Miasto z MPZP (Wrocław, Rynek) — teren 12UA*UC, strefa konserwatorska",
+ "parcelId": "026401_1.0001.2395",
+ "data": {
+  "version": 2,
+  "parcelId": "026401_1.0001.2395",
+  "generatedAt": "2026-10-23T09:48:34.591Z",
+  "parcel": {
+   "parcelId": "026401_1.0001.2395",
+   "numer": "2395",
+   "powierzchnia": 617,
+   "obreb": "Stare Miasto",
+   "gmina": "Wrocław (miasto)",
+   "teryt": "026401_1",
+   "terc": "026401",
+   "powiat": "powiat Wrocław",
+   "wojewodztwo": "dolnośląskie",
+   "wspolrzedne": {
+    "lat": 51.110104,
+    "lng": 17.031836
+   },
+   "geomWkt": "SRID=2180;POLYGON((362255.704471704 362226.773401869,362248.643857016 362211.537782151,362273.736096804 362200.071736079,362273.364949761 362199.242075433,362281.547652733 362195.461178068,362286.136864433 362204.791486001,362288.631005879 362211.340260029,362279.044879079 362215.788999358,362255.704471704 362226.773401869))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:48:36.062Z"
+  },
+  "mpzp": {
+   "covered": true,
+   "wroclaw": {
+    "zones": [
+     {
+      "symbol": "12UA*UC",
+      "symbolLiterowy": "UA*UC",
+      "przeznaczenie": "Tereny usług administracji, tereny usług centrotwórczych",
+      "klasyfikacja": "usługi",
+      "nrPlanu": "196",
+      "sharePct": 100
+     }
+    ],
+    "plans": [
+     {
+      "nr": "196",
+      "tytul": "Rynek i Plac Solny (cz. A)",
+      "uchwalaUrl": "<a href=\"https://geoportal.wroclaw.pl/akty_prawne/?numer=X/202/03\" title=\"Treść uchwały RM\" target=\"_blank\">X/202/03</a>",
+      "stan": "plan obowiazujacy"
+     }
+    ],
+    "plansPending": [],
+    "heritage": [
+     "strefa ochrony konserwatorskiej",
+     "strefa ochrony konserwatorskiej zabytków archeologicznych"
+    ],
+    "archeologia": false
+   },
+   "kimpzp": null,
+   "status": "ok"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "2460SW",
+      "symbol": "SW",
+      "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową wielorodzinną",
+      "maks_intensywnosc": 5,
+      "maks_udzial_zabudowy": 100,
+      "maks_wysokosc": 25,
+      "min_pbc": 30,
+      "profil_podstawowy": [
+       "teren zabudowy mieszkaniowej wielorodzinnej",
+       "teren usług",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren handlu wielkopowierzchniowego",
+       "teren zieleni naturalnej",
+       "teren lasu",
+       "teren wód"
+      ],
+      "sharePct": 100
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": null,
+    "ouzSharePct": 0,
+    "obszar_zabudowy_srodmiejskiej": "1OZS",
+    "obowiazuje_od": "2026-09-19",
+    "uchwala": "XXXVI/872/26",
+    "zrodlo": "GIS Urzędu Miejskiego Wrocławia"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 1573,
+     "tytul": "Plan ogólny gminy Wrocław",
+     "status": "w opracowaniu",
+     "obowiazujeOd": "2025-10-23",
+     "dataPublikacji": "2026-09-15",
+     "terc": "026401",
+     "gmina": "Wrocław"
+    },
+    "inForce": false,
+    "draft": {
+     "actId": 1573,
+     "tytul": "Plan ogólny gminy Wrocław",
+     "status": "w opracowaniu",
+     "obowiazujeOd": "2025-10-23",
+     "dataPublikacji": "2026-09-15",
+     "terc": "026401",
+     "gmina": "Wrocław"
+    }
+   },
+   "inForce": true,
+   "source": "GIS Urzędu Miejskiego Wrocławia"
+  },
+  "assessment": {
+   "verdict": "mpzp",
+   "title": "Działka objęta miejscowym planem (MPZP)",
+   "text": "O tym, co i jak można zbudować, decydują ustalenia obowiązującego MPZP — dla terenów objętych planem nie wydaje się decyzji o warunkach zabudowy. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": []
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-01-03",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "mpzp",
+    "text": "Działka w strefie ochrony: strefa ochrony konserwatorskiej; strefa ochrony konserwatorskiej zabytków archeologicznych — projekt może wymagać uzgodnień konserwatorskich."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:48:36.062Z"
+   },
+   {
+    "source": "MPZP – GIS UM Wrocławia",
+    "status": "ok",
+    "ms": 462,
+    "fetchedAt": "2026-10-23T09:48:36.527Z"
+   },
+   {
+    "source": "Plan ogólny – GIS UM Wrocławia",
+    "status": "ok",
+    "ms": 1296,
+    "fetchedAt": "2026-10-23T09:48:37.368Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 313,
+    "fetchedAt": "2026-10-23T09:48:36.377Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 1086,
+    "fetchedAt": "2026-10-23T09:48:37.161Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "no_data",
+    "ms": 762,
+    "fetchedAt": "2026-10-23T09:48:36.841Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 1150,
+    "fetchedAt": "2026-10-23T09:48:37.242Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 109,
+    "fetchedAt": "2026-10-23T09:48:36.215Z"
+   }
+  ]
+ }
+}

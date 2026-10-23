@@ -1,0 +1,185 @@
+{
+ "id": "ustrzyki-gorne",
+ "tags": [
+  "wz_niemozliwe_brak_pog",
+  "natura"
+ ],
+ "opis": "Bieszczady, Ustrzyki Górne",
+ "parcelId": "180105_2.0026.37/7",
+ "data": {
+  "version": 2,
+  "parcelId": "180105_2.0026.37/7",
+  "generatedAt": "2026-10-23T09:49:46.051Z",
+  "parcel": {
+   "parcelId": "180105_2.0026.37/7",
+   "numer": "37/7",
+   "powierzchnia": 233033,
+   "obreb": "Ustrzyki Górne",
+   "gmina": "Lutowiska",
+   "teryt": "180105_2",
+   "terc": "180105",
+   "powiat": "powiat bieszczadzki",
+   "wojewodztwo": "podkarpackie",
+   "wspolrzedne": {
+    "lat": 49.104451,
+    "lng": 22.654232
+   },
+   "geomWkt": "SRID=2180;POLYGON((766292.018857163 144026.510967597,766348.657320908 143980.289097036,766320.66133693 143945.733372265,766361.482185959 143913.48067592,766380.555141845 143898.634079652,766432.60568366 143856.769641583,766484.510010607 143815.146078582,766512.594102758 143788.616662609,766534.715148745 143756.010021167,766580.140186464 143685.181740256,766605.858361014 143654.867533104,766626.522796042 143637.930971091,766640.56049847 143630.419221009,766670.44292563 143669.95082488,766731.148429429 143628.618069236,766725.022588633 143620.605652272,766741.054429561 143611.281191174,766755.920609458 143634.15423343,766749.156090192 143648.090395049,766732.579293503 143665.35726233,766691.058386954 143699.708848522,766682.911207987 143702.86894776,766622.481587182 143763.534467151,766620.619076107 143774.42680379,766609.004893609 143791.069413998,766607.411575075 143805.016550867,766608.396295212 143813.320650773,766619.378209732 143828.690255008,766652.751572114 143847.855071565,766663.59633224 143846.797711758,766759.903355447 143752.850998245,766751.3298911 143744.716901833,766758.329559666 143737.080801365,766761.415142962 143727.852940885,766749.761085363 143717.951640412,766721.280642996 143690.420150854,766740.93022768 143672.915347784,766757.296504488 143653.980747314,766779.188531778 143609.521529011,766792.09013591 143580.374878738,766795.655039305 143570.567277151,766794.153100201 143559.472618098,766777.810554569 143529.515873523,766769.045535328 143520.336750522,766701.914809793 143580.178667739,766664.412593926 143603.620059243,766620.9322137 143629.402662496,766598.959573656 143647.024548848,766570.92253687 143677.84703102,766525.569774757 143749.401750417,766505.731457237 143777.648847831,766479.802289813 143804.33070715,766426.26276156 143847.189299815,766373.122565404 143889.162139192,766364.037411344 143888.922524486,766334.504471226 143861.090982632,766329.507506307 143856.320490179,766357.230967734 143835.550627355,766373.858979464 143835.707408356,766392.030634515 143833.891423767,766399.978499934 143835.870054536,766445.308460372 143788.31932354,766451.584859216 143782.830511295,766474.55520373 143759.060275707,766496.465914414 143713.560021176,766551.327078663 143679.518832608,766553.841925596 143670.433685496,766543.388847112 143652.673459556,766534.324394023 143637.560907722,766525.88946234 143625.055883734,766518.571900938 143606.260020371,766510.817549183 143584.518562813,766517.683939511 143556.907591488,766540.374988384 143518.404885561,766566.751723783 143519.225933691,766592.02521278 143520.816014032,766600.491533092 143519.651554011,766610.960589006 143511.994156808,766632.964275473 143496.328807278,766640.825109334 143493.861414229,766663.120205284 143464.383381219,766674.695154175 143455.917023143,766685.34233407 143456.029298524,766713.715050558 143435.141805973,766726.465766244 143417.832543646,766745.997716554 143386.788672346,766764.028335816 143380.282473153,766808.125364258 143356.695469784,766837.576827255 143339.808294798,766872.842996011 143303.639943862,766882.900783271 143296.897504862,766898.153735483 143307.397438089,766902.99624268 143322.24101856,766922.303793347 143386.352181974,766949.258686081 143475.796142448,766976.35005097 143566.662437572,767007.760140946 143671.04479003,767015.042767352 143721.611890406,766948.618345149 143749.075569861,766931.1721974 143756.291904297,766886.744088082 143787.464486591,766842.748013036 143842.280159965,766752.899428804 143902.655194057,766592.302937633 143977.658848583,766521.025771031 144030.01972821,766478.529286528 144027.872566965,766385.913790822 144071.57633323,766353.739041208 144086.749719758,766319.219533594 144109.495946248,766308.228811473 144077.427261138,766292.018857163 144026.510967597))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:46.614Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Bieszczady"
+    },
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Bieszczady"
+    },
+    {
+     "type": "Park narodowy",
+     "name": "Bieszczadzki Park Narodowy"
+    }
+   ],
+   "nearby": [
+    {
+     "type": "Park narodowy",
+     "name": "Bieszczadzki Park Narodowy - otulina"
+    },
+    {
+     "type": "Park krajobrazowy",
+     "name": "Park Krajobrazowy Doliny Sanu"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "woda": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "kanalizacja": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "gaz": {
+    "distanceM": 0,
+    "crosses": true
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 0,
+     "crosses": true,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-02-21",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "ryzyko",
+    "basis": "przyroda",
+    "text": "Działka leży w obszarze chronionym: Natura 2000 – obszar specjalnej ochrony ptaków (OSO) „Bieszczady”; Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Bieszczady”; Park narodowy „Bieszczadzki Park Narodowy”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć elektroenergetyczna, wodociąg, kanalizacja, sieć gazowa (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Napowietrzna linia średniego napięcia przebiega przez działkę (BDOT10k) — możliwa służebność przesyłu i ograniczenia zabudowy pod linią."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:46.614Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 320,
+    "fetchedAt": "2026-10-23T09:49:46.935Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 65,
+    "fetchedAt": "2026-10-23T09:49:46.679Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 195,
+    "fetchedAt": "2026-10-23T09:49:46.811Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 638,
+    "fetchedAt": "2026-10-23T09:49:47.256Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 801,
+    "fetchedAt": "2026-10-23T09:49:47.422Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 10,
+    "fetchedAt": "2026-10-23T09:49:46.631Z"
+   }
+  ]
+ }
+}

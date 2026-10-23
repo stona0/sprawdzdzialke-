@@ -1,0 +1,195 @@
+{
+ "id": "awaria-powodz-przyroda",
+ "tags": [
+  "wz_mozliwe",
+  "pog-ru",
+  "awaria-zrodla"
+ ],
+ "opis": "Siechnice (OUZ) (awaria ISOK i GDOŚ)",
+ "parcelId": "022308_5.0021.24",
+ "data": {
+  "version": 2,
+  "parcelId": "022308_5.0021.24",
+  "generatedAt": "2026-10-23T09:50:19.172Z",
+  "parcel": {
+   "parcelId": "022308_5.0021.24",
+   "numer": "24",
+   "powierzchnia": 16843,
+   "obreb": "Żerniki Wrocławskie",
+   "gmina": "Siechnice",
+   "teryt": "022308_5",
+   "terc": "022308",
+   "powiat": "powiat wrocławski",
+   "wojewodztwo": "dolnośląskie",
+   "wspolrzedne": {
+    "lat": 51.025689,
+    "lng": 17.053565
+   },
+   "geomWkt": "SRID=2180;POLYGON((363698.80976287 352733.950910966,363696.010415317 352735.398403708,363654.000211681 352757.111067876,363634.464609429 352767.232710422,363614.918876452 352777.344494719,363595.38300194 352787.446149452,363567.329961797 352801.951880467,363546.850975513 352812.536170363,363526.38225462 352823.140314546,363497.991702006 352837.820569566,363477.542562093 352848.394460445,363457.113410855 352858.968080754,363436.693982378 352869.521576967,363400.828638157 352888.071951407,363399.488592303 352888.769898076,363383.735367601 352839.511342527,363689.066294479 352684.830728257,363698.80976287 352733.950910966))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:50:19.851Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "685SJ",
+      "symbol": "SJ",
+      "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową jednorodzinną",
+      "maks_intensywnosc": 0.6,
+      "maks_udzial_zabudowy": 35,
+      "maks_wysokosc": 12,
+      "min_pbc": 50,
+      "profil_podstawowy": [
+       "teren zabudowy mieszkaniowej jednorodzinnej",
+       "teren usług",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren lasu",
+       "teren wód",
+       "teren zieleni naturalnej"
+      ],
+      "sharePct": 100
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": "1OUZ",
+    "ouzSharePct": 75.7,
+    "obszar_zabudowy_srodmiejskiej": null,
+    "obowiazuje_od": "2026-09-24",
+    "uchwala": "Uchwała nr XXXI/447/26 Rady Miejskiej w Siechnicach z dnia 27 sierpnia 2026 r.",
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/2336"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 2336,
+     "tytul": "Plan ogólny Gminy Siechnice",
+     "status": "prawnie wiążący lub realizowany",
+     "obowiazujeOd": "2026-09-24",
+     "dataPublikacji": "2026-09-24",
+     "terc": "022308",
+     "gmina": "Siechnice"
+    },
+    "inForce": true,
+    "draft": null
+   },
+   "inForce": true,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_mozliwe",
+   "title": "Możliwa decyzja o warunkach zabudowy (działka w OUZ)",
+   "text": "W obszarze uzupełnienia zabudowy leży ok. 76% działki. Można ubiegać się o decyzję WZ; jej ustalenia muszą być zgodne z planem ogólnym (strefa, parametry). Decyzja WZ wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": null,
+  "nature": null,
+  "gesut": {
+   "energia": {
+    "distanceM": 8,
+    "crosses": false
+   },
+   "woda": {
+    "distanceM": 0,
+    "crosses": false
+   },
+   "kanalizacja": {
+    "distanceM": 2,
+    "crosses": false
+   },
+   "gaz": {
+    "distanceM": 0,
+    "crosses": true
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 214,
+     "crosses": false,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-11-08",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć gazowa (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:50:19.851Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 277,
+    "fetchedAt": "2026-10-23T09:50:20.129Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 48,
+    "fetchedAt": "2026-10-23T09:50:19.900Z"
+   },
+   {
+    "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 487,
+    "fetchedAt": "2026-10-23T09:50:20.387Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "error",
+    "error": "fetch failed (symulowana awaria źródła)",
+    "ms": 401,
+    "fetchedAt": "2026-10-23T09:50:20.253Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "error",
+    "error": "fetch failed (symulowana awaria źródła)",
+    "ms": 1204,
+    "fetchedAt": "2026-10-23T09:50:21.056Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 2726,
+    "fetchedAt": "2026-10-23T09:50:22.578Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 17,
+    "fetchedAt": "2026-10-23T09:50:19.871Z"
+   }
+  ]
+ }
+}

@@ -1,0 +1,239 @@
+{
+ "id": "pog-wierzbica-ouz",
+ "tags": [
+  "wz_mozliwe",
+  "pog-ru"
+ ],
+ "opis": "Wierzbica: plan ogólny w mocy (RU), strefa SJ, w OUZ",
+ "parcelId": "060312_2.0011.29",
+ "data": {
+  "version": 2,
+  "parcelId": "060312_2.0011.29",
+  "generatedAt": "2026-10-23T09:49:09.169Z",
+  "parcel": {
+   "parcelId": "060312_2.0011.29",
+   "numer": "29",
+   "powierzchnia": 4918,
+   "obreb": "Pniówno",
+   "gmina": "Wierzbica",
+   "teryt": "060312_2",
+   "terc": "060312",
+   "powiat": "powiat chełmski",
+   "wojewodztwo": "lubelskie",
+   "wspolrzedne": {
+    "lat": 51.254588,
+    "lng": 23.313204
+   },
+   "geomWkt": "SRID=2180;POLYGON((800791.954351795 385293.072473342,800809.885989571 385262.467224329,800839.312187262 385230.500064277,800858.944368861 385212.74616491,800888.090567287 385313.959907791,800791.954351795 385293.072473342))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:10.239Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "101SO",
+      "symbol": "SO",
+      "nazwa": "strefa otwarta",
+      "maks_intensywnosc": null,
+      "maks_udzial_zabudowy": null,
+      "maks_wysokosc": null,
+      "min_pbc": null,
+      "profil_podstawowy": [
+       "teren rolnictwa z zakazem zabudowy",
+       "teren lasu",
+       "teren zieleni naturalnej",
+       "teren wód",
+       "teren komunikacji",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren zieleni urządzonej",
+       "teren elektrowni słonecznej"
+      ],
+      "sharePct": 98.5
+     },
+     {
+      "oznaczenie": "1SJ",
+      "symbol": "SJ",
+      "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową jednorodzinną",
+      "maks_intensywnosc": 2,
+      "maks_udzial_zabudowy": 50,
+      "maks_wysokosc": 12,
+      "min_pbc": 30,
+      "profil_podstawowy": [
+       "teren zabudowy mieszkaniowej jednorodzinnej",
+       "teren usług",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren zieleni naturalnej",
+       "teren lasu",
+       "teren wód",
+       "teren zabudowy letniskowej lub rekreacji indywidualnej"
+      ],
+      "sharePct": 1.5
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": "36OUZ",
+    "ouzSharePct": 1.5,
+    "obszar_zabudowy_srodmiejskiej": null,
+    "obowiazuje_od": "2026-09-14",
+    "uchwala": "Uchwała nr XXIV-145/2026 Rady Gminy Wierzbica z dnia 26 sierpnia 2026 r.",
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/5720"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 5720,
+     "tytul": "Plan ogólny gminy Wierzbica",
+     "status": "prawnie wiążący lub realizowany",
+     "obowiazujeOd": "2026-09-14",
+     "dataPublikacji": "2026-10-23",
+     "terc": "060312",
+     "gmina": "Wierzbica"
+    },
+    "inForce": true,
+    "draft": null
+   },
+   "inForce": true,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_mozliwe",
+   "title": "Możliwa decyzja o warunkach zabudowy (działka w OUZ)",
+   "text": "W obszarze uzupełnienia zabudowy leży ok. 2% działki. Można ubiegać się o decyzję WZ; jej ustalenia muszą być zgodne z planem ogólnym (strefa, parametry). Decyzja WZ wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Chełmski Obszar Chronionego Krajobrazu"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "woda": {
+    "distanceM": 11,
+    "crosses": false
+   },
+   "kanalizacja": {
+    "distanceM": 6,
+    "crosses": false
+   },
+   "gaz": {
+    "distanceM": null,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 0,
+     "crosses": true,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-01-18",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Obszar chronionego krajobrazu „Chełmski Obszar Chronionego Krajobrazu”."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć elektroenergetyczna (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Napowietrzna linia średniego napięcia przebiega przez działkę (BDOT10k) — możliwa służebność przesyłu i ograniczenia zabudowy pod linią."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:10.239Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 156,
+    "fetchedAt": "2026-10-23T09:49:10.396Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 50,
+    "fetchedAt": "2026-10-23T09:49:10.289Z"
+   },
+   {
+    "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 1279,
+    "fetchedAt": "2026-10-23T09:49:11.568Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 260,
+    "fetchedAt": "2026-10-23T09:49:10.501Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 357,
+    "fetchedAt": "2026-10-23T09:49:10.600Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 1330,
+    "fetchedAt": "2026-10-23T09:49:11.574Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 3,
+    "fetchedAt": "2026-10-23T09:49:10.247Z"
+   }
+  ]
+ }
+}

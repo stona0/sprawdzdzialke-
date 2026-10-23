@@ -17,6 +17,23 @@ export interface AiInsights {
   model: string | null
   /** Ile punktów AI odrzucono jako nieoparte na danych. */
   odrzucone: number
+  /** Szczegóły wywołania (do ewaluacji i logów) — nie trafiają do raportu. */
+  meta?: {
+    /** Model, który faktycznie odpowiedział (także gdy treść odrzucono). */
+    servedModel: string
+    usage: Anthropic.Usage
+    stopReason: string | null
+    /** Punkty z podstawą, zanim walidator odrzucił część z nich. */
+    raw: { rekomendacje: RawItem[]; ryzyka: RawItem[] } | null
+    fallbackReason?: string
+  }
+}
+
+export interface InsightsOptions {
+  model?: string
+  /** Tylko modele z parametrem effort (Haiku 4.5 go nie ma). */
+  effort?: 'low' | 'medium' | 'high'
+  maxTokens?: number
 }
 
 const BRAK = 'brak danych (źródło niedostępne lub nie obejmuje obszaru)'
@@ -26,6 +43,9 @@ const BRAK = 'brak danych (źródło niedostępne lub nie obejmuje obszaru)'
 function unquote<T>(v: T): T {
   return JSON.parse(JSON.stringify(v).replace(/[„”“]/g, '')) as T
 }
+
+/** Treść wiadomości użytkownika wysyłanej do modelu. */
+export const factsMessage = (facts: Record<string, unknown>) => `Fakty o działce:\n${JSON.stringify(facts, null, 1)}`
 
 export function buildFacts(d: ReportData): Record<FactKey, unknown> {
   return unquote(rawFacts(d))
@@ -129,7 +149,7 @@ const OUTPUT_SCHEMA = {
   additionalProperties: false,
 }
 
-const SYSTEM = `Jesteś doradcą osoby, która rozważa zakup działki w Polsce. Dostajesz fakty o działce w JSON, zebrane z rejestrów publicznych.
+export const AI_SYSTEM_PROMPT = `Jesteś doradcą osoby, która rozważa zakup działki w Polsce. Dostajesz fakty o działce w JSON, zebrane z rejestrów publicznych.
 
 Zasady:
 - Opieraj się WYŁĄCZNIE na faktach z JSON. Nie podawaj liczb, symboli, nazw, dat ani przepisów, których tam nie ma.
@@ -141,7 +161,7 @@ Zasady:
 - Każdy punkt ma pole „podstawa”: klucze faktów, z których wynika.
 - Do 4 rekomendacji (konkretne działania przed zakupem) i do 4 ryzyk. Każdy punkt maks. 2 zdania, po polsku.`
 
-interface RawItem {
+export interface RawItem {
   tekst: string
   podstawa: string[]
 }
@@ -192,26 +212,28 @@ export function ruleBasedInsights(d: ReportData): Omit<AiInsights, 'model' | 'od
   }
 }
 
-export async function generateInsights(d: ReportData, client?: Anthropic): Promise<AiInsights> {
+export async function generateInsights(d: ReportData, client?: Anthropic, opts: InsightsOptions = {}): Promise<AiInsights> {
   const facts = buildFacts(d)
-  const fallback = (odrzucone: number): AiInsights => ({ ...ruleBasedInsights(d), model: null, odrzucone })
+  const fallback = (odrzucone: number, meta?: AiInsights['meta']): AiInsights => ({ ...ruleBasedInsights(d), model: null, odrzucone, ...(meta ? { meta } : {}) })
   if (!client && !process.env.ANTHROPIC_API_KEY) return fallback(0)
   try {
     const anthropic = client ?? new Anthropic()
     const response = await anthropic.messages.create({
-      model: AI_MODEL,
-      max_tokens: 2000,
-      system: SYSTEM,
-      output_config: { format: { type: 'json_schema', schema: OUTPUT_SCHEMA } },
-      messages: [{ role: 'user', content: `Fakty o działce:\n${JSON.stringify(facts, null, 1)}` }],
+      model: opts.model ?? AI_MODEL,
+      max_tokens: opts.maxTokens ?? 2000,
+      system: AI_SYSTEM_PROMPT,
+      output_config: { format: { type: 'json_schema', schema: OUTPUT_SCHEMA }, ...(opts.effort ? { effort: opts.effort } : {}) },
+      messages: [{ role: 'user', content: factsMessage(facts) }],
     }, { timeout: 30_000, maxRetries: 1 })
-    if (response.stop_reason !== 'end_turn') return fallback(0)
+    const base = { servedModel: response.model, usage: response.usage, stopReason: response.stop_reason, raw: null }
+    if (response.stop_reason !== 'end_turn') return fallback(0, { ...base, fallbackReason: `stop_reason: ${response.stop_reason}` })
     const text = response.content.flatMap(b => (b.type === 'text' ? [b.text] : [])).join('')
     const parsed = JSON.parse(text) as { rekomendacje: RawItem[]; ryzyka: RawItem[] }
+    const meta = { ...base, raw: parsed }
     const rek = validateItems(parsed.rekomendacje.slice(0, 4), facts)
     const ryz = validateItems(parsed.ryzyka.slice(0, 4), facts)
-    if (!rek.ok.length) return fallback(rek.rejected + ryz.rejected)
-    return { rekomendacje: rek.ok, ryzyka: ryz.ok, model: response.model, odrzucone: rek.rejected + ryz.rejected }
+    if (!rek.ok.length) return fallback(rek.rejected + ryz.rejected, { ...meta, fallbackReason: 'walidator odrzucił wszystkie rekomendacje' })
+    return { rekomendacje: rek.ok, ryzyka: ryz.ok, model: response.model, odrzucone: rek.rejected + ryz.rejected, meta }
   } catch (e) {
     console.error('[ai] generateInsights failed:', e instanceof Error ? e.message : e)
     return fallback(0)

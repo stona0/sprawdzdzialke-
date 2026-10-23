@@ -1,0 +1,176 @@
+{
+ "id": "goniadz-biebrza",
+ "tags": [
+  "wz_niemozliwe_brak_pog",
+  "natura"
+ ],
+ "opis": "Goniądz, dolina Biebrzy",
+ "parcelId": "200801_4.0001.1007",
+ "data": {
+  "version": 2,
+  "parcelId": "200801_4.0001.1007",
+  "generatedAt": "2026-10-23T09:49:41.651Z",
+  "parcel": {
+   "parcelId": "200801_4.0001.1007",
+   "numer": "1007",
+   "powierzchnia": 1396,
+   "obreb": "Goniądz",
+   "gmina": "Goniądz",
+   "teryt": "200801_4",
+   "terc": "200801",
+   "powiat": "powiat moniecki",
+   "wojewodztwo": "podlaskie",
+   "wspolrzedne": {
+    "lat": 53.488194,
+    "lng": 22.739969
+   },
+   "geomWkt": "SRID=2180;POLYGON((748023.293899411 631249.191244057,748034.081046373 631249.047118965,748029.46644143 631322.978957824,748026.881995651 631372.161073615,748014.663294581 631371.562966178,748023.293899411 631249.191244057))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:42.376Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [
+    {
+     "type": "Park narodowy",
+     "name": "Biebrzański Park Narodowy - otulina"
+    }
+   ],
+   "nearby": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Ostoja Biebrzańska"
+    },
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Dolina Biebrzy"
+    },
+    {
+     "type": "Park narodowy",
+     "name": "Biebrzański Park Narodowy"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "woda": {
+    "distanceM": 6,
+    "crosses": false
+   },
+   "kanalizacja": {
+    "distanceM": 1,
+    "crosses": false
+   },
+   "gaz": {
+    "distanceM": null,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 153,
+     "crosses": false,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-01-09",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "ryzyko",
+    "basis": "przyroda",
+    "text": "Działka leży w obszarze chronionym: Park narodowy „Biebrzański Park Narodowy - otulina”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć elektroenergetyczna (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:42.376Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 204,
+    "fetchedAt": "2026-10-23T09:49:42.581Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 117,
+    "fetchedAt": "2026-10-23T09:49:42.493Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 861,
+    "fetchedAt": "2026-10-23T09:49:43.239Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 578,
+    "fetchedAt": "2026-10-23T09:49:42.958Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 795,
+    "fetchedAt": "2026-10-23T09:49:43.179Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 3,
+    "fetchedAt": "2026-10-23T09:49:42.390Z"
+   }
+  ]
+ }
+}

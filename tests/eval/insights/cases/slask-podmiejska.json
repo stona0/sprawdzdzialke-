@@ -1,0 +1,173 @@
+{
+ "id": "slask-podmiejska",
+ "tags": [
+  "mpzp"
+ ],
+ "opis": "Śląsk, gmina podmiejska",
+ "parcelId": "240802_1.0033.AR_1.37/5",
+ "data": {
+  "version": 2,
+  "parcelId": "240802_1.0033.AR_1.37/5",
+  "generatedAt": "2026-10-23T09:50:17.107Z",
+  "parcel": {
+   "parcelId": "240802_1.0033.AR_1.37/5",
+   "numer": "37/5",
+   "powierzchnia": 300750,
+   "obreb": "Paniowy",
+   "gmina": "Mikołów (miasto)",
+   "teryt": "240802_1",
+   "terc": "240802",
+   "powiat": "powiat mikołowski",
+   "wojewodztwo": "śląskie",
+   "wspolrzedne": {
+    "lat": 50.218333,
+    "lng": 18.800627
+   },
+   "geomWkt": "SRID=2180;POLYGON((485830.740265635 261073.915910027,485860.183991718 261051.603487768,485887.935754935 261030.563049046,485917.695888661 261007.996529898,485960.448565052 260975.74117687,486040.183498 260916.914680349,486051.861760804 260931.439646902,486071.132228795 260939.746273016,486088.747507473 260961.007707708,486132.363009254 260992.33443952,486152.581665849 260981.919040288,486160.07425818 260977.960745672,486178.375161932 261002.65101363,486182.221280698 261071.819847053,486140.653856179 261196.906218088,486127.127927654 261247.298946682,486117.863079695 261269.640522725,485995.999229513 261331.220923265,485968.325338245 261352.849991541,485923.814801307 261378.482749739,485864.254450511 261416.900203126,485850.232257267 261429.551178982,485819.665598241 261447.870973438,485811.065895878 261454.232763309,485803.982164261 261461.103915475,485792.211408319 261484.388602979,485777.904828904 261501.171039882,485755.080226329 261532.639419898,485732.97374104 261572.193547379,485714.855241852 261599.101371066,485687.391271244 261634.889562405,485657.617586509 261659.425181601,485653.145017494 261662.023729657,485629.47084017 261671.136286079,485383.089981952 261282.854692661,485388.397501712 261279.915134703,485457.062664607 261214.670770123,485527.128800753 261148.068393367,485599.336039095 261078.658899152,485669.286834578 261010.908758897,485690.308342987 260991.797540316,485705.416560792 260981.130863675,485734.02666945 261010.670023484,485806.013232138 261092.457184925,485830.740265635 261073.915910027))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:50:17.347Z"
+  },
+  "mpzp": {
+   "covered": true,
+   "wroclaw": null,
+   "kimpzp": [
+    {
+     "tytul": "Miejscowy plan zagospodarowania przestrzennego fragmentu miasta Mikołowa obejmującego obszar w granicach wyznaczonych ul. Buczka – Gliwicką –Przelotową - Potokiem Jasienica - granicą miasta",
+     "symbol": null,
+     "przeznaczenie": null,
+     "uchwala": null,
+     "obowiazujeOd": "2025-03-21",
+     "status": null,
+     "link": null,
+     "warstwa": "AktPlanowaniaPrzestrzennego"
+    }
+   ],
+   "status": "ok"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "mpzp",
+   "title": "Działka objęta miejscowym planem (MPZP)",
+   "text": "O tym, co i jak można zbudować, decydują ustalenia obowiązującego MPZP — dla terenów objętych planem nie wydaje się decyzji o warunkach zabudowy. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Park krajobrazowy",
+     "name": "Cysterskie Kompozycje Krajobrazowe Rud Wielkich"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "woda": {
+    "distanceM": null,
+    "crosses": false
+   },
+   "kanalizacja": {
+    "distanceM": null,
+    "crosses": false
+   },
+   "gaz": {
+    "distanceM": 12,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "HV",
+     "distanceM": 188,
+     "crosses": false,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-12-18",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Park krajobrazowy „Cysterskie Kompozycje Krajobrazowe Rud Wielkich”."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć elektroenergetyczna (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:50:17.347Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "ok",
+    "ms": 390,
+    "fetchedAt": "2026-10-23T09:50:17.738Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 59,
+    "fetchedAt": "2026-10-23T09:50:17.406Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 219,
+    "fetchedAt": "2026-10-23T09:50:17.567Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 265,
+    "fetchedAt": "2026-10-23T09:50:17.615Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 1818,
+    "fetchedAt": "2026-10-23T09:50:19.171Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 10,
+    "fetchedAt": "2026-10-23T09:50:17.363Z"
+   }
+  ]
+ }
+}
