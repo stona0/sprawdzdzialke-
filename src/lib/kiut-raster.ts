@@ -144,7 +144,11 @@ export interface NetworkMasks {
   source: Array<'half' | 'full' | null>
   /** Pikseli usuniętych jako opisy w ścieżce pełnej rozdzielczości. */
   labelPixels: number
-  /** W każdej rozdzielczości są co najmniej dwie odpowiedzi i zgadzają się co do każdej sieci (±10% pikseli). */
+  /**
+   * W każdej rozdzielczości są co najmniej dwie odpowiedzi, zgadzają się co do każdej sieci (±10% pikseli)
+   * i jest na nich jakakolwiek sieć. Pusty obraz nie jest potwierdzeniem: przy awarii serwera powiatowego
+   * KIUT odpowiada 200 z pustym PNG (23.10.2026 ok. 18:25 powiat wrocławski — 218 B zamiast ~175 KB).
+   */
   stable: boolean
 }
 
@@ -224,5 +228,5 @@ export function networkMasks(fulls: Rgba | Rgba[], halves: Rgba | Rgba[] | null,
     masks.push(mask)
     source.push(any ? (useHalf ? 'half' : 'full') : null)
   }
-  return { masks, source, labelPixels, stable }
+  return { masks, source, labelPixels, stable: stable && source.some(s => s !== null) }
 }

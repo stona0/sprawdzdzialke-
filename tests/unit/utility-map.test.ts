@@ -129,6 +129,13 @@ describe('prawdziwe odpowiedzi KIUT', () => {
       expect(networkMasks([full, full], [half, half], PALETTE).stable).toBe(true)
       expect(networkMasks([full], [half], PALETTE).stable).toBe(false) // jedna odpowiedź = brak potwierdzenia
     })
+
+    it('zgodnie puste odpowiedzi (awaria serwera powiatowego) nie są potwierdzeniem — mapa bez cache', () => {
+      const empty = canvas(1200, 750).img, emptyHalf = canvas(600, 375).img
+      const r = networkMasks([empty, empty], [emptyHalf, emptyHalf], PALETTE)
+      expect(r.source.every(s => s === null)).toBe(true)
+      expect(r.stable).toBe(false)
+    })
   })
 
   it('Siechnice: każda sieć ze swojego źródła (prąd tylko w 1:2500)', async () => {
