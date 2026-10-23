@@ -8,11 +8,17 @@ import type { ReportData } from './collect'
 export const AI_MODEL = 'claude-haiku-4-5'
 
 const FACT_KEYS = ['dzialka', 'ocena_zabudowy', 'mpzp', 'plan_ogolny', 'powodz', 'przyroda', 'uzbrojenie', 'ustalenia'] as const
-type FactKey = (typeof FACT_KEYS)[number]
+export type FactKey = (typeof FACT_KEYS)[number]
+
+export interface InsightItem {
+  tekst: string
+  /** Fakty (sekcje raportu), z których punkt wynika; pusta lista = ogólna dobra praktyka przy zakupie. */
+  podstawa: FactKey[]
+}
 
 export interface AiInsights {
-  rekomendacje: string[]
-  ryzyka: string[]
+  rekomendacje: InsightItem[]
+  ryzyka: InsightItem[]
   /** Model, który wygenerował treść; null = reguły (AI niedostępne lub odrzucone). */
   model: string | null
   /** Ile punktów AI odrzucono jako nieoparte na danych. */
@@ -187,7 +193,7 @@ function comparable(tekst: string, numer: unknown): string {
 }
 
 /** Odrzuca punkty bez podstawy w faktach lub z liczbami, których w faktach nie ma. */
-export function validateItems(items: RawItem[], facts: Record<string, unknown>): { ok: string[]; rejected: number } {
+export function validateItems(items: RawItem[], facts: Record<string, unknown>): { ok: InsightItem[]; rejected: number } {
   // Numer działki to identyfikator, nie wartość — „9” z „19/9” nie może uwiarygodnić „9 m”.
   const { dzialka, ...rest } = facts as Record<string, unknown> & { dzialka?: Record<string, unknown> }
   const values = { ...rest, dzialka: { ...(dzialka ?? {}), numer: undefined } }
@@ -195,40 +201,41 @@ export function validateItems(items: RawItem[], facts: Record<string, unknown>):
   const known = new Set((isoToPl(JSON.stringify(values)).match(NUM) ?? []).map(norm))
   // Rok z daty w faktach („od września 2026”) też jest znany.
   for (const n of [...known]) { const y = DATE_NUM.exec(n)?.[3]; if (y) known.add(y) }
-  const ok: string[] = []
+  const ok: InsightItem[] = []
   let rejected = 0
   for (const it of items) {
     const basisOk = it.podstawa.length > 0 && it.podstawa.every(k => (FACT_KEYS as readonly string[]).includes(k))
     const nums = (comparable(it.tekst, dzialka?.numer).match(NUM) ?? []).map(norm)
     const numsOk = nums.every(n => known.has(n))
-    if (basisOk && numsOk && it.tekst.trim()) ok.push(it.tekst.trim())
+    if (basisOk && numsOk && it.tekst.trim()) ok.push({ tekst: it.tekst.trim(), podstawa: [...new Set(it.podstawa as FactKey[])] })
     else rejected++
   }
   return { ok, rejected }
 }
 
 export function ruleBasedInsights(d: ReportData): Omit<AiInsights, 'model' | 'odrzucone'> {
-  const rek: string[] = []
+  const rek: InsightItem[] = []
+  const add = (tekst: string, ...podstawa: FactKey[]) => rek.push({ tekst, podstawa })
   switch (d.assessment.verdict) {
     case 'mpzp':
-      rek.push('Zamów w urzędzie wypis i wyrys z MPZP i sprawdź parametry zabudowy (wysokość, powierzchnia biologicznie czynna, linie zabudowy) dla konkretnego terenu.')
+      add('Zamów w urzędzie wypis i wyrys z MPZP i sprawdź parametry zabudowy (wysokość, powierzchnia biologicznie czynna, linie zabudowy) dla konkretnego terenu.', 'ocena_zabudowy', 'mpzp')
       break
     case 'wz_mozliwe':
-      rek.push('Przed zakupem złóż wniosek o decyzję o warunkach zabudowy albo zastrzeż w umowie przedwstępnej warunek jej uzyskania.')
+      add('Przed zakupem złóż wniosek o decyzję o warunkach zabudowy albo zastrzeż w umowie przedwstępnej warunek jej uzyskania.', 'ocena_zabudowy', 'plan_ogolny')
       break
     case 'wz_niemozliwe_poza_ouz':
     case 'wz_niemozliwe_brak_pog':
-      rek.push('Nie kupuj działki pod budowę bez potwierdzenia w urzędzie gminy, że istnieje ścieżka do pozwolenia na budowę (MPZP lub decyzja WZ).')
+      add('Nie kupuj działki pod budowę bez potwierdzenia w urzędzie gminy, że istnieje ścieżka do pozwolenia na budowę (MPZP lub decyzja WZ).', 'ocena_zabudowy')
       break
     default:
-      rek.push('Ustal w urzędzie gminy, czy działkę obejmuje MPZP i czy gmina ma obowiązujący plan ogólny.')
+      add('Ustal w urzędzie gminy, czy działkę obejmuje MPZP i czy gmina ma obowiązujący plan ogólny.', 'ocena_zabudowy')
   }
-  if (d.gesutStatus !== 'ok') rek.push('Wystąp do lokalnych operatorów sieci o warunki przyłączenia — w rejestrze uzbrojenia brak danych dla tej okolicy.')
-  else rek.push('Wystąp do operatorów o warunki przyłączenia — odległość sieci z rejestru nie przesądza o możliwości podłączenia.')
-  rek.push('Sprawdź księgę wieczystą (obciążenia, służebności, hipoteki) i zleć geodecie wznowienie granic.')
+  if (d.gesutStatus !== 'ok') add('Wystąp do lokalnych operatorów sieci o warunki przyłączenia — w rejestrze uzbrojenia brak danych dla tej okolicy.', 'uzbrojenie')
+  else add('Wystąp do operatorów o warunki przyłączenia — odległość sieci z rejestru nie przesądza o możliwości podłączenia.', 'uzbrojenie')
+  add('Sprawdź księgę wieczystą (obciążenia, służebności, hipoteki) i zleć geodecie wznowienie granic.')
   return {
     rekomendacje: rek.slice(0, 4),
-    ryzyka: d.findings.filter(f => f.level !== 'ok').map(f => f.text).slice(0, 4),
+    ryzyka: d.findings.filter(f => f.level !== 'ok').map(f => ({ tekst: f.text, podstawa: [f.basis] })).slice(0, 4),
   }
 }
 

@@ -10,6 +10,7 @@ import type { Pog } from '../pog'
 import { IN_FORCE_STATUS, queryRejestrPog, queryRuPogZones, type RuPog, type RuPogEntry } from '../sources/rejestr-urbanistyczny'
 import { isWroclawTerc, queryWroclawMpzp, type WroclawMpzp } from '../wroclaw-mpzp'
 import { queryWroclawPog } from '../wroclaw-pog'
+import type { FactKey } from './ai'
 import { assessBuildability, type Assessment } from './assessment'
 
 export interface SipRow {
@@ -33,7 +34,7 @@ export interface Finding {
   level: 'ryzyko' | 'uwaga' | 'ok'
   text: string
   /** Klucz faktu, z którego wynika (do weryfikacji rekomendacji AI). */
-  basis: string
+  basis: FactKey
 }
 
 export interface ReportData {
@@ -288,7 +289,7 @@ export function buildFindings(d: {
     })
   }
   if (d.ru?.entry && d.ru.entry.status !== IN_FORCE_STATUS && !d.plan) {
-    f.push({ level: 'uwaga', basis: 'pog', text: `Plan ogólny gminy w Rejestrze Urbanistycznym: „${d.ru.entry.status}”.` })
+    f.push({ level: 'uwaga', basis: 'plan_ogolny', text: `Plan ogólny gminy w Rejestrze Urbanistycznym: „${d.ru.entry.status}”.` })
   }
   if (d.draft) {
     const zones = d.draft.strefy.map(s => `${s.oznaczenie} (${s.nazwa ?? s.symbol})`).join(', ')
@@ -297,7 +298,7 @@ export function buildFindings(d: {
       : 'poza projektowanym obszarem uzupełnienia zabudowy'
     f.push({
       level: 'uwaga',
-      basis: 'pog',
+      basis: 'plan_ogolny',
       text: `W projekcie planu ogólnego (${d.ru?.draft?.status ?? 'projekt'}) działka leży w strefie ${zones}, ${ouz}. Projekt nie obowiązuje i może się jeszcze zmienić.`,
     })
   }

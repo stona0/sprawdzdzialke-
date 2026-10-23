@@ -6,7 +6,7 @@ import { OSM_RADIUS_M } from '../sources/osm'
 import { LINE_LABEL, TYPICAL_HALF_WIDTH_M } from '../sources/power-lines'
 import { RU_PUBLIC_URL, ruPlanUrl } from '../sources/rejestr-urbanistyczny'
 import { NETWORK_STYLES } from '../utility-map'
-import type { AiInsights } from './ai'
+import type { AiInsights, FactKey, InsightItem } from './ai'
 import type { ReportData } from './collect'
 
 export function esc(s: string | number | null | undefined): string {
@@ -247,11 +247,27 @@ function osmLines(d: ReportData): string {
       esc(`${l.distanceM} m${l.operator ? ` · ${l.operator}` : ''}`))).join('')
 }
 
+/** Sekcja raportu, w której czytelnik znajdzie fakt wskazany jako podstawa punktu. */
+export const BASIS_LABEL: Record<FactKey, string> = {
+  dzialka: 'Dane ewidencyjne',
+  ocena_zabudowy: 'Podsumowanie',
+  mpzp: 'Miejscowy plan (MPZP)',
+  plan_ogolny: 'Plan ogólny gminy (POG)',
+  powodz: 'Zagrożenie powodziowe',
+  przyroda: 'Ochrona przyrody',
+  uzbrojenie: 'Uzbrojenie terenu',
+  ustalenia: 'Kluczowe ustalenia',
+}
+
 function aiSection(ai: AiInsights): string {
-  const li = (items: string[], risk = false) =>
-    items.length ? items.map(t => `<li class="ai-item${risk ? ' risk' : ''}">${esc(t)}</li>`).join('') : '<li class="ai-item">Brak.</li>'
+  const basis = (it: InsightItem) => {
+    const labels = [...new Set(it.podstawa.map(k => BASIS_LABEL[k]).filter(Boolean))]
+    return `<span class="ai-basis">Podstawa: ${labels.length ? esc(labels.join(' · ')) : 'ogólna dobra praktyka przy zakupie działki'}</span>`
+  }
+  const li = (items: InsightItem[], risk = false) =>
+    items.length ? items.map(t => `<li class="ai-item${risk ? ' risk' : ''}"><span>${esc(t.tekst)}${basis(t)}</span></li>`).join('') : '<li class="ai-item">Brak.</li>'
   const note = ai.model
-    ? `Wygenerowane przez model ${esc(ai.model)} wyłącznie na podstawie danych z tego raportu${ai.odrzucone ? `; odrzucono ${ai.odrzucone} pkt bez pokrycia w danych` : ''}.`
+    ? `Wygenerowane przez model ${esc(ai.model)} wyłącznie na podstawie danych z tego raportu; przy każdym punkcie podana jest sekcja raportu, z której wynika${ai.odrzucone ? `. Odrzucono ${ai.odrzucone} pkt bez pokrycia w danych` : ''}.`
     : 'Rekomendacje wygenerowane regułami na podstawie danych z raportu (moduł AI niedostępny).'
   return `
     ${section('Rekomendacje', '✨', `<ul class="ai-list">${li(ai.rekomendacje)}</ul><p class="hint">${note}</p>`)}
@@ -312,6 +328,7 @@ export function buildReportHtml(d: ReportData, ai: AiInsights): string {
   .ai-item:last-child { border-bottom:none; }
   .ai-item::before { content:'→'; color:var(--green); font-weight:700; flex-shrink:0; }
   .ai-item.risk::before { content:'⚠'; color:var(--amber); }
+  .ai-basis { display:block; font-size:11px; color:var(--gray); margin-top:2px; }
   .legend { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:8px; font-size:11px; color:#374151; }
   .legend-item { display:inline-flex; align-items:center; gap:6px; }
   table.src { width:100%; border-collapse:collapse; font-size:12px; }

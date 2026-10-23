@@ -204,7 +204,7 @@ async function gradeCase(input, run, ref, ctx) {
   const findings = input.data.findings.filter(f => f.level === 'ryzyko');
   const j = await judgeInsights(anthropic(), {
     facts: buildFacts(input.data), assessment: input.data.assessment, findings,
-    rekomendacje: ins.rekomendacje, ryzyka: ins.ryzyka,
+    rekomendacje: ins.rekomendacje.map(i => i.tekst), ryzyka: ins.ryzyka.map(i => i.tekst),
   });
   try {
     const { grade, explanation } = gradeFromVerdict(j.verdict, {

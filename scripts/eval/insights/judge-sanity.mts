@@ -24,7 +24,7 @@ const rules = ruleBasedInsights(milicz)
 const checks: Check[] = [
   {
     name: 'oracle: rekomendacje z reguł (poprawne z definicji)',
-    data: milicz, rekomendacje: rules.rekomendacje, ryzyka: rules.ryzyka,
+    data: milicz, rekomendacje: rules.rekomendacje.map(i => i.tekst), ryzyka: rules.ryzyka.map(i => i.tekst),
     expect: v => {
       const bad = [...v.rekomendacje, ...v.ryzyka].filter(i => i.ocena !== 'zgodny')
       return bad.length ? `oczekiwano samych „zgodny”, jest: ${bad.map(b => `${b.id} ${b.ocena}`).join(', ')}` : null

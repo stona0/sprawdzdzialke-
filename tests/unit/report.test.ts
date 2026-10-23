@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { assessBuildability, type AssessmentInput } from '@/lib/report/assessment'
 import { buildFacts, generateInsights, ruleBasedInsights, validateItems } from '@/lib/report/ai'
 import { buildFindings, type ReportData } from '@/lib/report/collect'
-import { buildReportHtml, esc } from '@/lib/report/html'
+import { BASIS_LABEL, buildReportHtml, esc } from '@/lib/report/html'
 import type Anthropic from '@anthropic-ai/sdk'
 
 const base: AssessmentInput = {
@@ -138,7 +138,7 @@ describe('AI – tylko fakty z danych', () => {
     process.env.ANTHROPIC_API_KEY = prev
     expect(r.model).toBeNull()
     expect(r.rekomendacje.length).toBeGreaterThan(0)
-    expect(r.ryzyka.join(' ')).toMatch(/powodzi/)
+    expect(r.ryzyka.map(i => i.tekst).join(' ')).toMatch(/powodzi/)
   })
 
   it('odpowiedź modelu z halucynacją jest filtrowana; gdy nic nie zostaje → reguły', async () => {
@@ -169,12 +169,18 @@ describe('AI – tylko fakty z danych', () => {
     } as unknown as Anthropic
     const r = await generateInsights(makeData(), fake)
     expect(r.model).toBe('claude-haiku-4-5')
-    expect(r.rekomendacje).toHaveLength(1)
-    expect(r.ryzyka).toHaveLength(1)
+    expect(r.rekomendacje).toEqual([{ tekst: expect.stringMatching(/RDOŚ/), podstawa: ['przyroda'] }])
+    expect(r.ryzyka).toEqual([{ tekst: expect.stringMatching(/Q1%/), podstawa: ['powodz'] }])
   })
 
   it('reguły zalecają weryfikację, gdy brak POG', () => {
-    expect(ruleBasedInsights(makeData()).rekomendacje[0]).toMatch(/urzędzie gminy/)
+    expect(ruleBasedInsights(makeData()).rekomendacje[0].tekst).toMatch(/urzędzie gminy/)
+  })
+
+  it('reguły podają podstawę: ocena zabudowy, uzbrojenie, ustalenia; księga wieczysta bez podstawy w danych', () => {
+    const r = ruleBasedInsights(makeData())
+    expect(r.rekomendacje.map(i => i.podstawa)).toEqual([['ocena_zabudowy'], ['uzbrojenie'], []])
+    expect(r.ryzyka.map(i => i.podstawa)).toEqual([['powodz'], ['przyroda'], ['uzbrojenie']])
   })
 })
 
@@ -183,10 +189,26 @@ describe('HTML raportu', () => {
     const d = makeData()
     d.parcel.obreb = '<script>alert(1)</script>'
     d.nature = { onParcel: [{ type: 'X', name: '<img src=x onerror=alert(1)>' }], nearby: [] }
-    const html = buildReportHtml(d, { rekomendacje: ['<b>x</b>'], ryzyka: [], model: null, odrzucone: 0 })
+    const html = buildReportHtml(d, { rekomendacje: [{ tekst: '<b>x</b>', podstawa: ['mpzp'] }], ryzyka: [], model: null, odrzucone: 0 })
     expect(html).not.toMatch(/<script>alert/)
     expect(html).not.toMatch(/<img src=x/)
     expect(html).toContain('&lt;script&gt;')
+  })
+
+  it('przy każdym punkcie podaje podstawę — nazwę sekcji raportu, w której jest fakt', () => {
+    const html = buildReportHtml(makeData(), {
+      rekomendacje: [
+        { tekst: 'Zapytaj RDOŚ o uzgodnienia.', podstawa: ['przyroda', 'ocena_zabudowy', 'przyroda'] },
+        { tekst: 'Sprawdź księgę wieczystą.', podstawa: [] },
+      ],
+      ryzyka: [{ tekst: 'Działka w strefie Q1%.', podstawa: ['powodz'] }],
+      model: 'claude-haiku-5-5', odrzucone: 0,
+    })
+    expect(html).toContain('Zapytaj RDOŚ o uzgodnienia.<span class="ai-basis">Podstawa: Ochrona przyrody · Podsumowanie</span>')
+    expect(html).toContain('Sprawdź księgę wieczystą.<span class="ai-basis">Podstawa: ogólna dobra praktyka przy zakupie działki</span>')
+    expect(html).toContain('Działka w strefie Q1%.<span class="ai-basis">Podstawa: Zagrożenie powodziowe</span>')
+    // każda etykieta podstawy to nazwa sekcji lub podsekcji, która jest w raporcie
+    for (const label of Object.values(BASIS_LABEL)) expect(html).toContain(`${esc(label)}</div>`)
   })
 
   it('pokazuje status źródeł i informuje, że błąd źródła ≠ brak problemu', () => {
