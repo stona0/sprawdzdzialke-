@@ -283,7 +283,7 @@ Jak uzyskać cookie sesji:
 
   const browser = await chromium.launch({ headless: true })
   const context = await browser.newContext({
-    userAgent: 'Mozilla/5.0 (compatible; SprawdzDzialkeBot/1.0; +https://sprawdzdzialke.pl)',
+    userAgent: 'Mozilla/5.0 (compatible; SprawdzDzialkeBot/1.0; +https://sprawdzdzialke.com)',
     extraHTTPHeaders: { 'Accept-Language': 'pl-PL,pl;q=0.9' },
   })
   const page = await context.newPage()
