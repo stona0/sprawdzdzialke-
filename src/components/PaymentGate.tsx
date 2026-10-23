@@ -22,13 +22,15 @@ interface Props {
   onCancel: () => void
 }
 
+// Zakres jak w /pricing i w sekcjach src/lib/report/html.ts — płatny raport niczym się nie różni od darmowego.
 const INCLUDED = [
-  { icon: MapPin, text: 'Dane działki z Geoportal (obręb, gmina, współrzędne)' },
-  { icon: FileText, text: 'Parametry zabudowy z MPZP (symbol, wysokość, PBC, dach)' },
-  { icon: Shield, text: 'Strefy zalewowe (ISOK) i ochrona przyrody (GDOŚ)' },
-  { icon: Zap, text: 'Media: wodociąg, kanalizacja, gaz, prąd' },
-  { icon: Check, text: 'Rekomendacje inwestycyjne i ryzyka (AI)' },
-  { icon: Check, text: 'Eksport do PDF (drukowanie)' },
+  { icon: Shield, text: 'Ocena możliwości zabudowy (MPZP, plan ogólny, stan prawny od 1.09.2026)' },
+  { icon: MapPin, text: 'Dane ewidencyjne działki (ULDK GUGiK)' },
+  { icon: FileText, text: 'MPZP i plan ogólny gminy, w zakresie udostępnionym przez gminę' },
+  { icon: Shield, text: 'Zagrożenie powodziowe (ISOK) i ochrona przyrody (GDOŚ)' },
+  { icon: Zap, text: 'Uzbrojenie: sieci w pobliżu działki i mapa' },
+  { icon: Check, text: 'Rekomendacje i ryzyka AI z podstawą w danych' },
+  { icon: Check, text: 'Wydruk lub zapis do PDF z przeglądarki' },
 ]
 
 const PAYMENT_METHODS = ['BLIK', 'Karta', 'Przelewy24']
@@ -53,7 +55,7 @@ export default function PaymentGate({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CreditCard className="h-5 w-5 text-green-600" />
-            Kup raport – 29 PLN
+            Kup raport – 29 zł
           </DialogTitle>
           <DialogDescription>
             Działka <span className="font-mono font-medium text-gray-900">{parcelId}</span>
@@ -87,7 +89,7 @@ export default function PaymentGate({
               ))}
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold text-gray-900">29 PLN</p>
+              <p className="text-2xl font-bold text-gray-900">29 zł</p>
               <p className="text-xs text-gray-400">brutto · jednorazowo</p>
             </div>
           </div>
@@ -102,7 +104,7 @@ export default function PaymentGate({
               {loading ? (
                 <><Loader2 className="h-4 w-4 animate-spin mr-1.5" />Przekierowuję…</>
               ) : (
-                <><CreditCard className="h-4 w-4 mr-1.5" />Zapłać 29 PLN</>
+                <><CreditCard className="h-4 w-4 mr-1.5" />Zapłać 29 zł</>
               )}
             </Button>
           </div>

@@ -1,40 +1,33 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Check, X, ChevronRight } from 'lucide-react'
+import { Check, ChevronRight } from 'lucide-react'
+import { COMPANY } from '@/lib/company'
 
 export const metadata: Metadata = {
   title: 'Cennik',
   description:
-    'Sprawdź cennik SprawdzDziałkę.com. Pierwszy raport za darmo, kolejne od 29 zł. Bez subskrypcji — płacisz tylko za raporty których potrzebujesz.',
+    'Cennik SprawdzDziałkę.com: pierwszy raport za darmo, każdy kolejny 29 zł. Ten sam pełny raport, bez subskrypcji.',
   alternates: {
     canonical: 'https://sprawdzdzialke.com/pricing',
   },
   openGraph: {
     title: 'Cennik — SprawdzDziałkę.com',
-    description: 'Pierwszy raport za darmo. Pełny raport Pro za 29 zł — MPZP, media, AI rekomendacje.',
+    description: 'Pierwszy raport za darmo, każdy kolejny 29 zł. Ten sam pełny raport: MPZP, plan ogólny, zagrożenia, uzbrojenie, rekomendacje AI.',
   },
 }
 
-const starterFeatures = [
-  { text: '1 raport gratis', included: true },
-  { text: 'Dane podstawowe ULDK', included: true },
-  { text: 'Ochrona przyrody GDOŚ', included: true },
-  { text: 'Media i uzbrojenie (OSM)', included: true },
-  { text: 'Strefy zalewowe ISOK', included: false },
-  { text: 'Rekomendacje Claude AI', included: false },
-  { text: 'Analiza ryzyk inwestycyjnych', included: false },
-  { text: 'Eksport do PDF', included: false },
-]
-
-const proFeatures = [
-  { text: 'Pełny raport bez ograniczeń', included: true },
-  { text: 'Dane podstawowe ULDK', included: true },
-  { text: 'Ochrona przyrody GDOŚ', included: true },
-  { text: 'Media i uzbrojenie (OSM + SIP)', included: true },
-  { text: 'Strefy zalewowe ISOK', included: true },
-  { text: 'Rekomendacje Claude AI', included: true },
-  { text: 'Analiza ryzyk inwestycyjnych', included: true },
-  { text: 'Eksport do PDF', included: true },
+// Darmowy i płatny raport przechodzą ten sam potok (api/report/generate różni je
+// tylko flagą paid), więc lista jest jedna. Pozycje odpowiadają sekcjom src/lib/report/html.ts.
+const reportContents = [
+  { title: 'Ocena możliwości zabudowy', desc: 'MPZP, plan ogólny i obszar uzupełnienia zabudowy według przepisów obowiązujących od 1.09.2026.' },
+  { title: 'Dane ewidencyjne', desc: 'Obręb, gmina, powiat i powierzchnia z ULDK (GUGiK).' },
+  { title: 'Miejscowy plan (MPZP)', desc: 'Czy działkę obejmuje plan, oznaczenie terenu i uchwała. Zakres danych zależy od gminy, a dla Wrocławia pochodzą one z GIS miasta.' },
+  { title: 'Plan ogólny gminy', desc: 'Strefa, parametry zabudowy i obszar uzupełnienia zabudowy z Rejestru Urbanistycznego, jeśli gmina opublikowała plan.' },
+  { title: 'Zagrożenie powodziowe', desc: 'Obszary zagrożenia powodziowego z map ISOK (Wody Polskie).' },
+  { title: 'Ochrona przyrody', desc: 'Natura 2000, parki, rezerwaty i inne formy ochrony (GDOŚ).' },
+  { title: 'Uzbrojenie terenu', desc: 'Sieci i ich odległość od działki z Krajowej Integracji Uzbrojenia Terenu, linie energetyczne z BDOT10k i mapa.' },
+  { title: 'Rekomendacje i ryzyka AI', desc: 'Claude AI opisuje ryzyka i kolejne kroki wyłącznie na podstawie danych z raportu i przy każdym punkcie podaje podstawę.' },
+  { title: 'Status każdego źródła', desc: 'Widać, czego nie udało się ustalić, więc brak danych nie wygląda jak brak problemu.' },
 ]
 
 export default function PricingPage() {
@@ -60,56 +53,58 @@ export default function PricingPage() {
           Prosty cennik, <span className="font-bold">bez subskrypcji</span>
         </h1>
         <p className="text-gray-500 text-lg max-w-xl mx-auto">
-          Płacisz tylko za raporty których potrzebujesz. Pierwszy raport jest darmowy.
+          Płacisz tylko za raporty, których potrzebujesz. Pierwszy jest darmowy, a każdy raport ma ten sam pełny zakres.
         </p>
       </section>
 
       {/* Cards */}
-      <section className="max-w-4xl mx-auto px-6 pb-24">
+      <section className="max-w-4xl mx-auto px-6 pb-16">
         <div className="grid md:grid-cols-2 gap-6">
-
-          {/* Free */}
-          <div className="border border-gray-200 rounded-2xl p-8">
-            <div className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-2">Starter</div>
+          <div className="border border-gray-200 rounded-2xl p-8 flex flex-col">
+            <div className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-2">Pierwszy raport</div>
             <div className="text-4xl font-bold text-gray-900 mb-1 font-playfair">0 zł</div>
-            <p className="text-gray-500 text-sm mb-8">Pierwszy raport gratis</p>
-            <ul className="space-y-3 mb-8">
-              {starterFeatures.map(f => (
-                <li key={f.text} className="flex items-center gap-2.5 text-sm">
-                  {f.included ? (
-                    <Check className="w-4 h-4 text-green-600 flex-shrink-0" />
-                  ) : (
-                    <X className="w-4 h-4 text-gray-300 flex-shrink-0" />
-                  )}
-                  <span className={f.included ? 'text-gray-700' : 'text-gray-400'}>{f.text}</span>
-                </li>
-              ))}
-            </ul>
-            <Link href="/register" className="block text-center border border-gray-300 text-gray-700 font-medium py-3 rounded-full hover:bg-gray-50 transition-colors">Zacznij za darmo</Link>
+            <p className="text-gray-500 text-sm mb-8">Jeden na konto, bez podawania karty</p>
+            <Link href="/register" className="mt-auto block text-center border border-gray-300 text-gray-700 font-medium py-3 rounded-full hover:bg-gray-50 transition-colors">Zacznij za darmo</Link>
           </div>
 
-          {/* Paid */}
-          <div className="bg-gray-900 rounded-2xl p-8 text-white relative overflow-hidden">
-            <div className="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">Popularne</div>
-            <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-2">Pro</div>
+          <div className="bg-gray-900 rounded-2xl p-8 text-white flex flex-col">
+            <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-2">Każdy kolejny</div>
             <div className="text-4xl font-bold mb-1 font-playfair">29 zł</div>
-            <p className="text-gray-400 text-sm mb-8">za raport · jednorazowo</p>
-            <ul className="space-y-3 mb-8">
-              {proFeatures.map(f => (
-                <li key={f.text} className="flex items-center gap-2.5 text-sm text-gray-300">
-                  <Check className="w-4 h-4 text-green-400 flex-shrink-0" /> {f.text}
-                </li>
-              ))}
-            </ul>
-            <Link href="/register" className="block text-center bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2">
+            <p className="text-gray-400 text-sm mb-8">za raport · jednorazowo · cena brutto z VAT</p>
+            <Link href="/register" className="mt-auto text-center bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-full transition-colors flex items-center justify-center gap-2">
               Sprawdź swoją działkę <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
+      </section>
 
-        <p className="text-center text-sm text-gray-400 mt-8">
-          Płatność przez Stripe — karta, BLIK, Przelewy24. Faktura VAT na życzenie.
-        </p>
+      {/* Zawartość raportu */}
+      <section className="max-w-4xl mx-auto px-6 pb-24">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6 font-playfair">Co zawiera każdy raport</h2>
+        <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-5">
+          {reportContents.map(item => (
+            <li key={item.title} className="flex gap-3">
+              <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="font-medium text-gray-900">{item.title}</div>
+                <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-10 space-y-2 text-sm text-gray-500 border-t border-gray-100 pt-6">
+          <p>Raport otwierasz w swoim koncie. Możesz go wydrukować albo zapisać jako PDF funkcją drukowania przeglądarki.</p>
+          <p>
+            Płatność przez Stripe: karta, BLIK, Przelewy24. Fakturę VAT wystawiamy na życzenie, napisz na{' '}
+            <a href={`mailto:${COMPANY.email}`} className="text-green-700 underline underline-offset-2">{COMPANY.email}</a>{' '}
+            (szczegóły na stronie <Link href="/kontakt" className="text-green-700 underline underline-offset-2">Kontakt</Link>).
+          </p>
+          <p>
+            Raport ma charakter informacyjny i nie zastępuje wypisu i wyrysu z planu. Zasady opisuje{' '}
+            <Link href="/regulamin" className="text-green-700 underline underline-offset-2">Regulamin</Link>.
+          </p>
+        </div>
       </section>
 
       {/* Footer */}

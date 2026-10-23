@@ -21,8 +21,9 @@ SprawdzDziałkę.com generuje automatyczne raporty planistyczne dla działek bud
 
 ## Cennik
 
-- Starter: 0 zł — pierwszy raport za darmo
-- Pro: 29 zł za raport — pełna analiza z rekomendacjami AI, bez subskrypcji
+- Pierwszy raport: 0 zł (jeden na konto)
+- Każdy kolejny: 29 zł brutto za raport, bez subskrypcji
+- Darmowy i płatny raport mają ten sam pełny zakres. Raport można wydrukować lub zapisać jako PDF z przeglądarki.
 
 ## Źródła danych
 

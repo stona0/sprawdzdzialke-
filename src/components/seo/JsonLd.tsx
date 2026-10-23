@@ -19,17 +19,17 @@ export function WebApplicationJsonLd() {
     offers: [
       {
         '@type': 'Offer',
-        name: 'Starter',
+        name: 'Pierwszy raport',
         price: '0',
         priceCurrency: 'PLN',
-        description: 'Pierwszy raport za darmo',
+        description: 'Pierwszy raport na konto za darmo',
       },
       {
         '@type': 'Offer',
-        name: 'Pro',
+        name: 'Każdy kolejny raport',
         price: '29',
         priceCurrency: 'PLN',
-        description: 'Pełny raport z rekomendacjami AI',
+        description: 'Ten sam pełny raport, 29 zł brutto za sztukę, bez subskrypcji',
       },
     ],
     featureList: [

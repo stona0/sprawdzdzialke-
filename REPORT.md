@@ -604,6 +604,10 @@ Braki, które blokują uruchomienie płatnej usługi dla konsumentów. Tu też z
 - `src/app/favicon.ico` w wersji domyślnej Next.js (25 931 B, ta sama data co reszta szablonu): przeglądarki i wyszukiwarki pokazywały ikonę Next zamiast znaku serwisu. Zastąpiona plikiem z `public/favicon.svg`.
 - `public/og-image.png`: ciemna grafika niepasująca do jasnej strony, w dodatku ze zmyślonymi danymi (Długołęka 556/6, MN, 9 m, 30%), których prawdziwy raport nie podaje. Zastąpiona przez `src/app/opengraph-image.tsx`, który pokazuje tylko, z jakich części składa się raport.
 
+- `/pricing`: plany „Starter” i „Pro”, odznaka „Popularne” oraz krzyżyki przy ISOK, AI i „analizie ryzyk” w darmowym raporcie. Darmowy raport przechodzi ten sam potok co płatny (`api/report/generate` różni je tylko flagą `paid`), więc podział był nieprawdziwy. Zostały „Pierwszy raport, 0 zł” i „Każdy kolejny, 29 zł” z jedną listą zawartości. Odznaka „Popularne” nie ma sensu przy płatności za pojedynczy raport.
+- Obietnica „Eksport do PDF” (`/pricing`, `PaymentGate`): PDF nie istnieje, przycisk wywołuje `print()`. Teraz jest „wydruk lub zapis do PDF z przeglądarki”. Napis przycisku w `ReportView` zmienia sesja UI.
+- „Parametry zabudowy z MPZP (symbol, wysokość, PBC, dach)” w `PaymentGate`: Krajowa Integracja MPZP zwykle podaje tylko symbol i uchwałę, a parametry daje plan ogólny z Rejestru Urbanistycznego, jeśli gmina go opublikowała.
+
 ### Strony prawne
 Dodane `/regulamin`, `/polityka-prywatnosci` i `/kontakt` (grupa `src/app/(legal)`) oraz ich adresy w `sitemap.ts`. Dane firmy pochodzą z `src/lib/company.ts`. **Teksty to wzór napisany bez prawnika.** Dopóki `LEGAL_DRAFT = true` (`src/lib/legal.ts`), strony pokazują baner i uwagi „Do weryfikacji”.
 
