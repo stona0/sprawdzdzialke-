@@ -85,6 +85,10 @@ export default function LoginPage() {
             </svg>
             Kontynuuj z Google
           </button>
+          <p className="-mt-3 mb-6 text-xs text-gray-500 text-center">
+            Pierwsze logowanie przez Google zakłada konto na zasadach{' '}
+            <Link href="/regulamin" target="_blank" className="underline underline-offset-2">Regulaminu</Link>.
+          </p>
 
           {/* Separator */}
           <div className="flex items-center gap-3 mb-6">

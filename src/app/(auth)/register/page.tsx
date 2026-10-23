@@ -6,8 +6,10 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { authErrorMessage, callbackUrl, safeNext } from '@/lib/auth-redirect'
 import { startGoogleLogin } from '@/lib/auth-google'
+import { TERMS_VERSION } from '@/lib/legal'
 
 const redirectTarget = () => new URLSearchParams(window.location.search).get('redirectTo')
+const TERMS_REQUIRED = 'Aby założyć konto, zaakceptuj Regulamin.'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -16,12 +18,19 @@ export default function RegisterPage() {
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
   const [loading, setLoading] = useState(false)
+  const [termsAccepted, setTermsAccepted] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError('')
     setInfo('')
+
+    if (!termsAccepted) {
+      setError(TERMS_REQUIRED)
+      setLoading(false)
+      return
+    }
 
     if (password.length < 8) {
       setError('Hasło musi mieć co najmniej 8 znaków.')
@@ -33,8 +42,12 @@ export default function RegisterPage() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      // link aktywacyjny wraca przez callback (wymiana code na sesję), nie na Site URL projektu
-      options: { emailRedirectTo: callbackUrl(window.location.origin, redirectTarget()) },
+      options: {
+        // link aktywacyjny wraca przez callback (wymiana code na sesję), nie na Site URL projektu
+        emailRedirectTo: callbackUrl(window.location.origin, redirectTarget()),
+        // ślad zgody w auth.users.raw_user_meta_data (dowód akceptacji konkretnej wersji)
+        data: { terms_version: TERMS_VERSION, terms_accepted_at: new Date().toISOString() },
+      },
     })
 
     if (error) {
@@ -55,6 +68,11 @@ export default function RegisterPage() {
 
   async function handleGoogleLogin() {
     setError('')
+    // OAuth nie przenosi metadanych, więc przy Google zgoda nie jest zapisywana — tylko wymagana (REPORT.md)
+    if (!termsAccepted) {
+      setError(TERMS_REQUIRED)
+      return
+    }
     const message = await startGoogleLogin(redirectTarget())
     if (message) setError(message)
   }
@@ -90,6 +108,22 @@ export default function RegisterPage() {
           <p className="text-sm text-gray-500 mb-8">
             Dołącz i sprawdź swoją działkę w 60 sekund
           </p>
+
+          {/* Zgoda obejmuje oba sposoby rejestracji, dlatego stoi nad przyciskiem Google */}
+          <label className="flex items-start gap-2.5 text-sm text-gray-700 mb-6 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={e => setTermsAccepted(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-green-700"
+            />
+            <span>
+              Akceptuję{' '}
+              <Link href="/regulamin" target="_blank" className="underline underline-offset-2 hover:text-gray-900">Regulamin</Link>.
+              {' '}Zasady przetwarzania danych opisuje{' '}
+              <Link href="/polityka-prywatnosci" target="_blank" className="underline underline-offset-2 hover:text-gray-900">Polityka prywatności</Link>.
+            </span>
+          </label>
 
           {/* Google OAuth */}
           <button

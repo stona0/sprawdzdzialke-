@@ -617,3 +617,4 @@ Ustalenia, które zmieniły treść względem założeń:
 3. **Zwrot za nieudany płatny raport** robi się dziś ręcznie w panelu Stripe. Kolejka zwraca tylko darmowy limit.
 4. **Umowy powierzenia (DPA) i podstawy transferu**: Supabase, Netlify, Stripe, Anthropic. Do ustalenia, który podmiot Anthropic obsługuje klientów z UE.
 5. **Skrzynka kontakt@lintel.pl** musi odbierać pocztę, bo jest jedynym kanałem reklamacji, odstąpień, faktur i RODO.
+6. **Zgoda przy logowaniu przez Google nie jest zapisywana.** Przy rejestracji e-mailem wersja i czas akceptacji regulaminu trafiają do `auth.users.raw_user_meta_data` (`terms_version`, `terms_accepted_at`). Przy Google `/register` wymaga zaznaczenia zgody, ale OAuth nie przenosi metadanych. Na `/login` pierwsze logowanie przez Google zakłada konto po informacji o regulaminie, bez checkboxa. Zapis wymagałby migracji (np. kolumna w `profiles`) i zapisu po callbacku.
