@@ -29,6 +29,8 @@ function link(url: string | null | undefined, label: string): string {
 
 const pl = (n: number | null | undefined, unit = '') => (n === null || n === undefined ? null : `${n.toLocaleString('pl-PL')}${unit}`)
 const date = (iso: string | null | undefined) => (iso ? new Date(iso).toLocaleDateString('pl-PL') : null)
+// Serwer działa w UTC — bez strefy czasowej godziny w raporcie byłyby przesunięte.
+const warsawTime = (iso: string) => new Date(iso).toLocaleString('pl-PL', { timeZone: 'Europe/Warsaw' })
 
 function zone(cls: 'ok' | 'warn' | 'risk' | 'unk', icon: string, html: string): string {
   return `<div class="zone-row zone-${cls}"><span class="zone-icon">${icon}</span><span>${html}</span></div>`
@@ -218,13 +220,13 @@ function aiSection(ai: AiInsights): string {
 
 function sourcesSection(d: ReportData): string {
   const rows = d.sources.map(s =>
-    `<tr><td>${esc(s.source)}</td><td>${esc(STATUS_LABEL[s.status] ?? s.status)}</td><td>${esc(new Date(s.fetchedAt).toLocaleString('pl-PL'))}</td></tr>`).join('')
+    `<tr><td>${esc(s.source)}</td><td>${esc(STATUS_LABEL[s.status] ?? s.status)}</td><td>${esc(warsawTime(s.fetchedAt))}</td></tr>`).join('')
   return section('Źródła danych i ich status', '🔎', `<table class="src"><thead><tr><th>Źródło</th><th>Status</th><th>Pobrano</th></tr></thead><tbody>${rows}</tbody></table>
     <p class="hint">„Źródło niedostępne” oznacza, że nie wiemy — nie że problemu nie ma. Dane są pobierane na żywo z rejestrów publicznych w chwili generowania raportu.</p>`, true)
 }
 
 export function buildReportHtml(d: ReportData, ai: AiInsights): string {
-  const generated = new Date(d.generatedAt).toLocaleString('pl-PL')
+  const generated = warsawTime(d.generatedAt)
   return `<!DOCTYPE html>
 <html lang="pl">
 <head>
