@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import {
   Dialog, DialogContent, DialogHeader,
   DialogTitle, DialogDescription,
@@ -39,6 +40,7 @@ export default function PaymentGate({
   open, parcelId, gmina, reportId, onConfirm, onCancel,
 }: Props) {
   const [loading, setLoading] = useState(false)
+  const [consent, setConsent] = useState(false)
 
   async function handlePay() {
     setLoading(true)
@@ -94,13 +96,30 @@ export default function PaymentGate({
             </div>
           </div>
 
+          {/* Art. 38 ust. 1 pkt 13 upk: raport powstaje od razu po płatności, więc bez tej zgody
+              konsument zachowałby 14 dni na odstąpienie już po otrzymaniu raportu. */}
+          <label className="flex items-start gap-2.5 text-xs text-gray-600 leading-relaxed cursor-pointer">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={e => setConsent(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-green-700"
+            />
+            <span>
+              Akceptuję{' '}
+              <Link href="/regulamin" target="_blank" className="underline underline-offset-2 text-gray-800">Regulamin</Link>{' '}
+              i żądam wygenerowania raportu przed upływem 14 dni na odstąpienie od umowy. Wiem, że po dostarczeniu
+              raportu tracę prawo odstąpienia.
+            </span>
+          </label>
+
           {/* CTA */}
           <div className="flex gap-2">
             <Button variant="outline" className="flex-1" onClick={onCancel} disabled={loading}>
               <X className="h-4 w-4 mr-1.5" />
               Anuluj
             </Button>
-            <Button className="flex-1 bg-green-600 hover:bg-green-700" onClick={handlePay} disabled={loading}>
+            <Button className="flex-1 bg-green-600 hover:bg-green-700" onClick={handlePay} disabled={loading || !consent}>
               {loading ? (
                 <><Loader2 className="h-4 w-4 animate-spin mr-1.5" />Przekierowuję…</>
               ) : (

@@ -96,6 +96,11 @@ test('pełna ścieżka: logowanie → działka → darmowy raport → płatny ra
   await searchParcel(page, PAID_PARCEL)
   await page.getByRole('button', { name: 'Kup raport — 29 PLN' }).click()
   await expect(page.getByRole('dialog').getByText('Kup raport – 29 zł')).toBeVisible()
+  // Bez zgody na utratę prawa odstąpienia nie da się przejść do płatności
+  const pay = page.getByRole('dialog').getByRole('button', { name: 'Zapłać 29 zł' })
+  await expect(pay).toBeDisabled()
+  await page.getByRole('dialog').getByRole('checkbox').check()
+  await expect(pay).toBeEnabled()
   await page.getByRole('button', { name: 'Anuluj' }).click()
 
   db = await mockDb()

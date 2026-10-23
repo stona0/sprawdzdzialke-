@@ -142,6 +142,8 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
         parcelId: parcel.parcelId,
         gmina: parcel.gmina,
         reportId,
+        // przycisk płatności jest aktywny dopiero po zaznaczeniu zgody w PaymentGate
+        withdrawalConsent: true,
       }),
     })
     const data = await res.json()
