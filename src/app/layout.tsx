@@ -56,7 +56,6 @@ export const metadata: Metadata = {
     siteName: "SprawdzDziałkę.com",
     locale: "pl_PL",
     type: "website",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "SprawdzDziałkę.com — raport planistyczny działki" }],
   },
 
   twitter: {
@@ -64,7 +63,6 @@ export const metadata: Metadata = {
     title: "SprawdzDziałkę.com — Sprawdź działkę w 60 sekund",
     description:
       "Sprawdź swoją działkę przed zakupem — MPZP, strefy, media, rekomendacje AI.",
-    images: ["/og-image.png"],
   },
 
   robots: {

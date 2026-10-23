@@ -602,3 +602,4 @@ Braki, które blokują uruchomienie płatnej usługi dla konsumentów. Tu też z
 ### Usunięte
 - `public/{file,globe,next,vercel,window}.svg`: pliki z create-next-app, nigdzie nieużywane.
 - `src/app/favicon.ico` w wersji domyślnej Next.js (25 931 B, ta sama data co reszta szablonu): przeglądarki i wyszukiwarki pokazywały ikonę Next zamiast znaku serwisu. Zastąpiona plikiem z `public/favicon.svg`.
+- `public/og-image.png`: ciemna grafika niepasująca do jasnej strony, w dodatku ze zmyślonymi danymi (Długołęka 556/6, MN, 9 m, 30%), których prawdziwy raport nie podaje. Zastąpiona przez `src/app/opengraph-image.tsx`, który pokazuje tylko, z jakich części składa się raport.
