@@ -152,11 +152,12 @@ Projekt Supabase z `.env.local` jest jedyny i ten sam co produkcyjny (jego URL-e
 - **ISOK:** metadane map mają ważność do 21.12.2025, a usługa nie wskazuje nowszych. Mapy nie obejmują podtopień ani małych cieków.
 - **KIUT:** duże miasta nie przekazują danych. Odległość ±2 m z obrazu. Brak informacji o napięciu, średnicy i wolnej mocy.
 - **Niestabilność usług państwowych:** w trakcie sesji ortofotomapa `StandardResolution` przez pewien czas zwracała 404. Wszystkie źródła mają timeout, retry i status w raporcie; awaria pojedynczego źródła daje raport częściowy, nie błąd.
-- **AI (Haiku 4.5):** walidator odrzuca punkty z liczbami spoza danych i bez wskazania podstawy, ale nie łapie błędów semantycznych. Po poprawkach promptu zostały pojedyncze spekulacje (np. Milicz: „położenie nad Baryczą wskazuje na potencjalne zagrożenie hydrologiczne”, choć ISOK nie pokazuje strefy). Kluczowe ustalenia i werdykt w raporcie powstają regułami, nie przez AI.
+- **AI (Haiku 4.5):** walidator odrzuca punkty z liczbami spoza danych i bez wskazania podstawy, ale nie łapie błędów semantycznych. Eval (sekcja 13): 34% punktów Haiku 4.5 jest błędnych wg sędziego (głównie spekulacje o kosztach i terminach), Haiku 5.5 low — 11%. Po poprawkach promptu zostały pojedyncze spekulacje (np. Milicz: „położenie nad Baryczą wskazuje na potencjalne zagrożenie hydrologiczne”, choć ISOK nie pokazuje strefy). Kluczowe ustalenia i werdykt w raporcie powstają regułami, nie przez AI.
 
 **Ryzyka bezpieczeństwa (poza zakresem zmian w kodzie)**
 - **Token GitHub (PAT) zapisany jawnym tekstem w URL remote'a `origin`** w `.git/config`. Należy go natychmiast unieważnić i ustawić remote bez tokenu (credential helper).
 - Klucze **live** Stripe w lokalnym `.env.local`. Development powinien używać kluczy testowych.
+- **Klucz API Anthropic jawnym tekstem w `.claude/launch.json`** (konfiguracja podglądu dev serwera). Plik jest w `.gitignore` i nie ma go w historii gita, ale klucz powinien być tylko w `.env.local`.
 - **Bucket `utility-maps` pozwalał na zapis każdemu z kluczem anon** (polityki insert/update bez klauzuli TO w migracji 20260529). Każdy mógł podmienić obraz mapy w płatnych raportach. Poprawka: migracja `20261024_utility_maps_write_policies.sql` (`6568008`) — **do uruchomienia na produkcji**.
 - Rate limiter jest w pamięci i nie jest współdzielony między instancjami serverless (cache źródeł już jest — sekcja 10).
 - Pozostały 2 umiarkowane podatności (`postcss-selector-parser` przez `@tailwindcss/typography`; tylko czas budowania).
@@ -221,14 +222,14 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 2. ~~**Trwały cache i kolejka (2–3 dni).**~~ Zrobione w kodzie 20–23.10.2026 (sekcja 10). Do zrobienia: migracja na stagingu i produkcji, `CRON_SECRET` na hostingu, weryfikacja funkcji zaplanowanej.
 3. ~~**Geometria planów ogólnych z Rejestru Urbanistycznego (3–5 dni).**~~ Zrobione 23.10.2026 (sekcja 11).
 4. ~~**Własny ETL linii energetycznych (3–5 dni).**~~ Zrobione 23.10.2026 z BDOT10k (sekcja 12). Do zrobienia: pierwszy pełny przebieg ETL i upload na stagingu.
-5. **Jakość AI: eval i lepszy model (1–2 dni).** Zbudować zestaw ewaluacyjny z działek testowych (sprawdzanie zgodności z faktami), porównać Haiku 4.5 z nowszym modelem i pokazywać w raporcie „podstawę” każdej rekomendacji. Błędy semantyczne AI to dziś największe ryzyko jakości treści. Koszt modelu na raport jest pomijalny przy cenie 29 PLN.
+5. ~~**Jakość AI: eval i lepszy model (1–2 dni).**~~ Eval, poprawka walidatora i podstawa w raporcie zrobione 23.10.2026 (sekcja 13). Do zrobienia: doładować konto Anthropic, potwierdzający bieg po poprawce walidatora i decyzja o przejściu na Haiku 5.5.
 
 ## Jak uruchomić weryfikację
 
 ```bash
 npm install
 npm run typecheck
-npm test                 # 101 testów: fixture'y + SQL kolejki, cache i Storage na PGlite (bez sieci)
+npm test                 # 106 testów: fixture'y + SQL kolejki, cache i Storage na PGlite (bez sieci)
 npm run test:live        # 14 działek na żywych usługach (~3 min); z POWER_LINES_URL=./data/power-lines także linie BDOT10k
 npm run etl:power-lines -- --powiaty 0223,0264,0208,0213,1261,1463,1014,0605   # kafle BDOT10k dla działek testowych (~30 s); bez --powiaty cały kraj
 npm run test:e2e         # Playwright + mock Supabase na PGlite, 5 testów (~1,5 min; wymaga ANTHROPIC_API_KEY w .env.local, inaczej rekomendacje regułowe)
@@ -371,3 +372,83 @@ OSM (Geofabrik) wymagałby parsera PBF i pobrania 1,8 GB, a dawałby głównie n
 - **Odcinki:** BDOT10k zapisuje linię jako odcinki między słupami. Raport pokazuje najbliższy odcinek każdej klasy, a nie liczbę linii.
 - **AI** w nowych przykładach dopisuje spekulacje („dodatkowe opłaty za służebność”, „pola elektromagnetyczne”). Ustalenia o liniach powstają regułami; to temat kroku 5.
 
+
+## 13. Eval rekomendacji AI i podstawa w raporcie (23.10.2026)
+
+**Zestaw** (`tests/eval/insights/`, `2116f4a`). 41 prawdziwych działek:
+- 14 testowych, 6 z planami ogólnymi z Rejestru Urbanistycznego, 18 z punktów adresowych w różnych województwach, 3 z symulowaną awarią źródeł;
+- werdykty: brak POG 18, WZ możliwe 9, MPZP 8, poza OUZ 5, nieustalone 1;
+- tematy: powódź 11, Natura 2000 12, POG z RU 14, linia WN/NN 3, projekt POG 3.
+
+`cases.md` pokazuje dokładnie te fakty, które dostaje model.
+
+**Ocena.** Sędzia Sonnet 5.5 ocenia każdy punkt jako zgodny, nieoparty, sprzeczny albo spekulacja, względem tych samych faktów, które dostał model.
+- Rubryka jest ostra: koszty, terminy i trudności, których nie ma w faktach, to spekulacja. Zdecydował o tym właściciel po pilocie.
+- Metryki:
+  - raport bez błędnego punktu (główna);
+  - odsetek błędnych punktów;
+  - pokrycie ustaleń „ryzyko”;
+  - konkretność rekomendacji;
+  - spadek na reguły.
+- Kontrola sędziego (`judge-sanity.mts`) przeszła 4/4:
+  - rekomendacje z reguł → zgodne;
+  - 4 podrzucone błędy → wszystkie wychwycone;
+  - punkt o innej działce → nieoparty;
+  - „Nie wiem.” → niekonkretne.
+
+**Wynik** (41 działek × 2 powtórzenia; porównanie na 69 parach działka × powtórzenie wspólnych dla wszystkich wariantów)
+
+| | Haiku 4.5 (produkcja) | Haiku 5.5, effort low | Haiku 5.5, effort high |
+|---|---|---|---|
+| Raport bez błędnego punktu | 2,9% | 46,4% | 53,6% |
+| Błędne punkty | 34,0% | 11,2% | 9,1% |
+| Spekulacja / sprzeczny / nieoparty (wszystkie udane przebiegi) | 121 / 40 / 33 | 37 / 16 / 12 | 27 / 5 / 6 |
+| Pokrycie ustaleń „ryzyko” | 100% | 100% | 100% |
+| Konkretne rekomendacje | 98% | 100% | 100% |
+| Spadek na reguły | 0% | 0% | 5,8%¹ |
+| Czas odpowiedzi | 8,6 s | 4,5 s | 13,8 s |
+| Koszt modelu na raport | ~$0,006 | ~$0,0007 | ~$0,002 |
+
+¹ Wszystkie przez błąd walidatora opisany niżej.
+
+- **Haiku 5.5 low wobec Haiku 4.5:** mniej błędnych punktów na 35 z 37 działek, na żadnej więcej.
+- **High wobec low:** −2,3 pp błędnych punktów (95% CI od −5,8 do 1,0), czyli w granicach szumu. Dwa przebiegi tej samej działki różnią się średnio o 12–18 pp.
+- **Przy effort low i medium Haiku 5.5 w ogóle nie myśli** (0 tokenów myślenia), dlatego porównałem low z high, a nie z medium.
+- **Pokrycie i konkretność są na maksimum** we wszystkich wariantach, więc nie rozróżniają modeli.
+- **Typowy błąd po zmianie modelu** to wciąż ogólny skutek bez podstawy w faktach, np. „procedury mogą wydłużyć inwestycję”.
+
+**Błąd walidatora znaleziony przez eval** (`7c0bf16`)
+- Walidator odrzucał punkty, które wymieniały numer działki („wypis i wyrys dla działki 440/1”), oraz daty zapisane słownie („1 września 2026”). Tak było:
+  - u Haiku 5.5 low: 108 ze 109 odrzuceń;
+  - u Haiku 5.5 high: wszystkie 4 spadki na reguły;
+  - u Haiku 4.5: 37 z 45 odrzuceń (numer działki 20, daty 17).
+- Po poprawce, na tych samych zapisanych odpowiedziach, odrzuceń jest:
+  - Haiku 5.5 low: 109 → 2;
+  - Haiku 5.5 high: 141 → 2;
+  - Haiku 4.5: 45 → 8.
+- Nadal odpadają liczby zaokrąglone albo wyliczone („ponad 23 ha”, „24%” jako 100 − 76).
+- **Tabela wyżej powstała przed poprawką**, więc sędzia nie widział odzyskanych punktów. Trzeba to potwierdzić ponownym biegiem.
+
+**Podstawa w raporcie** (`73a1b3f`)
+- Pod każdą rekomendacją i każdym ryzykiem, z AI i z reguł, jest „Podstawa: …” z nazwą sekcji raportu, w której jest fakt.
+- Rekomendacja o księdze wieczystej i geodecie nie wynika z danych, więc ma opis „ogólna dobra praktyka przy zakupie działki”.
+- Klucz cache odpowiedzi AI zmieniony na `ai2:`, żeby po wdrożeniu stare wpisy (same teksty) nie trafiły do nowego HTML.
+
+**Sędzia** (`09d9520`). Oceny są dobierane po identyfikatorach punktów. 3 przypadki Haiku 4.5 odpadły w biegu, bo sędzia połączył powtórzone punkty, a w pilocie dopisał pokrycie uwag spoza listy. Przeliczenie 233 zapisanych werdyktów nową funkcją daje identyczne oceny.
+
+**Koszt evala:** pilot i kontrola sędziego $0,16, pełny bieg $4,64, czyli ok. $0,02 na przypadek, z czego ok. $0,018 to sędzia.
+
+**Niedokończone**
+- **W trakcie biegu wyczerpały się środki na koncie Anthropic.** 10 przypadków wariantu high się nie wykonało: jest 72 z 82. Jeśli produkcja używa tego samego konta, raporty dostają teraz rekomendacje z reguł zamiast AI, aż do doładowania.
+- **Produkcja nadal używa Haiku 4.5.** Zmiana modelu czeka na decyzję i na potwierdzający bieg po poprawce walidatora: baseline i Haiku 5.5 low, ok. $3,50.
+- **Ograniczenia oceny:**
+  - sędzia to też model, a jego kontrola obejmuje tylko 4 przypadki;
+  - nikt nie oznaczył ręcznie całego zestawu;
+  - eval nie mierzy poprawności językowej ani ogólnej przydatności.
+
+**Jak uruchomić** (wymaga `ANTHROPIC_API_KEY`; stan i wyniki w `.claude/hillclimb/ai-insights/`, poza gitem)
+```bash
+npx tsx --env-file=.env.local --tsconfig tsconfig.json scripts/eval/insights/judge-sanity.mts      # kontrola sędziego (~$0,05)
+npx tsx --env-file=.env.local scripts/eval/insights/run-eval.mjs --flow .claude/hillclimb/ai-insights --variant v1 --model claude-haiku-5-5 --reps 2   # ~$1,50 za wariant
+```
+Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia startu, dopóki człowiek nie uruchomi go raz z `--approve-harness`.
