@@ -230,7 +230,7 @@ Wyjątki i przepisy przejściowe (np. postępowania wszczęte wcześniej, art. 6
 ```bash
 npm install
 npm run typecheck
-npm test                 # 115 testów: fixture'y + SQL kolejki, cache, Storage i stagingu na PGlite (bez sieci)
+npm test                 # 125 testów: fixture'y + SQL kolejki, cache, Storage, stagingu i mapy uzbrojenia (bez sieci)
 npm run test:live        # 14 działek na żywych usługach (~3 min); z POWER_LINES_URL=./data/power-lines także linie BDOT10k
 npm run etl:power-lines -- --powiaty 0223,0264,0208,0213,1261,1463,1014,0605   # kafle BDOT10k dla działek testowych (~30 s); bez --powiaty cały kraj
 npm run test:e2e         # Playwright + mock Supabase na PGlite, 5 testów (~1,5 min; wymaga ANTHROPIC_API_KEY w .env.local, inaczej rekomendacje regułowe)
@@ -516,3 +516,33 @@ Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia
 - **Projekt Supabase `SprawdzDzialke` jest wstrzymany (status INACTIVE).** Plan Free wstrzymuje projekty po tygodniu bez aktywności. Wstrzymanych było wszystkie 6 projektów organizacji.
 - **Domena `sprawdzdzialke.com` nie rozwiązuje się w DNS** (brak rekordów A i NS). Z tego komputera serwis nie jest dostępny pod tą domeną.
 - **Na planie Free mogą działać naraz 2 projekty.** Staging zajmuje jedno miejsce, więc wznowienie produkcji wykorzysta drugie.
+
+## 15. Mapa uzbrojenia terenu (23.10.2026)
+
+**Problem:** sieci na mapie wyglądały gorzej niż granica działki — plamy zamiast linii, a kolory nie zgadzały się z legendą.
+- **Przyczyna 1:** serwer KIUT ignoruje style i rysuje linie 1 px oraz opisy średnic („kd160”, „wo32”). Kod pogrubiał je rozmyciem całego obrazu, więc napisy zmieniały się w plamy.
+- **Przyczyna 2:** po rozmyciu kolor był dzielony przez alfę, choć już był pełny. Brązowa kanalizacja i oliwkowy gaz wychodziły jaskrawożółte, a styk czerwonej i niebieskiej linii dawał **fiolet, czyli kolor sieci ciepłowniczej z legendy**. Mapa w płatnym raporcie pokazywała sieć, której nie było.
+
+**Zmiana** (`src/lib/kiut-raster.ts`, `src/lib/utility-map.ts`):
+- każdy piksel jest przypisywany do jednej sieci po kolorze serwera (kolory zmierzone na 6 powiatach), a każda sieć jest rysowana osobno jednolitym kolorem legendy, linią ~5 px z ostrą krawędzią i białą obwódką; zdjęcie jest lekko rozjaśnione;
+- opisy: w skali ~1:5000 większość serwerów powiatowych rysuje sieci bez opisów, więc mapa bierze geometrię z obrazu 600×375, jeśli dana sieć jest tam kompletna; w przeciwnym razie (np. powiat milicki i kłodzki w tej skali nie rysują nic) bierze pełną rozdzielczość i usuwa opisy po kształcie;
+- podpis mapy informuje, że opisy średnic i symbole urządzeń są pominięte.
+
+**Niestabilność serwera KIUT (nowe ryzyko danych)**
+- Identyczne zapytania zwracają różne wersje danych. Sobótka, prąd w 10 odpowiedziach 1200 px: 29 123 / 8 686 / 0 pikseli; kompletny tylko w 4.
+- Mapa pobiera teraz każdą rozdzielczość dwukrotnie (4 równoległe zapytania, ~1,8 s) i łączy odpowiedzi. W 6 kolejnych renderach Sobótki prąd był zawsze obecny (28,5–35,7 tys. px), wcześniej znikał w części renderów.
+- Mapa trafia do cache w Storage tylko wtedy, gdy odpowiedzi się zgadzają. Inaczej jest zapisywana pod jednorazową nazwą i nie zostaje utrwalona dla okolicy. Klucz cache podniesiony do `v5`, więc stare mapy nie są używane.
+- **Do zrobienia:** ten sam problem dotyczy odległości do sieci w tekście raportu (`src/lib/sources/gesut.ts`, jedno zapytanie na sieć, cache na dobę). Raport może wtedy napisać „brak sieci”, choć sieć jest. Nie poprawione; zgłoszone jako osobne zadanie.
+
+**Testy** (`tests/unit/utility-map.test.ts`, 10 testów na syntetycznych obrazach i prawdziwych odpowiedziach serwera w `tests/fixtures/kiut`):
+- klasyfikacja pikseli;
+- usuwanie napisów bez usuwania linii (w tym przyłączy w kształcie L i linii urwanych na krawędzi mapy);
+- wybór źródła geometrii dla Sobótki, Milicza i Siechnic;
+- niepełne odpowiedzi i łączenie;
+- brak plam w kolorze spoza legendy i brak fioletu.
+
+**Pomiar na żywych usługach** dla 7 działek z 6 powiatów: linie bez opisów pokrywają 89–100% linii z serwera (±2 px), a brakujące piksele to kreski i resztki opisów przyklejone do linii.
+
+**Ograniczenia**
+- Część opisów stykających się z linią zostaje jako krótkie odgałęzienia.
+- Przy dużym zagęszczeniu sieci linie się stykają; na wierzchu jest linia energetyczna.

@@ -216,7 +216,7 @@ function utilitiesSection(d: ReportData): string {
   const map = d.utilityMapUrl
     ? `<img src="${esc(d.utilityMapUrl)}" alt="Mapa uzbrojenia terenu" style="width:100%;border-radius:8px;display:block;margin-top:12px"/>
        <div class="legend">${legend}</div>
-       <p class="hint">Mapa: ortofotomapa i działki ewidencyjne (GUGiK), sieci z Krajowej Integracji Uzbrojenia Terenu. Brak linii na mapie nie oznacza braku sieci, jeśli powiat nie przekazuje danych.</p>`
+       <p class="hint">Mapa: ortofotomapa i działki ewidencyjne (GUGiK), sieci z Krajowej Integracji Uzbrojenia Terenu (bez opisów średnic i symboli urządzeń). Brak linii na mapie nie oznacza braku sieci, jeśli powiat nie przekazuje danych.</p>`
     : ''
   return section('Uzbrojenie terenu', '⚡', kiut + osm + sip + map, true)
 }
