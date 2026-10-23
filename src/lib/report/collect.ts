@@ -5,6 +5,7 @@ import { queryGesut, NETWORKS, type GesutResult, type Network } from '../sources
 import { queryIsok, SCENARIO_LABEL, type IsokResult } from '../sources/isok'
 import { queryKimpzp, type KimpzpPlan } from '../sources/kimpzp'
 import { queryOsmUtilities, type OsmUtilities } from '../sources/osm'
+import { LINE_LABEL, queryPowerLines, TYPICAL_HALF_WIDTH_M, type PowerLinesResult } from '../sources/power-lines'
 import type { Pog } from '../pog'
 import { IN_FORCE_STATUS, queryRejestrPog, queryRuPogZones, type RuPog, type RuPogEntry } from '../sources/rejestr-urbanistyczny'
 import { isWroclawTerc, queryWroclawMpzp, type WroclawMpzp } from '../wroclaw-mpzp'
@@ -62,6 +63,8 @@ export interface ReportData {
   gesut: GesutResult | null
   gesutStatus: SourceStatus
   osm: OsmUtilities | null
+  /** Linie napowietrzne i rurociągi z BDOT10k; gdy null, raport pokazuje OSM. */
+  powerLines: PowerLinesResult | null
   sip: SipRow | null
   utilityMapUrl: string | null
   findings: Finding[]
@@ -110,7 +113,13 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
         return entry ? queryRuPogZones(entry, parcelId, geom) : skipped<Pog>(name)
       })
 
-  const [wMpzp, wPog, kimpzp, ru, ruPlan, ruDraft, isok, gdos, gesut, osm, sip, utilityMapUrl] = await Promise.all([
+  // Linie z własnych kafli BDOT10k; OSM (publiczny Overpass) tylko, gdy kafli nie ma albo zawiodły.
+  const linesP = queryPowerLines(parcelId, geom)
+  const osmP = linesP.then(r => (r.status === 'ok' || r.status === 'no_data'
+    ? skipped<OsmUtilities>('Linie i rurociągi – OpenStreetMap')
+    : queryOsmUtilities(parcelId, geom)))
+
+  const [wMpzp, wPog, kimpzp, ru, ruPlan, ruDraft, isok, gdos, gesut, lines, osm, sip, utilityMapUrl] = await Promise.all([
     wroclaw ? queryWroclawMpzp(parcelId, geom) : Promise.resolve(skipped<WroclawMpzp>('MPZP – GIS UM Wrocławia')),
     wroclaw ? queryWroclawPog(parcelId, geom) : Promise.resolve(skipped<Pog>('Plan ogólny – GIS UM Wrocławia')),
     wroclaw ? Promise.resolve(skipped<KimpzpPlan[]>('MPZP – Krajowa Integracja MPZP (GUGiK)')) : queryKimpzp(parcelId, geom),
@@ -120,7 +129,8 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
     queryIsok(parcelId, geom),
     queryGdos(parcelId, geom),
     queryGesut(parcelId, geom),
-    queryOsmUtilities(parcelId, geom),
+    linesP,
+    osmP,
     deps.sipLookup ? deps.sipLookup(parcel.gmina).catch(() => null) : Promise.resolve(null),
     deps.utilityMap && parcel.wspolrzedne
       ? timed(deps.utilityMap(parcel.wspolrzedne.lat, parcel.wspolrzedne.lng, parcel.geomWkt).catch(() => null), 30_000, null)
@@ -162,7 +172,7 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
   })
 
   const findings = buildFindings({
-    wMpzp: wMpzp.data, isok: isok.data, gdos: gdos.data, gesut: gesut.data, osm: osm.data, ru: ru.data, plan,
+    wMpzp: wMpzp.data, isok: isok.data, gdos: gdos.data, gesut: gesut.data, osm: osm.data, powerLines: lines.data, ru: ru.data, plan,
     draft: ruDraft.status === 'ok' ? ruDraft.data : null,
   })
 
@@ -189,6 +199,7 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
     gesut: gesut.data,
     gesutStatus: gesut.status,
     osm: osm.data,
+    powerLines: lines.data,
     sip,
     utilityMapUrl,
     findings,
@@ -197,7 +208,7 @@ export async function collectReportData(parcelId: string, gmina: string, deps: C
         source: 'Dane ewidencyjne – ULDK (GUGiK)', status: 'ok' as const, ms: 0,
         fetchedAt: parcel.fetchedAt ?? now.toISOString(), ...(parcel.stale ? { stale: true } : {}),
       },
-      ...[wMpzp, wPog, kimpzp, ru, ruPlan, ruDraft, isok, gdos, gesut, osm]
+      ...[wMpzp, wPog, kimpzp, ru, ruPlan, ruDraft, isok, gdos, gesut, lines, osm]
         .filter(s => !(s.status === 'not_covered' && s.ms === 0))
         .map(summary),
     ],
@@ -210,6 +221,7 @@ export function buildFindings(d: {
   gdos: GdosResult | null
   gesut: GesutResult | null
   osm: OsmUtilities | null
+  powerLines?: PowerLinesResult | null
   ru: RuPog | null
   plan: Pog | null
   draft: Pog | null
@@ -266,7 +278,8 @@ export function buildFindings(d: {
       text: `Przez działkę przebiega: ${crosses.join(', ')} (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę.`,
     })
   }
-  const hv = d.osm?.power.find(p => p.kind === 'linia napowietrzna' && p.distanceM <= 50)
+  if (d.powerLines) f.push(...powerLineFindings(d.powerLines))
+  const hv = !d.powerLines && d.osm?.power.find(p => p.kind === 'linia napowietrzna' && p.distanceM <= 50)
   if (hv) {
     f.push({
       level: 'ryzyko',
@@ -290,3 +303,36 @@ export function buildFindings(d: {
   }
   return f
 }
+
+const HAZARDOUS_PIPES = /gaz|naft|benzyn|paliw|produkt/i
+const where = (h: { crosses: boolean; distanceM: number }) => (h.crosses ? 'przebiega przez działkę' : `w odległości ${h.distanceM} m od granicy działki`)
+
+/** Ustalenia z linii i rurociągów BDOT10k (odległość liczona od granicy działki do osi linii). */
+export function powerLineFindings(pl: PowerLinesResult): Finding[] {
+  const f: Finding[] = []
+  for (const klasa of ['EHV', 'HV'] as const) {
+    const near = pl.lines.find(l => l.klasa === klasa) // posortowane od najbliższej
+    if (!near) continue
+    const half = TYPICAL_HALF_WIDTH_M[klasa]
+    const label = LINE_LABEL[klasa][0].toUpperCase() + LINE_LABEL[klasa].slice(1)
+    if (near.distanceM <= half) {
+      f.push({
+        level: 'ryzyko',
+        basis: 'uzbrojenie',
+        text: `${label} ${where(near)} (BDOT10k). Część działki może leżeć w pasie technologicznym linii (typowo ok. ${half} m od osi w każdą stronę), gdzie zabudowa jest ograniczona — szerokość pasa i warunki potwierdź u operatora sieci.`,
+      })
+    } else if (near.distanceM <= 100) {
+      f.push({ level: 'uwaga', basis: 'uzbrojenie', text: `${label} w odległości ${near.distanceM} m od granicy działki (BDOT10k) — sprawdź u operatora zasięg pasa technologicznego.` })
+    }
+  }
+  const mv = pl.lines.find(l => l.klasa === 'MV')
+  if (mv && mv.distanceM <= TYPICAL_HALF_WIDTH_M.MV) {
+    f.push({ level: 'uwaga', basis: 'uzbrojenie', text: `Napowietrzna linia średniego napięcia ${where(mv)} (BDOT10k) — możliwa służebność przesyłu i ograniczenia zabudowy pod linią.` })
+  }
+  const pipe = pl.pipelines.find(p => p.crosses || (HAZARDOUS_PIPES.test(p.rodzaj ?? '') && p.distanceM <= 20))
+  if (pipe) {
+    f.push({ level: 'uwaga', basis: 'uzbrojenie', text: `Rurociąg${pipe.rodzaj ? ` ${pipe.rodzaj}` : ''} ${where(pipe)} (BDOT10k) — strefa ochronna lub służebność może ograniczać zabudowę; sprawdź u operatora.` })
+  }
+  return f
+}
+

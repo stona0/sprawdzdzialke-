@@ -49,9 +49,13 @@ describe('migracje', () => {
     expect(tables).toEqual(expect.arrayContaining(['reports', 'profiles', 'payments', 'source_cache', 'report_jobs']))
   })
 
-  it('Storage: utility-maps bez polityk zapisu dla wszystkich ról', async () => {
+  it('Storage: utility-maps bez polityk zapisu dla wszystkich, power-lines publiczny do odczytu', async () => {
     const policies = (await db.query<{ policyname: string; cmd: string }>(`SELECT policyname, cmd FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects' ORDER BY 1`)).rows
-    expect(policies).toEqual([{ policyname: 'Public read utility-maps', cmd: 'SELECT' }])
+    expect(policies).toEqual([
+      { policyname: 'Public read power-lines', cmd: 'SELECT' },
+      { policyname: 'Public read utility-maps', cmd: 'SELECT' },
+    ])
+    expect(await one('SELECT public, allowed_mime_types FROM storage.buckets WHERE id = $1', ['power-lines'])).toEqual({ public: true, allowed_mime_types: ['application/json'] })
   })
 
   it('anon i authenticated nie mogą wywołać funkcji kolejki', async () => {

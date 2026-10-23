@@ -3,6 +3,7 @@ import { GESUT_WINDOW_M, NETWORKS, type Network } from '../sources/gesut'
 import { NEARBY_M } from '../sources/gdos'
 import { ISOK_MAP_URL, SCENARIO_LABEL } from '../sources/isok'
 import { OSM_RADIUS_M } from '../sources/osm'
+import { LINE_LABEL, TYPICAL_HALF_WIDTH_M } from '../sources/power-lines'
 import { RU_PUBLIC_URL, ruPlanUrl } from '../sources/rejestr-urbanistyczny'
 import { NETWORK_STYLES } from '../utility-map'
 import type { AiInsights } from './ai'
@@ -21,6 +22,11 @@ export function esc(s: string | number | null | undefined): string {
 function row(label: string, valueHtml: string | null | undefined): string {
   if (!valueHtml) return ''
   return `<div class="row"><span class="row-label">${esc(label)}</span><span class="row-value">${valueHtml}</span></div>`
+}
+
+/** Wiersz z kolorem wartości (ok / warn / unk); wartość jest escapowana. */
+function rowCls(label: string, value: string, cls: 'ok' | 'warn' | 'unk' | ''): string {
+  return `<div class="row"><span class="row-label">${esc(label)}</span><span class="row-value ${cls}">${esc(value)}</span></div>`
 }
 
 function link(url: string | null | undefined, label: string): string {
@@ -195,9 +201,11 @@ function utilitiesSection(d: ReportData): string {
     kiut = '<p class="no-data">Rejestr uzbrojenia terenu był niedostępny.</p>'
   }
 
-  const osm = d.osm
-    ? osmLines(d)
-    : '<p class="hint">OpenStreetMap: źródło niedostępne.</p>'
+  const osm = d.powerLines
+    ? bdotLines(d)
+    : d.osm
+      ? osmLines(d)
+      : '<p class="hint">Linie napowietrzne: źródło niedostępne (BDOT10k i OpenStreetMap).</p>'
 
   const sip = d.sip
     ? (['wodociag', 'kanalizacja', 'gaz', 'energia'] as const).map(k => row(`${k[0].toUpperCase()}${k.slice(1)} (dane gminy)`, esc(d.sip![k] ?? null))).join('') + row('Uwagi', esc(d.sip.uwagi))
@@ -211,6 +219,23 @@ function utilitiesSection(d: ReportData): string {
        <p class="hint">Mapa: ortofotomapa i działki ewidencyjne (GUGiK), sieci z Krajowej Integracji Uzbrojenia Terenu. Brak linii na mapie nie oznacza braku sieci, jeśli powiat nie przekazuje danych.</p>`
     : ''
   return section('Uzbrojenie terenu', '⚡', kiut + osm + sip + map, true)
+}
+
+function bdotLines(d: ReportData): string {
+  const pl = d.powerLines!
+  const dated = pl.dataDate ? `, dane powiatu z ${esc(date(pl.dataDate))}` : ''
+  const hint = `<p class="hint">Źródło: BDOT10k (GUGiK)${dated}. Obejmuje napowietrzne linie SN, 110 kV i 220–400 kV oraz rurociągi — nie zawiera linii niskiego napięcia ani kabli podziemnych. Odległość od granicy działki do osi linii. Typowy pas technologiczny: SN ok. 10–15 m, 110 kV ok. 30–40 m, 220–400 kV ok. 50–80 m; wiążącą szerokość podaje operator.</p>`
+  if (!pl.lines.length && !pl.pipelines.length) {
+    return `<p class="hint">Brak napowietrznych linii SN/WN/NN i rurociągów w promieniu ${pl.radiusM} m wg BDOT10k${dated}.</p>`
+  }
+  const status = (s: string | null) => (s ? ` (${s})` : '')
+  const value = (h: { crosses: boolean; distanceM: number }) => (h.crosses ? 'przez działkę' : `${h.distanceM} m`)
+  const rows = [
+    ...pl.lines.map(l => rowCls(LINE_LABEL[l.klasa][0].toUpperCase() + LINE_LABEL[l.klasa].slice(1) + status(l.status),
+      value(l), l.distanceM <= TYPICAL_HALF_WIDTH_M[l.klasa] ? 'warn' : '')),
+    ...pl.pipelines.map(p => rowCls(`Rurociąg${p.rodzaj ? ` ${p.rodzaj}` : ''}${status(p.status)}`, value(p), p.crosses ? 'warn' : '')),
+  ]
+  return `<div class="sub-title">Linie napowietrzne i rurociągi w BDOT10k (do ${pl.radiusM} m)</div>` + rows.join('') + hint
 }
 
 function osmLines(d: ReportData): string {

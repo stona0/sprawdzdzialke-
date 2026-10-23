@@ -1,0 +1,206 @@
+{
+  "version": 2,
+  "parcelId": "022307_4.0003.541",
+  "generatedAt": "2026-10-23T09:33:31.321Z",
+  "parcel": {
+    "parcelId": "022307_4.0003.541",
+    "numer": "541",
+    "powierzchnia": 22603,
+    "obreb": "Strzeblów",
+    "gmina": "Sobótka",
+    "teryt": "022307_4",
+    "terc": "022307",
+    "powiat": "powiat wrocławski",
+    "wojewodztwo": "dolnośląskie",
+    "wspolrzedne": {
+      "lat": 50.897972,
+      "lng": 16.712562
+    },
+    "geomWkt": "SRID=2180;POLYGON((339084.207730504 339278.522944344,339109.791318415 339211.507225486,339202.96885055 339228.978750819,339208.867181959 339204.646451518,339295.956515546 339240.554698658,339287.763178804 339347.092245522,339287.610302777 339351.30299326,339250.391714569 339345.379347173,339211.600113363 339339.197103501,339095.936837255 339320.780682049,339097.567890901 339309.092246188,339101.441943127 339284.397494033,339098.167719317 339283.27222873,339084.207730504 339278.522944344))",
+    "found": true,
+    "fetchedAt": "2026-10-23T09:33:32.184Z"
+  },
+  "mpzp": {
+    "covered": true,
+    "wroclaw": null,
+    "kimpzp": [
+      {
+        "tytul": "Miejscowy plan zagospodarowania przestrzennego miasta Sobótka",
+        "symbol": "SOB_1",
+        "przeznaczenie": null,
+        "uchwala": null,
+        "obowiazujeOd": null,
+        "status": "uchwalony, obowiązujący w części",
+        "link": null,
+        "warstwa": "1"
+      }
+    ],
+    "status": "ok"
+  },
+  "pog": {
+    "plan": null,
+    "planStatus": "not_covered",
+    "draft": null,
+    "ru": {
+      "entry": null,
+      "inForce": false,
+      "draft": null
+    },
+    "inForce": false,
+    "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+    "verdict": "mpzp",
+    "title": "Działka objęta miejscowym planem (MPZP)",
+    "text": "O tym, co i jak można zbudować, decydują ustalenia obowiązującego MPZP — dla terenów objętych planem nie wydaje się decyzji o warunkach zabudowy. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+    "confidence": "wysoka"
+  },
+  "flood": {
+    "scenarios": [],
+    "oszp": false,
+    "risk": [],
+    "validTo": null
+  },
+  "nature": {
+    "onParcel": [
+      {
+        "type": "Park krajobrazowy",
+        "name": "Ślężański Park Krajobrazowy - otulina"
+      }
+    ],
+    "nearby": [
+      {
+        "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+        "name": "Masyw Ślęży"
+      },
+      {
+        "type": "Park krajobrazowy",
+        "name": "Ślężański Park Krajobrazowy"
+      }
+    ]
+  },
+  "gesut": {
+    "energia": {
+      "distanceM": 11,
+      "crosses": false
+    },
+    "woda": {
+      "distanceM": 7,
+      "crosses": false
+    },
+    "kanalizacja": {
+      "distanceM": 0,
+      "crosses": true
+    },
+    "gaz": {
+      "distanceM": 4,
+      "crosses": false
+    }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+    "lines": [
+      {
+        "klasa": "HV",
+        "distanceM": 0,
+        "crosses": true,
+        "status": null
+      },
+      {
+        "klasa": "MV",
+        "distanceM": 3,
+        "crosses": false,
+        "status": null
+      }
+    ],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2023-11-08",
+    "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "findings": [
+    {
+      "level": "ryzyko",
+      "basis": "przyroda",
+      "text": "Działka leży w obszarze chronionym: Park krajobrazowy „Ślężański Park Krajobrazowy - otulina”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+    },
+    {
+      "level": "uwaga",
+      "basis": "uzbrojenie",
+      "text": "Przez działkę przebiega: kanalizacja (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+    },
+    {
+      "level": "ryzyko",
+      "basis": "uzbrojenie",
+      "text": "Linia wysokiego napięcia (110 kV) przebiega przez działkę (BDOT10k). Część działki może leżeć w pasie technologicznym linii (typowo ok. 20 m od osi w każdą stronę), gdzie zabudowa jest ograniczona — szerokość pasa i warunki potwierdź u operatora sieci."
+    },
+    {
+      "level": "uwaga",
+      "basis": "uzbrojenie",
+      "text": "Napowietrzna linia średniego napięcia w odległości 3 m od granicy działki (BDOT10k) — możliwa służebność przesyłu i ograniczenia zabudowy pod linią."
+    }
+  ],
+  "sources": [
+    {
+      "source": "Dane ewidencyjne – ULDK (GUGiK)",
+      "status": "ok",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T09:33:32.184Z"
+    },
+    {
+      "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+      "status": "ok",
+      "ms": 344,
+      "fetchedAt": "2026-10-23T09:33:32.530Z"
+    },
+    {
+      "source": "Plan ogólny – Rejestr Urbanistyczny",
+      "status": "no_data",
+      "ms": 249,
+      "fetchedAt": "2026-10-23T09:33:32.434Z"
+    },
+    {
+      "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+      "status": "no_data",
+      "ms": 875,
+      "fetchedAt": "2026-10-23T09:33:33.063Z"
+    },
+    {
+      "source": "Ochrona przyrody – GDOŚ",
+      "status": "ok",
+      "ms": 2188,
+      "fetchedAt": "2026-10-23T09:33:34.380Z"
+    },
+    {
+      "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+      "status": "ok",
+      "ms": 1112,
+      "fetchedAt": "2026-10-23T09:33:33.310Z"
+    },
+    {
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "ok",
+      "ms": 3,
+      "fetchedAt": "2026-10-23T09:33:32.206Z"
+    }
+  ],
+  "utilityMap": "osadzona w HTML",
+  "ai": {
+    "rekomendacje": [
+      "Uzyskaj w urzędzie gminy Sobótka wypis i wyrys z MPZP oraz zaświadczenie potwierdzające przeznaczenie terenu i obowiązujące warunki zabudowy. Plan obejmuje tę działkę, więc decyzja o warunkach zabudowy nie będzie wydawana.",
+      "Skontaktuj się z operatorem sieci elektroenergetycznej, aby potwierdzić zasięg pasa technologicznego linii wysokiego napięcia 110 kV przebiegającej przez działkę oraz możliwości zabudowy w tym obszarze.",
+      "Przed podpisaniem umowy zweryfikuj u operatora kanalizacji przebieg sieci przez działkę, istnienie pasa ochronnego i służebności przesyłu, które mogą ograniczać możliwość zabudowy na części terenu.",
+      "Zwróć się do regionalnej dyrekcji ochrony środowiska w sprawie wymaganych uzgodnień dla inwestycji ze względu na położenie działki w otulinie Ślężańskiego Parku Krajobrazowego i sąsiedztwo Natura 2000."
+    ],
+    "ryzyka": [
+      "Linia wysokiego napięcia 110 kV przebiegająca przez działkę ogranicza możliwości zabudowy i może wymagać dodatkowych opłat za służebność. Pas technologiczny linii (ok. 20 m od osi w każdą stronę) może zajmować znaczną część użyteczną działki.",
+      "Kanalizacja przebiegająca przez działkę i linia średniego napięcia w odległości 3 m od granicy mogą oznaczać służebności przesyłu ograniczające projektowanie zabudowy i utrudniające jej lokalizację.",
+      "Położenie działki w otulinie parku krajobrazowego i bliskość specjalnego obszaru ochrony siedlisk Natura 2000 mogą wiązać się z wymogami oceny oddziaływania na środowisko i ograniczeniami w zabudowie nieznanego zakresu do czasu konsultacji z RDOŚ.",
+      "MPZP określa przeznaczenie terenu, ale jego ustalenia pozostają nieznane. Jeśli plan przewiduje tereny niebudowlane lub funkcje niezgodne z planowanym użytkowaniem, zakup może nie spełnić Twoich oczekiwań."
+    ],
+    "model": "claude-haiku-4-5-20251001",
+    "odrzucone": 0
+  }
+}

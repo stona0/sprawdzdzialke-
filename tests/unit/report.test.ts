@@ -63,6 +63,7 @@ function makeData(over: Partial<ReportData> = {}): ReportData {
     gesut: { energia: { distanceM: 0, crosses: true }, woda: { distanceM: 12, crosses: false }, kanalizacja: { distanceM: null, crosses: false }, gaz: { distanceM: null, crosses: false } },
     gesutStatus: 'ok',
     osm: null,
+    powerLines: null,
     sip: null,
     utilityMapUrl: null,
     findings,
@@ -159,6 +160,21 @@ describe('HTML raportu', () => {
     expect(html).toContain('Źródła danych i ich status')
     expect(html).toContain('źródło niedostępne')
     expect(html).toContain('Brak obowiązującego planu ogólnego gminy')
+  })
+
+  it('linie z BDOT10k zastępują blok OSM: klasa, odległość, data danych powiatu', () => {
+    const d = makeData({
+      powerLines: {
+        lines: [{ klasa: 'HV', distanceM: 0, crosses: true, status: null }, { klasa: 'MV', distanceM: 3, crosses: false, status: null }],
+        pipelines: [], radiusM: 300, dataDate: '2023-11-08', datasetVersion: 'v1',
+      },
+    })
+    const html = buildReportHtml(d, { rekomendacje: [], ryzyka: [], model: null, odrzucone: 0 })
+    expect(html).toContain('Linie napowietrzne i rurociągi w BDOT10k')
+    expect(html).toContain('Linia wysokiego napięcia (110 kV)')
+    expect(html).toContain('przez działkę')
+    expect(html).toContain('dane powiatu z 8.11.2023')
+    expect(html).not.toContain('OpenStreetMap: źródło niedostępne')
   })
 
   it('esc', () => {

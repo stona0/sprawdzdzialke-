@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<gml:FeatureCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ot="urn:gugik:specyfikacje:gmlas:bazaDanychObiektowTopograficznych10k:2.0" gml:id="GUGiK_OT_SULN_L" xsi:schemaLocation="urn:gugik:specyfikacje:gmlas:bazaDanychObiektowTopograficznych10k:2.0 ../XSD/BDOT10k_BDOO.xsd">
+	<gml:featureMember>
+		<ot:OT_SULN_L gml:id="id_276596F5-8895-332E-E053-CA2BA8C08151">
+			<ot:lokalnyId>276596F5-8895-332E-E053-CA2BA8C08151</ot:lokalnyId>
+			<ot:przestrzenNazw>PL.PZGiK.337.BDOT10k</ot:przestrzenNazw>
+			<ot:wersja>2023-12-31T12:00:00</ot:wersja>
+			<ot:poczatekWersjiObiektu>2023-12-31T12:00:00</ot:poczatekWersjiObiektu>
+			<ot:oznaczenieZmiany>GI-TOPO.600.116.2023</ot:oznaczenieZmiany>
+			<ot:zrodloDanychGeometrycznych>ortofotomapa</ot:zrodloDanychGeometrycznych>
+			<ot:kategoriaIstnienia>eksploatowany</ot:kategoriaIstnienia>
+			<ot:kodKarto10k>0010_444</ot:kodKarto10k>
+			<ot:geometria>
+				<gml:Curve gml:id="id-e3b73b61-6ff8-46ea-8eb9-f11dfc566366-0" srsName="EPSG:2180" srsDimension="2">
+					<gml:segments>
+						<gml:LineStringSegment>
+							<gml:posList>376500.40 368526.93 376487.82 368491.04 376366.60 368145.15</gml:posList>
+						</gml:LineStringSegment>
+					</gml:segments>
+				</gml:Curve>
+			</ot:geometria>
+			<ot:rodzaj>linia elektroenergetyczna średniego napięcia</ot:rodzaj>
+		</ot:OT_SULN_L>
+	</gml:featureMember>
+	<gml:featureMember>
+		<ot:OT_SULN_L gml:id="id_276596F5-981E-332E-E053-CA2BA8C08151">
+			<ot:lokalnyId>276596F5-981E-332E-E053-CA2BA8C08151</ot:lokalnyId>
+			<ot:przestrzenNazw>PL.PZGiK.337.BDOT10k</ot:przestrzenNazw>
+			<ot:wersja>2023-12-31T12:00:00</ot:wersja>
+			<ot:poczatekWersjiObiektu>2023-12-31T12:00:00</ot:poczatekWersjiObiektu>
+			<ot:oznaczenieZmiany>GI-TOPO.600.116.2023</ot:oznaczenieZmiany>
+			<ot:zrodloDanychGeometrycznych>ortofotomapa</ot:zrodloDanychGeometrycznych>
+			<ot:kategoriaIstnienia>eksploatowany</ot:kategoriaIstnienia>
+			<ot:kodKarto10k>0010_446</ot:kodKarto10k>
+			<ot:geometria>
+				<gml:Curve gml:id="id-c5c3c728-4b8d-4d7b-9bd6-4533f0cd29b9-0" srsName="EPSG:2180" srsDimension="2">
+					<gml:segments>
+						<gml:LineStringSegment>
+							<gml:posList>344393.12 358525.95 344707.91 358486.03 345025.76 358450.15 345313.53 358415.26 345631.93 358377.85 345950.00 358336.89 346266.73 358300.44 346585.32 358261.10 346894.61 358223.62 347210.33 358184.28 347500.38 358115.40 347800.86 358044.15 347982.06 358001.11 348124.41 357967.75 348299.03 357927.00 348473.31 357885.15 348647.41 357844.67 348822.43 357803.11 348992.17 357761.98 349159.76 357723.78 349315.69 357686.44 349500.81 357641.95 349677.52 357600.61 349871.72 357553.40 350009.34 357521.67 350195.52 357478.49 350352.60 357441.23 350491.86 357406.97 350650.65 357369.70 350828.62 357326.85 350966.38 357293.81 351091.19 357265.34 351214.15 357235.51 351375.66 357199.25 351589.39 357147.60 351816.20 357092.53 351997.37 357052.55 352178.43 357008.40 352380.28 356959.33 352560.54 356917.35 352718.26 356879.44 352819.40 356852.68 352927.69 356823.36 353046.14 356790.81 353180.26 356756.05 353303.86 356721.43 353429.89 356690.44 353537.11 356661.49 353674.73 356621.72 353792.47 356589.82 353960.41 356544.61 354129.22 356500.26 354417.26 356423.23 354724.41 356339.26 355012.66 356260.72 355184.60 356213.82 355369.03 356165.17 355669.44 356085.40 355965.21 356005.50 356258.90 355926.66 356353.08 356203.42 356448.02 356488.24 356548.54 356776.35 356627.06 357014.27 356706.15 357240.74 356887.56 357282.69</gml:posList>
+						</gml:LineStringSegment>
+					</gml:segments>
+				</gml:Curve>
+			</ot:geometria>
+			<ot:rodzaj>linia elektroenergetyczna wysokiego napięcia</ot:rodzaj>
+		</ot:OT_SULN_L>
+	</gml:featureMember>
+	<gml:featureMember>
+		<ot:OT_SULN_L gml:id="id_TEST-NIEZNANY-RODZAJ">
+			<ot:lokalnyId>TEST-NIEZNANY-RODZAJ</ot:lokalnyId>
+			<ot:przestrzenNazw>PL.PZGiK.337.BDOT10k</ot:przestrzenNazw>
+			<ot:wersja>2023-12-31T12:00:00</ot:wersja>
+			<ot:poczatekWersjiObiektu>2023-12-31T12:00:00</ot:poczatekWersjiObiektu>
+			<ot:oznaczenieZmiany>GI-TOPO.600.116.2023</ot:oznaczenieZmiany>
+			<ot:zrodloDanychGeometrycznych>ortofotomapa</ot:zrodloDanychGeometrycznych>
+			<ot:kategoriaIstnienia>eksploatowany</ot:kategoriaIstnienia>
+			<ot:kodKarto10k>0010_444</ot:kodKarto10k>
+			<ot:geometria>
+				<gml:Curve gml:id="id-e3b73b61-6ff8-46ea-8eb9-f11dfc566366-0" srsName="EPSG:2180" srsDimension="2">
+					<gml:segments>
+						<gml:LineStringSegment>
+							<gml:posList>376500.40 368526.93 376487.82 368491.04 376366.60 368145.15</gml:posList>
+						</gml:LineStringSegment>
+					</gml:segments>
+				</gml:Curve>
+			</ot:geometria>
+			<ot:rodzaj>linia telekomunikacyjna</ot:rodzaj>
+		</ot:OT_SULN_L>
+	</gml:featureMember>
+</gml:FeatureCollection>

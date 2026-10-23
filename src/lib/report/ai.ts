@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { NETWORKS, type Network } from '../sources/gesut'
 import { SCENARIO_LABEL } from '../sources/isok'
+import { LINE_LABEL } from '../sources/power-lines'
 import type { Pog } from '../pog'
 import type { ReportData } from './collect'
 
@@ -94,7 +95,15 @@ function rawFacts(d: ReportData): Record<FactKey, unknown> {
     przyroda,
     uzbrojenie: {
       kiut,
-      osm_linie_energetyczne: d.osm ? d.osm.power.slice(0, 3).map(p => `${p.kind}${p.voltage ? ` ${p.voltage} V` : ''}, ${p.distanceM} m`) : BRAK,
+      ...(d.powerLines
+        ? {
+          linie_napowietrzne_bdot10k: d.powerLines.lines.length
+            ? d.powerLines.lines.slice(0, 4).map(l => `${LINE_LABEL[l.klasa]}: ${l.crosses ? 'przebiega przez działkę' : `${l.distanceM} m od granicy działki`}`)
+            : `brak linii SN/WN/NN w promieniu ${d.powerLines.radiusM} m`,
+          rurociagi_bdot10k: d.powerLines.pipelines.slice(0, 3).map(p => `rurociąg ${p.rodzaj ?? ''}: ${p.crosses ? 'przebiega przez działkę' : `${p.distanceM} m od granicy działki`}`),
+          zakres_bdot10k: 'tylko linie napowietrzne SN i wyższe oraz rurociągi; bez linii niskiego napięcia i kabli',
+        }
+        : { osm_linie_energetyczne: d.osm ? d.osm.power.slice(0, 3).map(p => `${p.kind}${p.voltage ? ` ${p.voltage} V` : ''}, ${p.distanceM} m`) : BRAK }),
     },
     ustalenia: d.findings.map(f => f.text),
   }

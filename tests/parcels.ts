@@ -17,6 +17,8 @@ export interface TestParcel {
     /** Działka w OUZ projektu planu ogólnego (gmina bez planu w mocy). */
     draftOuz?: boolean
     verdict?: string
+    /** Klasa najbliższej linii z BDOT10k, która przecina działkę (sprawdzane, gdy ustawiono POWER_LINES_URL). */
+    powerLineCrosses?: 'EHV' | 'HV' | 'MV'
     flood?: string[]
     natureOnParcel?: boolean
     gesut?: 'ok' | 'not_covered'
@@ -78,6 +80,16 @@ export const TEST_PARCELS: TestParcel[] = [
     id: '101408_2.0021.44/2', slug: 'sieradz-projekt-pog',
     opis: 'Gmina bez planu w mocy, projekt planu ogólnego w RU — OUZ w projekcie (informacyjnie)',
     expect: { gminaContains: 'Sieradz', pogInForce: false, draftOuz: true, verdict: 'wz_niemozliwe_brak_pog' },
+  },
+  {
+    id: '022307_4.0003.541', slug: 'sobotka-linia-110kv',
+    opis: 'Działka pod napowietrzną linią 110 kV (BDOT10k), obok linia SN',
+    expect: { gminaContains: 'Sobótka', powerLineCrosses: 'HV' },
+  },
+  {
+    id: '126104_9.0078.270', slug: 'krakow-podgorze-linia-nn',
+    opis: 'Działka pod linią najwyższego napięcia 220–400 kV (BDOT10k)',
+    expect: { gminaContains: 'Kraków', powerLineCrosses: 'EHV' },
   },
   {
     id: '126105_9.0001.580/4', slug: 'krakow-stare-miasto',

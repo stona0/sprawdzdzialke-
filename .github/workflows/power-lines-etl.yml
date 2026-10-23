@@ -1,0 +1,30 @@
+# Comiesięczne odświeżenie kafli linii elektroenergetycznych i rurociągów z BDOT10k.
+# Nie robi nic, dopóki w ustawieniach repozytorium nie ma zmiennej POWER_LINES_ETL=on
+# oraz sekretów ETL_SUPABASE_URL i ETL_SUPABASE_SERVICE_ROLE_KEY (projekt docelowy).
+# ETL pobiera ~380 paczek powiatowych (~11 GB) — każda jest usuwana po przetworzeniu.
+name: ETL linii energetycznych (BDOT10k)
+
+on:
+  schedule:
+    - cron: '0 3 5 * *' # 5. dnia miesiąca, 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  etl:
+    if: vars.POWER_LINES_ETL == 'on'
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Pobranie i przetworzenie BDOT10k
+        run: npm run etl:power-lines -- --out data/power-lines --concurrency 4
+      - name: Wgranie do Storage (najpierw kafle, na końcu current.json)
+        run: npm run etl:power-lines:upload -- --dir data/power-lines --yes
+        env:
+          ETL_SUPABASE_URL: ${{ secrets.ETL_SUPABASE_URL }}
+          ETL_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.ETL_SUPABASE_SERVICE_ROLE_KEY }}
