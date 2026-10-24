@@ -113,6 +113,6 @@ export const article: BlogArticle = {
 <li><strong>Księgę wieczystą</strong> — stan prawny (<a href="/blog/ksiega-wieczysta-dzialki-jak-sprawdzic">jak sprawdzić KW?</a>)</li>
 </ol>
 
-<p>Najszybciej sprawdzisz to na <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> — raport AI w 60 sekund obejmuje przeznaczenie w MPZP lub planie ogólnym, ocenę możliwości zabudowy i rekomendacje. Pierwszy raport darmowy.</p>
+<p>Najszybciej sprawdzisz to na <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> — raport, gotowy zwykle w mniej niż minutę, obejmuje przeznaczenie w MPZP lub planie ogólnym, ocenę możliwości zabudowy i rekomendacje. Pierwszy raport darmowy.</p>
 `
 };

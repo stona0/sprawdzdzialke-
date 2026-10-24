@@ -125,6 +125,6 @@ export const article: BlogArticle = {
 
 <p>Sprawdzenie księgi wieczystej to <strong>10 minut, które mogą uchronić przed wielotysięczną stratą</strong>. Pamiętaj: ogłoszenie sprzedaży to nie dokument prawny — tylko KW i MPZP dają pełny obraz.</p>
 
-<p>Chcesz kompleksowo zweryfikować działkę — KW, MPZP, media, strefy ochronne? <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> generuje pełny raport z rekomendacjami AI w 60 sekund. Pierwszy raport za darmo.</p>
+<p>Chcesz kompleksowo zweryfikować działkę — KW, MPZP, media, strefy ochronne? <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> generuje pełny raport z rekomendacjami AI, zwykle w mniej niż minutę. Pierwszy raport za darmo.</p>
 `
 };

@@ -18,7 +18,7 @@ export const homepageFaqs: FaqItem[] = [
   {
     question: 'Jak szybko dostanę raport?',
     answer:
-      'Raport generowany jest automatycznie w 30–60 sekund. System odpytuje rejestry publiczne w czasie rzeczywistym i analizuje dane za pomocą AI.',
+      'Zwykle w mniej niż minutę. System odpytuje rejestry publiczne i analizuje dane za pomocą AI. Jeśli któryś rejestr chwilowo nie odpowiada, zapytania są automatycznie ponawiane — wtedy może to potrwać kilka minut, a raport pojawi się w Twoim koncie, gdy będzie gotowy.',
   },
   {
     question: 'Dla jakich gmin działa usługa?',

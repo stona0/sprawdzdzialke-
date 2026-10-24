@@ -4,7 +4,7 @@ export const article: BlogArticle = {
   slug: 'jak-odczytac-numer-dzialki-ewidencyjnej',
   title: 'Jak odczytać numer działki ewidencyjnej? Kompletny przewodnik [2025]',
   metaTitle: 'Jak odczytać numer działki ewidencyjnej? Kompletny przewodnik',
-  metaDescription: 'Numer działki ewidencyjnej to klucz do wszystkich informacji o gruncie. Dowiedz się, jak go czytać, gdzie znaleźć i jak sprawdzić pełny raport działki online w 60 sekund.',
+  metaDescription: 'Numer działki ewidencyjnej to klucz do wszystkich informacji o gruncie. Dowiedz się, jak go czytać, gdzie znaleźć i jak sprawdzić działkę online w jednym raporcie.',
   excerpt: 'Numer działki ewidencyjnej to precyzyjny adres gruntowy, dzięki któremu urzędy, sądy i aplikacje potrafią jednoznacznie zidentyfikować każdą parcelę w Polsce. Sprawdź jak go odczytać i co z nim zrobić.',
   publishedAt: '2025-06-15',
   readingTime: 7,
@@ -148,13 +148,13 @@ export const article: BlogArticle = {
 <li><strong>Dostęp do drogi</strong> — czy działka ma bezpośredni dostęp do drogi publicznej</li>
 </ul>
 
-<p>Tradycyjnie zebranie tych danych zajmuje kilka dni i wymaga wizyt w kilku urzędach. Dzisiaj możesz to zrobić w 60 sekund.</p>
+<p>Tradycyjnie zebranie tych danych zajmuje kilka dni i wymaga wizyt w kilku urzędach. Dzisiaj podstawowe dane zbierzesz online, zwykle w mniej niż minutę.</p>
 
-<h2>Sprawdź działkę online w minutę</h2>
+<h2>Sprawdź działkę online</h2>
 
 <p><a href="https://sprawdzdzialke.com"><strong>SprawdzDziałkę.com</strong></a> to narzędzie, które automatycznie pobiera dane z publicznych rejestrów (GUGiK, GDOŚ, ISOK, MPZP) i generuje pełny raport AI dla dowolnej działki w Polsce.</p>
 
-<p>Wystarczy wpisać numer działki wraz z obrębem — aplikacja sama rozpoznaje format, pobiera dane i w mniej niż minutę dostarcza raport z:</p>
+<p>Wystarczy wpisać numer działki wraz z obrębem — aplikacja sama rozpoznaje format, pobiera dane i zwykle w mniej niż minutę dostarcza raport z:</p>
 
 <ul>
 <li>Danymi ewidencyjnymi: obręb, gmina, powierzchnia z obrysu działki (bez danych właściciela — raport nie zastępuje wypisu z ewidencji)</li>

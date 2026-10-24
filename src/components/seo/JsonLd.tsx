@@ -12,7 +12,7 @@ export function WebApplicationJsonLd() {
     name: 'SprawdzDziałkę.com',
     url: 'https://sprawdzdzialke.com',
     description:
-      'Narzędzie do analizy działek budowlanych w Polsce. Raport planistyczny w 60 sekund — MPZP, media, strefy Natura 2000 i rekomendacje AI.',
+      'Narzędzie do analizy działek budowlanych w Polsce. Raport planistyczny zwykle w mniej niż minutę — MPZP, plan ogólny, media, strefy Natura 2000 i rekomendacje AI.',
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web',
     browserRequirements: 'Requires JavaScript',
@@ -40,7 +40,7 @@ export function WebApplicationJsonLd() {
       'Ochrona przyrody — Natura 2000, parki, rezerwaty',
       'Zagrożenie powodziowe ISOK',
       'Rekomendacje i ryzyka AI (Claude) z podstawą w danych',
-      'Raport w 60 sekund',
+      'Raport zwykle w mniej niż minutę',
     ],
     creator: {
       '@type': 'Organization',

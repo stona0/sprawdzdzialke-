@@ -106,7 +106,7 @@ export default function RegisterPage() {
             Utwórz konto
           </h1>
           <p className="text-sm text-gray-500 mb-8">
-            Dołącz i sprawdź swoją działkę w 60 sekund
+            Dołącz i sprawdź swoją działkę przed zakupem
           </p>
 
           {/* Zgoda obejmuje oba sposoby rejestracji, dlatego stoi nad przyciskiem Google */}

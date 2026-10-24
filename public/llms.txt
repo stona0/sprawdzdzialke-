@@ -1,10 +1,10 @@
 # SprawdzDziałkę.com
 
-> Narzędzie do analizy działek budowlanych w Polsce. Raport planistyczny w 60 sekund.
+> Narzędzie do analizy działek budowlanych w Polsce. Raport planistyczny zwykle w mniej niż minutę.
 
 ## Co robimy
 
-SprawdzDziałkę.com generuje automatyczne raporty planistyczne dla działek budowlanych w Polsce. Użytkownik podaje identyfikator EGB działki, a system w ciągu 30–60 sekund pobiera dane z oficjalnych rejestrów publicznych i generuje kompletny raport zawierający:
+SprawdzDziałkę.com generuje automatyczne raporty planistyczne dla działek budowlanych w Polsce. Użytkownik podaje identyfikator EGB działki, a system — zwykle w mniej niż minutę — pobiera dane z oficjalnych rejestrów publicznych i generuje kompletny raport zawierający:
 
 - Ocena możliwości zabudowy według przepisów obowiązujących od 1.09.2026 (MPZP, plan ogólny, obszar uzupełnienia zabudowy)
 - Dane ewidencyjne działki (obręb, powiat, powierzchnia) z ULDK GUGiK

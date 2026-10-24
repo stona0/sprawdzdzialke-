@@ -615,6 +615,16 @@ Ustalenia, które zmieniły treść względem założeń:
 - **Supabase nie jest w UE.** Produkcja i staging stoją w regionie `eu-central-2`, czyli w Zurychu (Szwajcaria, decyzja KE o adekwatności). Polityka podaje Szwajcarię.
 - **Baner cookies nie jest potrzebny.** Serwis nie ma analityki ani Stripe.js, a strony publiczne nie ustawiają cookies. Po zalogowaniu działają tylko `sb-<ref>-auth-token` (sesja, do 400 dni) i `…-code-verifier` (PKCE). To cookies niezbędne, zwolnione ze zgody (art. 399 PKE). Jeśli dojdzie analityka, baner zgody stanie się konieczny.
 
+### Czas generowania: pomiar i obietnica
+Strona obiecywała trzy różne czasy: „w 60 sekund” (tytuł, hero, OG, rejestracja, 7 artykułów), „30–60 s” (FAQ, llms.txt) i „kilka minut” (payment-success). Pomiar z 24.10.2026: `scripts/generate-sample-reports.mts`, 8 działek z różnych gmin, bez trwałego cache, Haiku 5.5 z klucza stagingu. Mierzy zbieranie danych, AI i HTML, bez kolejki i odpytywania statusu co 3 s.
+
+| Działka | Czas |
+|---|---|
+| Wrocław Stare Miasto | 20,6 s (w tym 15 s timeoutu Overpass, potem bezpiecznik) |
+| Kłodzko, Długołęka, Batorz, Milicz, Siechnice, Radom, Sobótka | 7,1–8,2 s |
+
+Wszędzie AI odpowiedziało. Obietnica brzmi teraz „zwykle w mniej niż minutę”, a FAQ dodaje, że przy awarii rejestru ponowienia mogą trwać kilka minut (kolejka: 15/60/180 s). Tak samo pisze sesja UI. Do zmiany po scaleniu `ui/redesign` zostały: hero w `HomePageContent.tsx` i CTA w `blog/page.tsx` oraz `blog/[slug]`.
+
 ### Otwarte blokery (po stronie właściciela)
 1. **Weryfikacja regulaminu i polityki przez prawnika**, potem `LEGAL_DRAFT = false` i usunięcie uwag `DraftNote`.
 2. **Potwierdzenie umowy na trwałym nośniku.** Wyłączenie prawa odstąpienia (art. 38 ust. 1 pkt 13 upk) wymaga przesłania konsumentowi potwierdzenia ze zgodą, np. e-mailem. Serwis nie ma dostawcy poczty transakcyjnej, a e-mail od Stripe nie zawiera treści zgody. Bez tego zgoda zbierana przed płatnością może nie wyłączyć prawa odstąpienia.

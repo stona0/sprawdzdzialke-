@@ -123,7 +123,7 @@ export const article: BlogArticle = {
 <li><strong>Wypis i wyrys z MPZP</strong> — oficjalny dokument z urzędu gminy</li>
 </ul>
 
-<p>Najszybszą opcją jest <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> — wpisujesz numer działki i w 60 sekund dostajesz pełny raport z analizą MPZP, stref ochronnych, mediów i rekomendacjami AI. Pierwszy raport jest darmowy.</p>
+<p>Najszybszą opcją jest <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> — wpisujesz numer działki i zwykle w mniej niż minutę dostajesz pełny raport z analizą MPZP, stref ochronnych, mediów i rekomendacjami AI. Pierwszy raport jest darmowy.</p>
 
 <p>Szczegółowy poradnik krok po kroku znajdziesz w artykule <a href="/blog/jak-sprawdzic-mpzp-dzialki">Jak sprawdzić MPZP działki?</a></p>
 `

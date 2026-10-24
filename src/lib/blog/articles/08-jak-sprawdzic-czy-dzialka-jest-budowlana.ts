@@ -85,7 +85,7 @@ export const article: BlogArticle = {
 
 <h2>Sposób 5: Automatyczny raport online</h2>
 
-<p>Najszybsza metoda — <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> weryfikuje w 60 sekund:</p>
+<p>Najszybsza metoda — <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> weryfikuje, zwykle w mniej niż minutę:</p>
 <ul>
 <li>Czy działka jest objęta MPZP i jakie jest przeznaczenie</li>
 <li>Parametry zabudowy z planu ogólnego gminy (jeśli gmina go opublikowała)</li>
