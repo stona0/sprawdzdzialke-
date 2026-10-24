@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import HomePageContent from './HomePageContent'
 import { FAQSection } from '@/components/seo/FAQ'
+import { SiteFooter } from '@/components/layout/SiteFooter'
 
 export const metadata: Metadata = {
   // Title uses root layout default (58 chars) — no explicit title here
@@ -17,6 +18,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <HomePageContent />
       <FAQSection />
+      <SiteFooter />
     </div>
   )
 }

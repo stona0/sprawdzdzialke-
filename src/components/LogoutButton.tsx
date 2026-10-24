@@ -17,8 +17,9 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
+      className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-red-600 transition-colors cursor-pointer"
       title="Wyloguj się"
+      aria-label="Wyloguj się"
     >
       <LogOut className="h-4 w-4" />
       <span className="hidden sm:inline">Wyloguj</span>

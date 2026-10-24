@@ -16,50 +16,15 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   return (
     <div className="min-h-screen bg-white font-sans">
-      {/* NAV — reuse from homepage or import shared nav */}
-      <nav className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-lg font-bold tracking-tight text-gray-900"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
-            Sprawdź<span className="text-green-700">Działkę</span>.com
-          </Link>
-          <div
-            className="hidden md:flex items-center gap-8 text-gray-700"
-            style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem' }}
-          >
-            <Link href="/blog" className="text-green-700 font-medium">
-              Blog
-            </Link>
-            <Link href="/pricing" className="hover:text-gray-900 transition-colors">
-              Cennik
-            </Link>
-            <Link href="/login" className="hover:text-gray-900 transition-colors">
-              Zaloguj się
-            </Link>
-          </div>
-          <Link
-            href="/register"
-            className="bg-gray-900 text-white text-sm px-5 py-2 rounded-full hover:bg-gray-700 transition-colors"
-            style={{ fontFamily: 'var(--font-playfair)' }}
-          >
-            Zacznij za darmo
-          </Link>
-        </div>
-      </nav>
-
       {/* HEADER */}
       <section className="pt-28 pb-12 px-6 bg-gradient-to-b from-green-50/50 to-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1
-            className="text-4xl md:text-5xl text-gray-900 tracking-tight"
-            style={{ fontFamily: 'var(--font-playfair)', fontWeight: 700 }}
+            className="text-4xl md:text-5xl text-gray-900 tracking-tight font-playfair font-bold"
           >
             Blog
           </h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto" style={{ fontFamily: 'var(--font-playfair)' }}>
+          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto font-playfair">
             Praktyczne poradniki o zakupie działek, planowaniu przestrzennym
             i wszystkim co musisz wiedzieć przed inwestycją w nieruchomość.
           </p>
@@ -93,8 +58,7 @@ export default function BlogPage() {
                       </span>
                     </div>
                     <h2
-                      className="text-xl font-semibold text-gray-900 group-hover:text-green-700 transition-colors"
-                      style={{ fontFamily: 'var(--font-playfair)' }}
+                      className="text-xl font-semibold text-gray-900 group-hover:text-green-700 transition-colors font-playfair"
                     >
                       {article.title}
                     </h2>
@@ -122,8 +86,7 @@ export default function BlogPage() {
       <section className="pb-20 px-6">
         <div className="max-w-4xl mx-auto bg-gray-900 rounded-2xl p-8 md:p-12 text-center">
           <h2
-            className="text-2xl md:text-3xl text-white"
-            style={{ fontFamily: 'var(--font-playfair)', fontWeight: 700 }}
+            className="text-2xl md:text-3xl text-white font-playfair font-bold"
           >
             Sprawdź swoją działkę w 60 sekund
           </h2>
@@ -132,8 +95,7 @@ export default function BlogPage() {
           </p>
           <Link
             href="/register"
-            className="inline-block mt-6 bg-green-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-500 transition-colors"
-            style={{ fontFamily: 'var(--font-playfair)' }}
+            className="inline-block mt-6 bg-green-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-500 transition-colors font-playfair"
           >
             Pierwszy raport za darmo →
           </Link>

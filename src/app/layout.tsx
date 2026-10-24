@@ -1,18 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Playfair_Display } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { WebApplicationJsonLd, OrganizationJsonLd } from "@/components/seo/JsonLd";
 
+// latin-ext: polskie znaki (ą, ę, ł, ż…) z tego samego kroju, nie z zapasowego
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
+// identyfikatory działek (font-mono)
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin", "latin-ext"],
+});
+
+// Font zmienny (400–900): obejmuje też font-semibold używane w nagłówkach
 const playfair = Playfair_Display({
   variable: "--font-playfair",
-  subsets: ["latin-ext"],
-  weight: ["400", "700", "800", "900"],
+  subsets: ["latin", "latin-ext"],
   style: ["normal", "italic"],
 });
 
@@ -80,7 +87,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${geistSans.variable} ${playfair.variable} h-full antialiased`}>
+    <html lang="pl" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         {/* Structured data — JSON-LD (global, renderowane raz) */}
         <WebApplicationJsonLd />

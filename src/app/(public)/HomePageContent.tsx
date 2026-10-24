@@ -1,62 +1,11 @@
-'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
-import { MapPin, FileText, Shield, Zap, ChevronRight, Check, Menu, X } from 'lucide-react'
+import { MapPin, FileText, Shield, Zap, ChevronRight, Check } from 'lucide-react'
+import { SiteHeader } from '@/components/layout/SiteHeader'
 
 export default function HomePageContent() {
-  const [menuOpen, setMenuOpen] = useState(false)
-
   return (
     <>
-      {/* ── NAV ─────────────────────────────────────────────────────────────── */}
-      <nav className="fixed top-0 inset-x-0 z-50 bg-transparent">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="text-lg font-bold tracking-tight text-gray-900 font-playfair">
-            Sprawdź<span className="text-green-700">Działkę</span>.com
-          </span>
-
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8 text-gray-700">
-            <a href="#funkcje" className="hover:text-gray-900 transition-colors">Funkcje</a>
-            <Link href="/pricing" className="hover:text-gray-900 transition-colors">Cennik</Link>
-            <a href="#faq" className="hover:text-gray-900 transition-colors">FAQ</a>
-            <Link href="/blog" className="hover:text-gray-900 transition-colors">Blog</Link>
-            <Link href="/login" className="hover:text-gray-900 transition-colors">Zaloguj się</Link>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href="/register"
-              className="bg-gray-900 text-white text-sm px-5 py-2 rounded-full hover:bg-gray-700 transition-colors"
-            >
-              Zacznij za darmo
-            </Link>
-
-            {/* Hamburger — mobile only */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 text-gray-700 hover:text-gray-900 transition-colors"
-              aria-label="Menu"
-            >
-              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile menu dropdown */}
-        {menuOpen && (
-          <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-lg">
-            <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-3">
-              <a href="#funkcje" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">Funkcje</a>
-              <Link href="/pricing" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">Cennik</Link>
-              <a href="#faq" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">FAQ</a>
-              <Link href="/blog" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">Blog</Link>
-              <Link href="/login" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-gray-900 py-2 text-base transition-colors">Zaloguj się</Link>
-            </div>
-          </div>
-        )}
-      </nav>
+      <SiteHeader overlay />
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
       <section
@@ -243,7 +192,7 @@ export default function HomePageContent() {
       <section id="funkcje" className="max-w-6xl mx-auto px-6 py-24">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight font-playfair">
-            Wszystko co potrzebujesz<br />
+            Wszystko, czego potrzebujesz<br />
             <span className="text-green-600">przed zakupem działki.</span>
           </h2>
           <p className="mt-4 text-gray-500 text-lg max-w-xl mx-auto">
@@ -253,8 +202,8 @@ export default function HomePageContent() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { icon: <MapPin className="w-6 h-6" />, color: 'bg-green-50 text-green-600', title: 'MPZP i zabudowa', desc: 'Przeznaczenie terenu, max wysokość, PBC — prosto z aktualnej uchwały gminy.' },
-            { icon: <Shield className="w-6 h-6" />, color: 'bg-blue-50 text-blue-600', title: 'Strefy i ochrona', desc: 'Natura 2000, parki krajobrazowe, strefy zalewowe ISOK — auto wykrywane.' },
+            { icon: <MapPin className="w-6 h-6" />, color: 'bg-green-50 text-green-600', title: 'MPZP i zabudowa', desc: 'Czy działkę obejmuje plan miejscowy lub plan ogólny gminy i jakie przeznaczenie terenu z niego wynika.' },
+            { icon: <Shield className="w-6 h-6" />, color: 'bg-blue-50 text-blue-600', title: 'Strefy i ochrona', desc: 'Natura 2000, parki krajobrazowe i obszary zagrożenia powodzią (ISOK) sprawdzane dla granic działki.' },
             { icon: <Zap className="w-6 h-6" />, color: 'bg-amber-50 text-amber-600', title: 'Media i uzbrojenie', desc: 'Woda, kanalizacja, gaz, prąd. Dane z SIP gminy lub OpenStreetMap.' },
             { icon: <FileText className="w-6 h-6" />, color: 'bg-purple-50 text-purple-600', title: 'Rekomendacje AI', desc: 'Claude AI analizuje dane i wskazuje ryzyka inwestycyjne specyficzne dla działki.' },
           ].map(f => (
@@ -274,8 +223,8 @@ export default function HomePageContent() {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { step: '01', title: 'Wklej identyfikator', desc: 'Skopiuj identyfikator EGB z Geoportal.gov.pl i wklej w formularz.' },
-              { step: '02', title: 'Poczekaj 60 sekund', desc: 'System automatycznie odpytuje ULDK, GDOŚ, ISOK i analizuje dane przez AI.' },
-              { step: '03', title: 'Pobierz raport PDF', desc: 'Gotowy raport z rekomendacjami. Pokaż prawnikowi lub deweloperowi.' },
+              { step: '02', title: 'Poczekaj chwilę', desc: 'System odpytuje rejestry publiczne (ULDK, GDOŚ, ISOK, plany gminy) i przygotowuje podsumowanie AI.' },
+              { step: '03', title: 'Przeczytaj raport', desc: 'Raport otworzysz w przeglądarce — wydrukujesz go albo zapiszesz jako PDF. Pokaż go prawnikowi lub deweloperowi.' },
             ].map(s => (
               <div key={s.step} className="text-center">
                 <div className="w-14 h-14 rounded-2xl bg-green-600 text-white font-bold text-xl flex items-center justify-center mx-auto mb-4">{s.step}</div>
@@ -337,23 +286,6 @@ export default function HomePageContent() {
           Zacznij za darmo <ChevronRight className="w-4 h-4" />
         </Link>
       </section>
-
-      {/* ── FOOTER ───────────────────────────────────────────────────────────── */}
-      <footer className="bg-gray-900 border-t border-gray-800 py-8">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-gray-400 text-sm font-semibold font-playfair">
-            Sprawdź<span className="text-green-500">Działkę</span>.com
-          </span>
-          <div className="flex gap-6 text-xs text-gray-500">
-            <Link href="/pricing" className="hover:text-gray-300 transition-colors">Cennik</Link>
-            <Link href="/blog" className="hover:text-gray-300 transition-colors">Blog</Link>
-            <a href="#faq" className="hover:text-gray-300 transition-colors">FAQ</a>
-            <Link href="/login" className="hover:text-gray-300 transition-colors">Zaloguj się</Link>
-            <Link href="/register" className="hover:text-gray-300 transition-colors">Rejestracja</Link>
-          </div>
-          <span className="text-xs text-gray-600">© 2026 SprawdzDziałkę.com</span>
-        </div>
-      </footer>
     </>
   )
 }

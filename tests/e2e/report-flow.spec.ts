@@ -92,9 +92,9 @@ test('pełna ścieżka: logowanie → działka → darmowy raport → płatny ra
 
   // 3. Drugi raport wymaga płatności
   await page.goto('/dashboard')
-  await expect(page.getByText('Każdy raport kosztuje 29 PLN.')).toBeVisible()
+  await expect(page.getByText('Każdy raport kosztuje 29 zł.')).toBeVisible()
   await searchParcel(page, PAID_PARCEL)
-  await page.getByRole('button', { name: 'Kup raport — 29 PLN' }).click()
+  await page.getByRole('button', { name: 'Kup raport — 29 zł' }).click()
   await expect(page.getByRole('dialog').getByText('Kup raport – 29 zł')).toBeVisible()
   // Bez zgody na utratę prawa odstąpienia nie da się przejść do płatności
   const pay = page.getByRole('dialog').getByRole('button', { name: 'Zapłać 29 zł' })
@@ -134,6 +134,33 @@ test('pełna ścieżka: logowanie → działka → darmowy raport → płatny ra
   const paidReport = page.frameLocator('iframe')
   await expect(paidReport.getByText(/Dolina Baryczy/).first()).toBeVisible()
   await expect(paidReport.locator('.section-title', { hasText: 'Ochrona przyrody' })).toBeVisible()
+})
+
+test('moje raporty: „Zapłać” przy raporcie bez płatności, bez drugiej płatności za gotowy, „Spróbuj ponownie” przy błędzie', async ({ page }) => {
+  await login(page)
+  const insert = async (parcelId: string, gmina: string, status: string, paid: boolean) =>
+    (await mockSql<{ id: string }>(
+      'INSERT INTO reports (user_id, parcel_id, gmina, status, paid) VALUES ($1, $2, $3, $4, $5) RETURNING id', [USER.id, parcelId, gmina, status, paid]))[0].id
+  await insert(PAID_PARCEL, 'Milicz', 'pending', false)
+  const completed = await insert(PAID_PARCEL, 'Milicz', 'completed', true)
+  const failed = await insert(FREE_PARCEL, 'Długołęka', 'failed', true)
+  await page.goto('/dashboard')
+
+  // „Zapłać” otwiera ten sam dialog co przy nowym raporcie (bez sesji Stripe — klucz w e2e jest fałszywy)
+  const pendingItem = page.getByRole('listitem').filter({ hasText: 'Czeka na płatność' })
+  await pendingItem.getByRole('button', { name: 'Zapłać 29 zł' }).click()
+  await expect(page.getByRole('dialog')).toBeVisible()
+  await page.getByRole('button', { name: 'Anuluj' }).click()
+
+  // Serwer nie zaczyna płatności za raport, który już jest gotowy
+  const again = await page.request.post('/api/payments/create-checkout', { data: { reportId: completed } })
+  expect(again.status()).toBe(409)
+
+  // Ponowienie nieudanego raportu — bez opłaty, raport przechodzi przez kolejkę od nowa
+  await page.getByRole('listitem').filter({ hasText: 'Nie udało się' }).getByRole('button', { name: 'Spróbuj ponownie' }).click()
+  await page.waitForURL(`**/report/${failed}`)
+  expect((await waitForReport(failed)).status).toBe('completed')
+  expect((await mockDb()).report_jobs.find(j => j.report_id === failed)).toMatchObject({ status: 'done', free_slot: false })
 })
 
 /** Raport „w trakcie”, którego worker zginął: zadanie zajęte, dzierżawa już wygasła. */

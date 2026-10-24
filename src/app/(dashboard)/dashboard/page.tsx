@@ -1,9 +1,34 @@
 import { redirect } from 'next/navigation'
+import type { Metadata } from 'next'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
-import { FileText } from 'lucide-react'
+import { FileText, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import DashboardClient from '@/components/forms/DashboardClient'
-import LogoutButton from '@/components/LogoutButton'
+import { AppHeader } from '@/components/layout/AppHeader'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { PayButton } from '@/components/report/PayButton'
+import { RetryButton } from '@/components/report/RetryButton'
+import { describeParcelId } from '@/lib/parcel-label'
+import { REPORT_PRICE_LABEL } from '@/lib/pricing'
+import { resolveReportStatus } from '@/lib/report-status'
+
+export const metadata: Metadata = {
+  title: 'Moje raporty',
+  robots: { index: false },
+}
+
+interface ReportRow {
+  id: string
+  parcel_id: string
+  gmina: string
+  status: string
+  created_at: string
+}
+
+const dateFormat = new Intl.DateTimeFormat('pl-PL', {
+  day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Warsaw',
+})
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -19,99 +44,57 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .single()
 
-  const { data: reports } = await supabaseService
+  const { data: rows } = await supabaseService
     .from('reports')
-    .select('*')
+    .select('id, parcel_id, gmina, status, created_at')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
+
+  // Płatności przyjęte przez webhook — raport „pending” z taką płatnością nie dostaje przycisku „Zapłać”.
+  const { data: paidRows } = await supabaseService
+    .from('payments')
+    .select('report_id')
+    .eq('user_id', user.id)
+    .eq('status', 'paid')
+  const paidReports = new Set((paidRows ?? []).map(p => p.report_id as string))
+
+  // „W trakcie” może znaczyć porzucone generowanie — faktyczny stan liczy resolveReportStatus.
+  const reports: ReportRow[] = await Promise.all(
+    (rows ?? []).map(async r => (r.status === 'generating' ? { ...r, status: (await resolveReportStatus(supabaseService, r)).status } : r)),
+  )
 
   const hasFreeReport = (profile?.free_reports_used ?? 0) === 0
 
   return (
     <main className="min-h-screen bg-white">
+      <AppHeader email={user.email} isAdmin={profile?.role === 'admin'} />
 
-      {/* Nav */}
-      <nav className="border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-lg font-bold text-gray-900 font-playfair">
-            Sprawdź<span className="text-green-700">Działkę</span>.com
-          </Link>
-          <div className="flex items-center gap-4">
-            {profile?.role === 'admin' && (
-              <Link
-                href="/admin"
-                className="text-sm text-gray-500 hover:text-gray-800 transition-colors"
-              >
-                Panel admina
-              </Link>
-            )}
-            <span className="text-sm text-gray-400 hidden sm:block">
-              {user.email}
-            </span>
-            <LogoutButton />
-          </div>
-        </div>
-      </nav>
-
-      <div className="max-w-4xl mx-auto px-6 py-12 space-y-14">
-
-        {/* Header strony */}
+      <div className="mx-auto max-w-5xl space-y-14 px-4 py-10 sm:px-6 sm:py-12">
         <div>
-          <h1 className="text-4xl text-gray-900 font-playfair">
-            Sprawdź działkę
-          </h1>
-          <p className="mt-2 text-gray-500">
+          <h1 className="font-playfair text-3xl text-gray-900 sm:text-4xl">Sprawdź działkę</h1>
+          <p className="mt-2 text-muted-foreground">
             {hasFreeReport
               ? 'Masz 1 darmowy raport — skorzystaj teraz.'
-              : 'Każdy raport kosztuje 29 PLN.'}
+              : `Każdy raport kosztuje ${REPORT_PRICE_LABEL}.`}
           </p>
         </div>
 
-        {/* Wyszukiwarka */}
         <DashboardClient hasFreeReport={hasFreeReport} userId={user.id} />
 
-        {/* Lista raportów */}
-        <section>
-          <h2 className="text-2xl text-gray-900 mb-6 font-playfair">
-            Twoje raporty
-          </h2>
+        <section aria-labelledby="moje-raporty">
+          <h2 id="moje-raporty" className="mb-6 font-playfair text-2xl text-gray-900">Moje raporty</h2>
 
-          {!reports || reports.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 border border-dashed border-gray-200 rounded-2xl text-center">
-              <FileText className="h-10 w-10 text-gray-200 mb-4" />
-              <p className="text-gray-400">
-                Brak raportów — sprawdź swoją pierwszą działkę powyżej
-              </p>
+          {reports.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed py-16 text-center">
+              <FileText className="mb-4 h-10 w-10 text-gray-300" aria-hidden />
+              <p className="text-muted-foreground">Brak raportów — sprawdź swoją pierwszą działkę powyżej.</p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <ul className="space-y-3">
               {reports.map(report => (
-                <div
-                  key={report.id}
-                  className="flex items-center justify-between px-5 py-4 bg-white border border-gray-100 rounded-2xl hover:border-gray-200 hover:shadow-sm transition-all"
-                >
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800">
-                      {report.parcel_id}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      {report.gmina}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <StatusBadge status={report.status} />
-                    {report.status === 'completed' && (
-                      <Link
-                        href={`/report/${report.id}`}
-                        className="text-sm px-4 py-1.5 border border-gray-200 rounded-full text-gray-700 hover:bg-gray-50 transition-colors"
-                      >
-                        Zobacz raport
-                      </Link>
-                    )}
-                  </div>
-                </div>
+                <ReportItem key={report.id} report={report} paid={paidReports.has(report.id)} />
               ))}
-            </div>
+            </ul>
           )}
         </section>
       </div>
@@ -119,17 +102,67 @@ export default async function DashboardPage() {
   )
 }
 
-function StatusBadge({ status }: { status: string }) {
-  const map: Record<string, { label: string; className: string }> = {
-    completed: { label: 'Gotowy', className: 'text-green-700 bg-green-50 border border-green-200' },
-    generating: { label: 'Generuję…', className: 'text-blue-700 bg-blue-50 border border-blue-200' },
-    pending: { label: 'Oczekuje', className: 'text-yellow-700 bg-yellow-50 border border-yellow-200' },
-    failed: { label: 'Błąd', className: 'text-red-700 bg-red-50 border border-red-200' },
-  }
-  const s = map[status] ?? { label: status, className: 'text-gray-600 bg-gray-50 border border-gray-200' }
+function ReportItem({ report, paid }: { report: ReportRow; paid: boolean }) {
+  const { numer, obreb, arkusz } = describeParcelId(report.parcel_id)
   return (
-    <span className={`text-xs px-3 py-1 rounded-full font-medium ${s.className}`}>
-      {s.label}
-    </span>
+    <li className="flex flex-col gap-4 rounded-2xl border bg-card px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0">
+        <p className="font-medium text-gray-900">
+          Działka {numer}
+          {obreb && <span className="font-normal text-muted-foreground"> · obręb {obreb}{arkusz && `, ark. ${arkusz}`}</span>}
+        </p>
+        <p className="mt-0.5 text-sm text-muted-foreground">
+          {report.gmina} · <time dateTime={report.created_at}>{dateFormat.format(new Date(report.created_at))}</time>
+        </p>
+        <p className="mt-0.5 truncate font-mono text-xs text-muted-foreground" title={report.parcel_id}>{report.parcel_id}</p>
+      </div>
+      <div className="flex flex-wrap items-center gap-3 sm:shrink-0 sm:justify-end">
+        <ReportActions report={report} paid={paid} />
+      </div>
+    </li>
   )
+}
+
+function ReportActions({ report, paid }: { report: ReportRow; paid: boolean }) {
+  switch (report.status) {
+    case 'completed':
+      return (
+        <>
+          <Badge variant="success">Gotowy</Badge>
+          <Button asChild size="sm">
+            <Link href={`/report/${report.id}`}>Otwórz</Link>
+          </Button>
+        </>
+      )
+    case 'generating':
+      return (
+        <>
+          <Badge variant="muted"><Loader2 className="h-3 w-3 animate-spin" aria-hidden />W trakcie</Badge>
+          <Button asChild size="sm" variant="outline">
+            <Link href={`/report/${report.id}`}>Podgląd</Link>
+          </Button>
+        </>
+      )
+    case 'pending':
+      return paid ? (
+        <>
+          <Badge variant="warning">Płatność przyjęta</Badge>
+          <span className="text-sm text-muted-foreground">Raport ruszy po potwierdzeniu płatności.</span>
+        </>
+      ) : (
+        <>
+          <Badge variant="warning">Czeka na płatność</Badge>
+          <PayButton reportId={report.id} parcelId={report.parcel_id} gmina={report.gmina} />
+        </>
+      )
+    case 'failed':
+      return (
+        <>
+          <Badge variant="danger">Nie udało się</Badge>
+          <RetryButton reportId={report.id} />
+        </>
+      )
+    default:
+      return <Badge variant="muted">{report.status}</Badge>
+  }
 }

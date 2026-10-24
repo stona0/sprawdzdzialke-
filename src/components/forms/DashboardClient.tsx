@@ -3,8 +3,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
+import { Info, X } from 'lucide-react'
 import ParcelSearch from './ParcelSearch'
 import PaymentGate from '@/components/PaymentGate'
+import { GeneratingNotice } from '@/components/report/GeneratingNotice'
+import { goToCheckout } from '@/components/report/PayButton'
 import type { ParcelData } from '@/lib/geoportal'
 
 interface Props {
@@ -21,7 +24,9 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [generating, setGenerating] = useState(false)
+  const [startedAt, setStartedAt] = useState<number | null>(null)
   const [pendingPayment, setPendingPayment] = useState<PendingPayment | null>(null)
+  const [paymentCancelled, setPaymentCancelled] = useState(false)
   const pollAbortRef = useRef<AbortController | null>(null)
 
   // Cleanup polling on unmount
@@ -39,7 +44,7 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
       // Przekieruj na stronę raportu po chwili
       setTimeout(() => router.push(`/report/${reportId}`), 1500)
     } else if (payment === 'cancelled') {
-      toast.info('Płatność anulowana.')
+      setPaymentCancelled(true)
       window.history.replaceState({}, '', '/dashboard')
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -47,6 +52,7 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
   async function handleParcelFound(parcel: ParcelData) {
     if (generating) return
     setGenerating(true)
+    setStartedAt(Date.now())
 
     try {
       // 1. Kick off generation — zwraca natychmiast (unika 504)
@@ -133,43 +139,40 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
   async function handlePaymentConfirm() {
     if (!pendingPayment) return
 
-    const { parcel, reportId } = pendingPayment
+    if (await goToCheckout(pendingPayment.reportId, router) !== 'redirect') setPendingPayment(null)
+  }
 
-    const res = await fetch('/api/payments/create-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        parcelId: parcel.parcelId,
-        gmina: parcel.gmina,
-        reportId,
-        // przycisk płatności jest aktywny dopiero po zaznaczeniu zgody w PaymentGate
-        withdrawalConsent: true,
-      }),
-    })
-    const data = await res.json()
-
-    if (!res.ok) {
-      toast.error(data.error ?? 'Błąd systemu płatności')
-      setPendingPayment(null)
-      return
-    }
-
-    window.location.href = data.url
+  function handlePaymentCancel() {
+    setPendingPayment(null)
+    // Raport „czeka na płatność” jest już na liście — pokaż go.
+    router.refresh()
   }
 
   return (
-    <div>
+    <div className="space-y-4">
+      {paymentCancelled && (
+        <div className="flex items-start gap-3 rounded-2xl border bg-muted p-4 text-sm text-gray-900">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+          <p className="flex-1">
+            Płatność anulowana — nic nie zostało pobrane. Raport czeka na liście „Moje raporty”, możesz zapłacić później.
+          </p>
+          <button
+            type="button"
+            onClick={() => setPaymentCancelled(false)}
+            className="cursor-pointer rounded-full p-0.5 text-muted-foreground hover:text-gray-900"
+            aria-label="Zamknij komunikat"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
       <ParcelSearch
         onParcelFound={handleParcelFound}
         hasFreeReport={hasFreeReport}
       />
 
-      {generating && (
-        <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-500">
-          <div className="h-4 w-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
-          Generuję raport, proszę czekać…
-        </div>
-      )}
+      {generating && startedAt !== null && <GeneratingNotice startedAt={startedAt} />}
 
       {pendingPayment && (
         <PaymentGate
@@ -178,7 +181,7 @@ export default function DashboardClient({ hasFreeReport, userId }: Props) {
           gmina={pendingPayment.parcel.gmina}
           reportId={pendingPayment.reportId}
           onConfirm={handlePaymentConfirm}
-          onCancel={() => setPendingPayment(null)}
+          onCancel={handlePaymentCancel}
         />
       )}
     </div>

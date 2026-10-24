@@ -595,6 +595,60 @@ Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia
 
 **Nie sprawdzono:** pełnej ścieżki Google (wymaga konfiguracji właściciela i jego konta Google) ani resetu hasła z prawdziwym mailem.
 
+## UI i landing (23.10.2026)
+
+Gałąź `ui/redesign` (od `fix/autonomous-recovery`). Zakres: punkt 3 (poprawki UI) i porządki landingu z punktu 4. Przebudowa sekcji `#funkcje` i „Jak to działa” czeka na inspiracje właściciela.
+
+### Co było zepsute
+- **Brak tokenów shadcn.** `globals.css` miał tylko `--background` i `--foreground`, więc Tailwind nie generował `bg-primary`, `border-input`, `text-muted-foreground`, `animate-in` (0 wystąpień w zbudowanym CSS). Skutki: „Pobierz PDF” i „Wróć…” bez tła, ciemny tekst na zielonym „Zapłać”, niewidoczny separator, obramowania w `currentColor`, dialog bez animacji. Po zmianie wszystkie te klasy są w CSS.
+- **Fonty:** Geist bez `latin-ext`, Playfair bez wagi 600 (używanej wszędzie jako `font-semibold`), brak Geist Mono, więc `font-mono` nie był monospace.
+- **Toasty:** `sonner` czytał motyw z `next-themes` bez ThemeProvidera.
+
+### Zmiany
+- **Fundament.** Tokeny marki (primary `#15803d`, neutralne szarości Tailwind) i `tw-animate-css` 1.4.0. Przycisk `ui/Button` ma kształt pigułki jak reszta witryny i wariant `dark` (czarna pigułka z hero). `Badge` ma warianty statusów. Dialog: polski opis zamknięcia, szerokość na telefonie.
+- **Wspólne komponenty** `src/components/layout/`: `Logo` (zawsze link do strony głównej; blog pokazywał „.pl”), `SiteHeader` (menu mobilne z `aria-expanded`, Escape; na landingu przezroczysty nad hero, po przewinięciu biały), `AppHeader`, `SiteFooter`. Blog ma wspólny `blog/layout.tsx`.
+- **Panel „Moje raporty”.** Działka opisana jako „Działka 440/1 · obręb 0020”, z gminą, datą i statusem. Akcje według stanu: „Otwórz”, „Podgląd”, „Zapłać”, „Spróbuj ponownie”. Zamiast samego spinnera licznik czasu i opis bez udawanych kroków. Po anulowaniu płatności stały komunikat zamiast znikającego toastu. „29 zł” zamiast „29 PLN”, „Moje raporty” zamiast „dashboard”. `<Link><Button>` (zagnieżdżony przycisk w linku) zamienione na `Button asChild`.
+- **Ponowienie nieudanego raportu:** `POST /api/report/[id]/retry` (`src/lib/report-retry.ts`). Zawsze bez opłaty (decyzja właściciela). Darmowa pula zwrócona przy porażce wraca do zajętej; gdy użytkownik zdążył ją wykorzystać, zadanie przestaje być „darmowe”, żeby kolejna porażka nie oddała drugiego darmowego raportu. Blokada na warunkowej zmianie statusu (dwa kliknięcia = jedno ponowienie), limit 3 na 10 min.
+- **Ochrona przed podwójną płatnością** (`src/lib/checkout.ts`). `create-checkout` nie sprawdzał wcześniej, czy raport należy do użytkownika ani czy nie jest już opłacony. Teraz:
+  - działkę i gminę bierze z bazy;
+  - każdą sesję Stripe zapisuje w `payments` jako `pending`;
+  - przed nową sesją sprawdza poprzednie: otwartą oddaje ponownie, opłaconą (webhook jeszcze nie doszedł) blokuje, wygasłą oznacza `failed`;
+  - webhook zamienia `pending` na `paid` (upsert bez `ignoreDuplicates`).
+- **Wyszukiwanie:** prymitywy `ui`, neutralna ramka instrukcji (zamiast niebieskiej), błąd z `role="alert"`, układ przy 375 px.
+- **Landing:** FAQ nad stopką, wspólny nagłówek i stopka, `HomePageContent` bez `'use client'`. Teksty bez obietnicy PDF, „60 sekund” i „PBC prosto z uchwały”; „Wszystko, czego potrzebujesz”. Hero bez zmian, tylko zdjęcie przycięte z 1087 do 978 px, żeby usunąć znak wodny Gemini.
+
+- **Logowanie, rejestracja, hasła (3b).**
+  - Wspólny `(auth)/layout.tsx`: tło z hero (`bg-cover bg-top` zamiast nieistniejącej klasy `bg-center-top`), pełna biała karta zamiast szkła.
+  - Każda strona to serwerowy `page.tsx` z `metadata` (tytuł; `noindex` dla przypomnienia i resetu hasła) oraz kliencki `*Form.tsx`. Logika handlerów sesji A przeniesiona bez zmian (porównane bajt po bajcie).
+  - `ui/Input`, `Label`, `Button`; wspólny `GoogleButton` (SVG był skopiowany dwa razy); komunikaty `role="alert"` / `role="status"`; `autoComplete`.
+  - Teksty: „Nie pamiętasz hasła?”, „e-mail”, przykład `jan@przyklad.pl` bez ogonków; rejestracja bez „w 60 sekund”.
+  - Placeholder w `ui/Input` jaśniejszy (gray-500): był prawie tak ciemny jak wpisany tekst.
+
+### Usunięte (z powodem)
+- **`next-themes`:** aplikacja nie ma trybu ciemnego, a bez ThemeProvidera toast mógł się wyświetlić jako ciemny.
+- **Znacznik „✓ Zweryfikowano”** przy wyniku wyszukiwania: zastąpiony informacją o źródle („Dane z ewidencji gruntów (ULDK GUGiK)”). Znacznik powtarzał nagłówek „Działka znaleziona” i był kolejnym zielonym akcentem; ważniejsze jest, skąd pochodzą dane.
+- **Przycisk „Odśwież”** na stronie generowanego raportu: strona i tak odświeża się co 4 s.
+- **Obietnica PDF** („Pobierz raport PDF”, „Pobierz PDF”): raport to strona HTML, a przycisk wywołuje `print()`. Teraz „Drukuj / zapisz PDF”.
+- **Zduplikowane nawigacje i stopki** (landing, blog ×2, panel): zastąpione wspólnymi komponentami.
+- **Karta „szkło” na ekranach logowania** (`bg-white/80 backdrop-blur-md`): zastąpiona pełną białą kartą zgodnie z planem właściciela — formularz czytelnie oddziela się od zdjęcia.
+- **`'use client'` na całym landingu:** był potrzebny tylko dla menu mobilnego, które jest teraz w `SiteHeader`.
+
+### Ryzyka szczątkowe
+- **Ponowienie raportu z nieistniejącą działką** (`ParcelNotFoundError`) padnie znowu. Kosztuje jedno wywołanie, raportu nie daje.
+- **Dwie sesje Checkout.** Dwa żądania „Zapłać” w tej samej chwili mogą utworzyć dwie sesje, bo nie ma unikalnego indeksu na otwartą płatność raportu; to wymagałoby migracji. Druga płatność za opłacony raport nie jest zwracana automatycznie.
+- **Licznik czasu po ręcznym ponowieniu** liczy od otwarcia strony (zadanie zachowuje pierwotne `created_at`).
+
+### Dowody
+- `npx tsc --noEmit` OK, `npm test` 173/173 (było 156; nowe: `report-retry` 7, `checkout` 7, `parcel-label` 3). Testy ponowienia i płatności przeszły mutację: wyłączenie ponownego użycia sesji i zdjęcia flagi `free_slot` daje czerwone testy.
+- `npm run build` OK. W zbudowanym CSS są `bg-primary`, `border-input`, `text-muted-foreground`, `hover:bg-accent`, `focus-visible:ring-ring`, `animate-in` (przed zmianą 0).
+- e2e 13/13 na mocku Supabase, z prawdziwymi rejestrami i Claude. Nowy scenariusz: „Zapłać” otwiera dialog, `create-checkout` dla gotowego raportu daje 409, „Spróbuj ponownie” przeprowadza nieudany raport przez kolejkę do końca.
+- Zrzuty (desktop 1280 px i 375 px) poza repo: `/Users/macbookpro/Sprawdz Dzialke/ui-screenshots/`. Strony publiczne ze stagingu; panel, stany raportu i dialog z mocka, bo logowanie na stagingu wymaga konta.
+
+### Nie sprawdzono
+- „Zapłać” w trybie testowym Stripe na stagingu (ponowne użycie otwartej sesji na prawdziwym API). Logika jest pokryta testami z podstawionym Stripe.
+- Nowe sekcje landingu `#funkcje` i „Jak to działa”: czekają na inspiracje właściciela.
+- Ekrany auth z prawdziwym Google i prawdziwym mailem resetu (wymaga konfiguracji właściciela, jak w sekcji 16); wygląd i logika sprawdzone na stagingu i w e2e (7 testów sesji A przechodzi).
+
 ## Blokery startu (gałąź `chore/launch-blockers`, 23.10.2026)
 
 Braki, które blokują uruchomienie płatnej usługi dla konsumentów. Tu też zapisuję usunięte funkcje i pliki z powodem. Nic nie wdrożone, nic nie wypchnięte.
