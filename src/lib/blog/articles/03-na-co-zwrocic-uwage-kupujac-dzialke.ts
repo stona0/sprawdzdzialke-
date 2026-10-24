@@ -13,7 +13,7 @@ export const article: BlogArticle = {
   faq: [
     {
       question: 'Ile kosztuje pełne sprawdzenie działki przed zakupem?',
-      answer: 'Samodzielne sprawdzenie (Geoportal, strona gminy, wizyta w urzędzie) jest w zasadzie darmowe, ale zajmuje 2-5 dni. Wypis z MPZP kosztuje 30-50 zł, wyrys do 150 zł. Profesjonalny audyt to 400-2000 zł. Automatyczny raport AI na SprawdzDziałkę.com kosztuje od 0 zł (pierwszy darmowy) i obejmuje najważniejsze punkty w 60 sekund.'
+      answer: 'Samodzielne sprawdzenie (Geoportal, strona gminy, wizyta w urzędzie) jest w zasadzie darmowe, ale zajmuje 2-5 dni. Wypis z MPZP kosztuje 30-50 zł, wyrys do 150 zł. Profesjonalny audyt to 400-2000 zł. Automatyczny raport AI na SprawdzDziałkę.com kosztuje od 0 zł (pierwszy darmowy) i obejmuje najważniejsze punkty, zwykle w mniej niż minutę.'
     },
     {
       question: 'Czy mogę kupić działkę bez MPZP?',
@@ -141,6 +141,6 @@ export const article: BlogArticle = {
 
 <h2>15. Automatyczna analiza — oszczędź czas</h2>
 
-<p>Ręczne sprawdzenie wszystkich 14 powyższych punktów zajmuje <strong>2-5 dni</strong> i wymaga odwiedzin kilku urzędów. Alternatywą jest <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> — automatyczny raport obejmujący MPZP, media, strefy ochronne, zagrożenia i rekomendacje AI. Pierwszy raport jest darmowy, a wynik dostajesz w 60 sekund.</p>
+<p>Ręczne sprawdzenie wszystkich 14 powyższych punktów zajmuje <strong>2-5 dni</strong> i wymaga odwiedzin kilku urzędów. Alternatywą jest <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> — automatyczny raport obejmujący MPZP, media, strefy ochronne, zagrożenia i rekomendacje AI. Pierwszy raport jest darmowy, a wynik dostajesz zwykle w mniej niż minutę.</p>
 `
 };

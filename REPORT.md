@@ -644,3 +644,108 @@ Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia
 - Równoległe przewody tej samej sieci w jednej ulicy (1–2 px od siebie) stają się jedną linią.
 - Linia, którą serwer rysuje przerywaną z przerwami dłuższymi niż ~8 px (~5,6 m), zostaje przerywana.
 - Mapy z działką większą niż ~840 m pokazują, jak dotąd, tylko obszar wokół jej środka.
+
+## UI i landing (23.10.2026)
+
+Gałąź `ui/redesign` (od `fix/autonomous-recovery`). Zakres: punkt 3 (poprawki UI) i porządki landingu z punktu 4. Przebudowa sekcji `#funkcje` i „Jak to działa” czeka na inspiracje właściciela.
+
+### Co było zepsute
+- **Brak tokenów shadcn.** `globals.css` miał tylko `--background` i `--foreground`, więc Tailwind nie generował `bg-primary`, `border-input`, `text-muted-foreground`, `animate-in` (0 wystąpień w zbudowanym CSS). Skutki: „Pobierz PDF” i „Wróć…” bez tła, ciemny tekst na zielonym „Zapłać”, niewidoczny separator, obramowania w `currentColor`, dialog bez animacji. Po zmianie wszystkie te klasy są w CSS.
+- **Fonty:** Geist bez `latin-ext`, Playfair bez wagi 600 (używanej wszędzie jako `font-semibold`), brak Geist Mono, więc `font-mono` nie był monospace.
+- **Toasty:** `sonner` czytał motyw z `next-themes` bez ThemeProvidera.
+
+### Zmiany
+- **Fundament.** Tokeny marki (primary `#15803d`, neutralne szarości Tailwind) i `tw-animate-css` 1.4.0. Przycisk `ui/Button` ma kształt pigułki jak reszta witryny i wariant `dark` (czarna pigułka z hero). `Badge` ma warianty statusów. Dialog: polski opis zamknięcia, szerokość na telefonie.
+- **Wspólne komponenty** `src/components/layout/`: `Logo` (zawsze link do strony głównej; blog pokazywał „.pl”), `SiteHeader` (menu mobilne z `aria-expanded`, Escape; na landingu przezroczysty nad hero, po przewinięciu biały), `AppHeader`, `SiteFooter`. Blog ma wspólny `blog/layout.tsx`.
+- **Panel „Moje raporty”.** Działka opisana jako „Działka 440/1 · obręb 0020”, z gminą, datą i statusem. Akcje według stanu: „Otwórz”, „Podgląd”, „Zapłać”, „Spróbuj ponownie”. Zamiast samego spinnera licznik czasu i opis bez udawanych kroków. Po anulowaniu płatności stały komunikat zamiast znikającego toastu. „29 zł” zamiast „29 PLN”, „Moje raporty” zamiast „dashboard”. `<Link><Button>` (zagnieżdżony przycisk w linku) zamienione na `Button asChild`.
+- **Ponowienie nieudanego raportu:** `POST /api/report/[id]/retry` (`src/lib/report-retry.ts`). Zawsze bez opłaty (decyzja właściciela). Darmowa pula zwrócona przy porażce wraca do zajętej; gdy użytkownik zdążył ją wykorzystać, zadanie przestaje być „darmowe”, żeby kolejna porażka nie oddała drugiego darmowego raportu. Blokada na warunkowej zmianie statusu (dwa kliknięcia = jedno ponowienie), limit 3 na 10 min.
+- **Ochrona przed podwójną płatnością** (`src/lib/checkout.ts`). `create-checkout` nie sprawdzał wcześniej, czy raport należy do użytkownika ani czy nie jest już opłacony. Teraz:
+  - działkę i gminę bierze z bazy;
+  - każdą sesję Stripe zapisuje w `payments` jako `pending`;
+  - przed nową sesją sprawdza poprzednie: otwartą oddaje ponownie, opłaconą (webhook jeszcze nie doszedł) blokuje, wygasłą oznacza `failed`;
+  - webhook zamienia `pending` na `paid` (upsert bez `ignoreDuplicates`).
+- **Wyszukiwanie:** prymitywy `ui`, neutralna ramka instrukcji (zamiast niebieskiej), błąd z `role="alert"`, układ przy 375 px.
+- **Landing:** FAQ nad stopką, wspólny nagłówek i stopka, `HomePageContent` bez `'use client'`. Teksty bez obietnicy PDF, „60 sekund” i „PBC prosto z uchwały”; „Wszystko, czego potrzebujesz”. Hero bez zmian, tylko zdjęcie przycięte z 1087 do 978 px, żeby usunąć znak wodny Gemini.
+
+- **Logowanie, rejestracja, hasła (3b).**
+  - Wspólny `(auth)/layout.tsx`: tło z hero (`bg-cover bg-top` zamiast nieistniejącej klasy `bg-center-top`), pełna biała karta zamiast szkła.
+  - Każda strona to serwerowy `page.tsx` z `metadata` (tytuł; `noindex` dla przypomnienia i resetu hasła) oraz kliencki `*Form.tsx`. Logika handlerów sesji A przeniesiona bez zmian (porównane bajt po bajcie).
+  - `ui/Input`, `Label`, `Button`; wspólny `GoogleButton` (SVG był skopiowany dwa razy); komunikaty `role="alert"` / `role="status"`; `autoComplete`.
+  - Teksty: „Nie pamiętasz hasła?”, „e-mail”, przykład `jan@przyklad.pl` bez ogonków; rejestracja bez „w 60 sekund”.
+  - Placeholder w `ui/Input` jaśniejszy (gray-500): był prawie tak ciemny jak wpisany tekst.
+
+### Usunięte (z powodem)
+- **`next-themes`:** aplikacja nie ma trybu ciemnego, a bez ThemeProvidera toast mógł się wyświetlić jako ciemny.
+- **Znacznik „✓ Zweryfikowano”** przy wyniku wyszukiwania: zastąpiony informacją o źródle („Dane z ewidencji gruntów (ULDK GUGiK)”). Znacznik powtarzał nagłówek „Działka znaleziona” i był kolejnym zielonym akcentem; ważniejsze jest, skąd pochodzą dane.
+- **Przycisk „Odśwież”** na stronie generowanego raportu: strona i tak odświeża się co 4 s.
+- **Obietnica PDF** („Pobierz raport PDF”, „Pobierz PDF”): raport to strona HTML, a przycisk wywołuje `print()`. Teraz „Drukuj / zapisz PDF”.
+- **Zduplikowane nawigacje i stopki** (landing, blog ×2, panel): zastąpione wspólnymi komponentami.
+- **Karta „szkło” na ekranach logowania** (`bg-white/80 backdrop-blur-md`): zastąpiona pełną białą kartą zgodnie z planem właściciela — formularz czytelnie oddziela się od zdjęcia.
+- **`'use client'` na całym landingu:** był potrzebny tylko dla menu mobilnego, które jest teraz w `SiteHeader`.
+
+### Ryzyka szczątkowe
+- **Ponowienie raportu z nieistniejącą działką** (`ParcelNotFoundError`) padnie znowu. Kosztuje jedno wywołanie, raportu nie daje.
+- **Dwie sesje Checkout.** Dwa żądania „Zapłać” w tej samej chwili mogą utworzyć dwie sesje, bo nie ma unikalnego indeksu na otwartą płatność raportu; to wymagałoby migracji. Druga płatność za opłacony raport nie jest zwracana automatycznie.
+- **Licznik czasu po ręcznym ponowieniu** liczy od otwarcia strony (zadanie zachowuje pierwotne `created_at`).
+
+### Dowody
+- `npx tsc --noEmit` OK, `npm test` 173/173 (było 156; nowe: `report-retry` 7, `checkout` 7, `parcel-label` 3). Testy ponowienia i płatności przeszły mutację: wyłączenie ponownego użycia sesji i zdjęcia flagi `free_slot` daje czerwone testy.
+- `npm run build` OK. W zbudowanym CSS są `bg-primary`, `border-input`, `text-muted-foreground`, `hover:bg-accent`, `focus-visible:ring-ring`, `animate-in` (przed zmianą 0).
+- e2e 13/13 na mocku Supabase, z prawdziwymi rejestrami i Claude. Nowy scenariusz: „Zapłać” otwiera dialog, `create-checkout` dla gotowego raportu daje 409, „Spróbuj ponownie” przeprowadza nieudany raport przez kolejkę do końca.
+- Zrzuty (desktop 1280 px i 375 px) poza repo: `/Users/macbookpro/Sprawdz Dzialke/ui-screenshots/`. Strony publiczne ze stagingu; panel, stany raportu i dialog z mocka, bo logowanie na stagingu wymaga konta.
+
+### Nie sprawdzono
+- „Zapłać” w trybie testowym Stripe na stagingu (ponowne użycie otwartej sesji na prawdziwym API). Logika jest pokryta testami z podstawionym Stripe.
+- Nowe sekcje landingu `#funkcje` i „Jak to działa”: czekają na inspiracje właściciela.
+- Ekrany auth z prawdziwym Google i prawdziwym mailem resetu (wymaga konfiguracji właściciela, jak w sekcji 16); wygląd i logika sprawdzone na stagingu i w e2e (7 testów sesji A przechodzi).
+
+## Blokery startu (gałąź `chore/launch-blockers`, 23.10.2026)
+
+Braki, które blokują uruchomienie płatnej usługi dla konsumentów. Tu też zapisuję usunięte funkcje i pliki z powodem. Nic nie wdrożone, nic nie wypchnięte.
+
+### Usunięte
+- `public/{file,globe,next,vercel,window}.svg`: pliki z create-next-app, nigdzie nieużywane.
+- `src/app/favicon.ico` w wersji domyślnej Next.js (25 931 B, ta sama data co reszta szablonu): przeglądarki i wyszukiwarki pokazywały ikonę Next zamiast znaku serwisu. Zastąpiona plikiem z `public/favicon.svg`.
+- `public/og-image.png`: ciemna grafika niepasująca do jasnej strony, w dodatku ze zmyślonymi danymi (Długołęka 556/6, MN, 9 m, 30%), których prawdziwy raport nie podaje. Zastąpiona przez `src/app/opengraph-image.tsx`, który pokazuje tylko, z jakich części składa się raport.
+
+- Własna nawigacja i stopka `/pricing` oraz tymczasowy nagłówek stron prawnych zastąpione wspólnymi `SiteHeader` i `SiteFooter` z gałęzi `ui/redesign`. Linki Regulamin, Polityka prywatności i Kontakt są teraz w stopce każdej strony publicznej.
+- `/pricing`: plany „Starter” i „Pro”, odznaka „Popularne” oraz krzyżyki przy ISOK, AI i „analizie ryzyk” w darmowym raporcie. Darmowy raport przechodzi ten sam potok co płatny (`api/report/generate` różni je tylko flagą `paid`), więc podział był nieprawdziwy. Zostały „Pierwszy raport, 0 zł” i „Każdy kolejny, 29 zł” z jedną listą zawartości. Odznaka „Popularne” nie ma sensu przy płatności za pojedynczy raport.
+- Obietnica „Eksport do PDF” (`/pricing`, `PaymentGate`): PDF nie istnieje, przycisk wywołuje `print()`. Teraz jest „wydruk lub zapis do PDF z przeglądarki”. Napis przycisku w `ReportView` zmienia sesja UI.
+- „Parametry zabudowy z MPZP (symbol, wysokość, PBC, dach)” w `PaymentGate`: Krajowa Integracja MPZP zwykle podaje tylko symbol i uchwałę, a parametry daje plan ogólny z Rejestru Urbanistycznego, jeśli gmina go opublikowała.
+
+- Makieta raportu pod hero: dane Długołęki 556/6 (MPZP „MN… Uchwała nr XXI/143/2023” obok rekomendacji „Brak MPZP — złóż wniosek o WZ”), adres `/report/556-6-dlugoleka` i emoji jako ikony. Teraz to skrót prawdziwego raportu z `reports-sample/siechnice-ouz.json` (23.10.2026): układ i nazwy sekcji z `html.ts`, ikony lucide, adres z UUID, etykieta „Przykładowy raport”, przy 375 px jedna kolumna. Z tej samej strony usunięty teaser „Starter/Pro/Popularne/PDF” i lista źródeł z „GDOŚ WFS”, „ISOK KZGW”, „OpenStreetMap” (OSM służy już tylko za zapasowe źródło linii).
+
+### Strony prawne
+Dodane `/regulamin`, `/polityka-prywatnosci` i `/kontakt` (grupa `src/app/(legal)`) oraz ich adresy w `sitemap.ts`. Dane firmy pochodzą z `src/lib/company.ts`. **Teksty to wzór napisany bez prawnika.** Dopóki `LEGAL_DRAFT = true` (`src/lib/legal.ts`), strony pokazują baner i uwagi „Do weryfikacji”.
+
+Ustalenia, które zmieniły treść względem założeń:
+- **Supabase nie jest w UE.** Produkcja i staging stoją w regionie `eu-central-2`, czyli w Zurychu (Szwajcaria, decyzja KE o adekwatności). Polityka podaje Szwajcarię.
+- **Baner cookies nie jest potrzebny.** Serwis nie ma analityki ani Stripe.js, a strony publiczne nie ustawiają cookies. Po zalogowaniu działają tylko `sb-<ref>-auth-token` (sesja, do 400 dni) i `…-code-verifier` (PKCE). To cookies niezbędne, zwolnione ze zgody (art. 399 PKE). Jeśli dojdzie analityka, baner zgody stanie się konieczny.
+
+### Czas generowania: pomiar i obietnica
+Strona obiecywała trzy różne czasy: „w 60 sekund” (tytuł, hero, OG, rejestracja, 7 artykułów), „30–60 s” (FAQ, llms.txt) i „kilka minut” (payment-success). Pomiar z 24.10.2026: `scripts/generate-sample-reports.mts`, 8 działek z różnych gmin, bez trwałego cache, Haiku 5.5 z klucza stagingu. Mierzy zbieranie danych, AI i HTML, bez kolejki i odpytywania statusu co 3 s.
+
+| Działka | Czas |
+|---|---|
+| Wrocław Stare Miasto | 20,6 s (w tym 15 s timeoutu Overpass, potem bezpiecznik) |
+| Kłodzko, Długołęka, Batorz, Milicz, Siechnice, Radom, Sobótka | 7,1–8,2 s |
+
+Wszędzie AI odpowiedziało. Obietnica brzmi teraz „zwykle w mniej niż minutę”, a FAQ dodaje, że przy awarii rejestru ponowienia mogą trwać kilka minut (kolejka: 15/60/180 s). Tak samo pisze sesja UI. Po scaleniu `ui/redesign` poprawione też hero i CTA bloga.
+
+### Otwarte blokery (po stronie właściciela)
+1. **Weryfikacja regulaminu i polityki przez prawnika**, potem `LEGAL_DRAFT = false` i usunięcie uwag `DraftNote`.
+2. **Potwierdzenie umowy na trwałym nośniku.** Wyłączenie prawa odstąpienia (art. 38 ust. 1 pkt 13 upk) wymaga przesłania konsumentowi potwierdzenia ze zgodą, np. e-mailem. Serwis nie ma dostawcy poczty transakcyjnej, a e-mail od Stripe nie zawiera treści zgody. Bez tego zgoda zbierana przed płatnością może nie wyłączyć prawa odstąpienia.
+3. **Zwrot za nieudany płatny raport** robi się dziś ręcznie w panelu Stripe. Kolejka zwraca tylko darmowy limit.
+4. **Umowy powierzenia (DPA) i podstawy transferu**: Supabase, Netlify, Stripe, Anthropic. Do ustalenia, który podmiot Anthropic obsługuje klientów z UE.
+5. **Skrzynka kontakt@lintel.pl** musi odbierać pocztę, bo jest jedynym kanałem reklamacji, odstąpień, faktur i RODO.
+6. **Zgoda przy logowaniu przez Google nie jest zapisywana.** Przy rejestracji e-mailem wersja i czas akceptacji regulaminu trafiają do `auth.users.raw_user_meta_data` (`terms_version`, `terms_accepted_at`). Przy Google `/register` wymaga zaznaczenia zgody, ale OAuth nie przenosi metadanych. Na `/login` pierwsze logowanie przez Google zakłada konto po informacji o regulaminie, bez checkboxa. Zapis wymagałby migracji (np. kolumna w `profiles`) i zapisu po callbacku.
+7. **Linie energetyczne z BDOT10k są obiecane w cenniku i FAQ.** Działają jednak tylko tam, gdzie wgrano kafle (`npm run etl:power-lines`, potem `etl:power-lines:upload`, sekcja 12). Pełnego przebiegu dla kraju jeszcze nie wykonano. Przed startem trzeba uruchomić ETL albo usunąć tę obietnicę.
+8. **Google Search Console:** domenę najprościej zweryfikować rekordem DNS TXT (właściwość „Domena”), co nie wymaga zmian w kodzie. Pusty blok `verification` z TODO usunięty z `layout.tsx`. Weryfikacja możliwa po odnowieniu domeny.
+10. **Publikacja logowania Google** („In production” w Google Auth Platform; dziś „Testing” z listą testerów, sekcja 16) wymaga adresów polityki prywatności i strony głównej. Strony są gotowe (`/polityka-prywatnosci`, `/regulamin`), ale będą dostępne dopiero po wdrożeniu i odnowieniu domeny.
+9. **Klucz Anthropic z `.env.local` był jawnie w `.claude/launch.json`.** Trzeba go zrotować w konsoli Anthropic, a nową wartość wpisać do `.env.local` i na hostingu. Wpis w `launch.json` miał zostać usunięty w tej sesji, ale klasyfikator uprawnień zablokował zapis do pliku z sekretem, więc trzeba go usunąć ręcznie albo udzielić zgody.
+
+### Weryfikacja (24.10.2026, po scaleniu `ui/redesign` 90419ff)
+- `npx tsc --noEmit` bez błędów, `npm test` 176/176, `npm run build` OK, `npm run test:e2e` 13/13 (mock Supabase, fałszywe klucze Stripe).
+- W zbudowanym HTML: canonical `/blog`, `/regulamin` i `/pricing`, og:image na stronach z własnym `openGraph`, `apple-touch-icon` i `icon.svg`. `sitemap.xml` ma `/kontakt`, `/regulamin` i `/polityka-prywatnosci`, `robots.txt` bez zmian (wszystko poza `/api`, `/admin`, `/dashboard` i `/report` dozwolone).
+- Zrzuty 1280 px i 375 px stron `/`, `/pricing`, `/regulamin`, `/polityka-prywatnosci`, `/kontakt`, `/register`, `/login`, `/blog`, artykułu oraz okna płatności: żadna strona nie przewija się w poziomie. **Zrobione Playwrightem na mocku Supabase z `playwright.config.ts`, nie na stagingu**, bo konfiguracji stagingu w `.claude/launch.json` nie dało się dodać (pkt 9). Strony publiczne nie odpytują bazy, więc wyglądają tak samo, ale okno płatności widziano tylko z kontem z mocka.
+- Nie sprawdzono: rzeczywistej sesji Stripe Checkout z metadanymi zgody (wymaga kluczy testowych i stagingu), logowania Google i stron błędów (nie da się ich wywołać bez wstrzyknięcia błędu).

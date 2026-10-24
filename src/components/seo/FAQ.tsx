@@ -13,32 +13,32 @@ export const homepageFaqs: FaqItem[] = [
   {
     question: 'Jakie dane zawiera raport?',
     answer:
-      'Raport zawiera: dane ewidencyjne działki z ULDK GUGiK (powierzchnia, obręb, powiat), status MPZP (plan zagospodarowania przestrzennego), informacje o mediach i uzbrojeniu terenu (woda, kanalizacja, gaz, prąd), strefy ochrony przyrody z GDOŚ (Natura 2000, parki krajobrazowe), oraz rekomendacje AI dotyczące ryzyk inwestycyjnych.',
+      'Raport zawiera: ocenę możliwości zabudowy według przepisów obowiązujących od 1.09.2026, dane ewidencyjne z ULDK GUGiK (obręb, powiat, powierzchnia), informację o MPZP (czy plan obejmuje działkę, oznaczenie terenu i uchwała), plan ogólny gminy z Rejestru Urbanistycznego (strefa, parametry zabudowy, obszar uzupełnienia zabudowy), zagrożenie powodziowe (ISOK), ochronę przyrody (GDOŚ), sieci uzbrojenia w pobliżu działki oraz rekomendacje i ryzyka przygotowane przez AI na podstawie tych danych. Dla każdego źródła raport pokazuje, czy udało się pobrać dane.',
   },
   {
     question: 'Jak szybko dostanę raport?',
     answer:
-      'Raport generowany jest automatycznie w 30–60 sekund. System odpytuje rejestry publiczne w czasie rzeczywistym i analizuje dane za pomocą AI.',
+      'Zwykle w mniej niż minutę. System odpytuje rejestry publiczne i analizuje dane za pomocą AI. Jeśli któryś rejestr chwilowo nie odpowiada, zapytania są automatycznie ponawiane — wtedy może to potrwać kilka minut, a raport pojawi się w Twoim koncie, gdy będzie gotowy.',
   },
   {
     question: 'Dla jakich gmin działa usługa?',
     answer:
-      'Dane ewidencyjne (ULDK) i ochrona przyrody (GDOŚ) dostępne są dla całej Polski. Pełna analiza MPZP aktualnie działa dla Wrocławia (dane live z WFS Urzędu Miejskiego) — sukcesywnie dodajemy kolejne gminy.',
+      'Raport można wygenerować dla każdej działki w Polsce. Zakres zależy od tego, co gminy i powiaty przekazały do rejestrów krajowych. Informację o MPZP bierzemy z Krajowej Integracji MPZP; niektóre gminy podają tam tylko uchwałę, bez oznaczenia terenu, a dla Wrocławia dane pochodzą z GIS miasta. Plan ogólny pokazujemy, gdy gmina opublikowała go w Rejestrze Urbanistycznym. Sieci uzbrojenia są widoczne tam, gdzie powiat przekazuje dane do Krajowej Integracji Uzbrojenia Terenu. Gdy źródło nie ma danych, raport mówi to wprost.',
   },
   {
     question: 'Czy dane w raporcie są aktualne?',
     answer:
-      'Tak. Dane pobierane są na żywo z oficjalnych rejestrów publicznych: GUGiK (ULDK), Generalnej Dyrekcji Ochrony Środowiska (GDOŚ WFS), WFS urzędów gmin, oraz OpenStreetMap. Stan danych odpowiada momentowi generowania raportu.',
+      'Dane pobieramy z rejestrów publicznych (GUGiK, Rejestr Urbanistyczny, Wody Polskie, GDOŚ, BDOT10k, OpenStreetMap) w chwili generowania raportu. Odpowiedzi rejestrów przechowujemy najwyżej 24 godziny, a Rejestru Urbanistycznego 6 godzin. Rejestry bywają opóźnione względem uchwał gmin, dlatego przed zakupem potwierdź stan planistyczny w urzędzie gminy.',
   },
   {
     question: 'Co to jest MPZP i dlaczego jest ważny?',
     answer:
-      'MPZP (Miejscowy Plan Zagospodarowania Przestrzennego) to dokument uchwalany przez gminę, który określa co i jak można budować na danej działce — przeznaczenie terenu, maksymalną wysokość zabudowy, procent powierzchni biologicznie czynnej, typ dachu i inne parametry. Bez MPZP budowa wymaga uzyskania decyzji o warunkach zabudowy (WZ).',
+      'MPZP (Miejscowy Plan Zagospodarowania Przestrzennego) to dokument uchwalany przez gminę, który określa co i jak można budować na danej działce — przeznaczenie terenu, maksymalną wysokość zabudowy, procent powierzchni biologicznie czynnej, typ dachu i inne parametry. Bez MPZP od 1.09.2026 nową decyzję o warunkach zabudowy (WZ) co do zasady można uzyskać tylko w obszarze uzupełnienia zabudowy wyznaczonym w planie ogólnym gminy.',
   },
   {
     question: 'Jak znaleźć identyfikator (numer EGB) działki?',
     answer:
-      'Identyfikator EGB działki znajdziesz na Geoportal.gov.pl — klikając na działkę na mapie, w aktach notarialnych nieruchomości, lub w wypise z ewidencji gruntów i budynków. Format to np. 026401_1.0037.AR_3.2.',
+      'Identyfikator EGB działki znajdziesz na Geoportal.gov.pl — klikając na działkę na mapie, w aktach notarialnych nieruchomości, lub w wypisie z ewidencji gruntów i budynków. Format to np. 026401_1.0037.AR_3.2.',
   },
   {
     question: 'Czy mogę sprawdzić działkę rolną?',

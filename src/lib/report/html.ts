@@ -344,7 +344,7 @@ export function buildReportHtml(d: ReportData, ai: AiInsights): string {
 <div class="page">
   <div class="header">
     <div>
-      <div class="brand">SprawdzDziałkę.pl</div>
+      <div class="brand">SprawdzDziałkę.com</div>
       <h1>Raport działki <strong>${esc(d.parcel.numer)}</strong><br/>${esc(d.parcel.gmina)}${d.parcel.obreb ? `, obręb ${esc(d.parcel.obreb)}` : ''}</h1>
       <div class="meta">Wygenerowano: ${esc(generated)} · identyfikator ${esc(d.parcelId)}</div>
     </div>
@@ -366,7 +366,7 @@ export function buildReportHtml(d: ReportData, ai: AiInsights): string {
     ani interpretacji prawa miejscowego. Dane pochodzą z rejestrów publicznych w chwili generowania i mogą być niekompletne lub nieaktualne.
     Przed decyzją o zakupie potwierdź stan planistyczny w urzędzie gminy, a warunki przyłączenia mediów u operatorów sieci.
   </div>
-  <div class="footer"><span class="footer-brand">SprawdzDziałkę.pl</span><span>Raport wygenerowany: ${esc(generated)}</span></div>
+  <div class="footer"><span class="footer-brand">SprawdzDziałkę.com</span><span>Raport wygenerowany: ${esc(generated)}</span></div>
 </div>
 </body>
 </html>`

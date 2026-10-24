@@ -1,16 +1,18 @@
 # SprawdzDziałkę.com
 
-> Narzędzie do analizy działek budowlanych w Polsce. Raport planistyczny w 60 sekund.
+> Narzędzie do analizy działek budowlanych w Polsce. Raport planistyczny zwykle w mniej niż minutę.
 
 ## Co robimy
 
-SprawdzDziałkę.com generuje automatyczne raporty planistyczne dla działek budowlanych w Polsce. Użytkownik podaje identyfikator EGB działki, a system w ciągu 30–60 sekund pobiera dane z oficjalnych rejestrów publicznych i generuje kompletny raport zawierający:
+SprawdzDziałkę.com generuje automatyczne raporty planistyczne dla działek budowlanych w Polsce. Użytkownik podaje identyfikator EGB działki, a system — zwykle w mniej niż minutę — pobiera dane z oficjalnych rejestrów publicznych i generuje kompletny raport zawierający:
 
-- Dane ewidencyjne działki (powierzchnia, obręb, powiat) z ULDK GUGiK
-- Status MPZP (Miejscowy Plan Zagospodarowania Przestrzennego) — przeznaczenie terenu, parametry zabudowy
-- Ochrona przyrody — strefy Natura 2000, parki krajobrazowe, rezerwaty (GDOŚ WFS)
-- Media i uzbrojenie terenu — wodociąg, kanalizacja, gaz, energia elektryczna
-- Rekomendacje AI — analiza ryzyk inwestycyjnych specyficznych dla działki
+- Ocena możliwości zabudowy według przepisów obowiązujących od 1.09.2026 (MPZP, plan ogólny, obszar uzupełnienia zabudowy)
+- Dane ewidencyjne działki (obręb, powiat, powierzchnia) z ULDK GUGiK
+- MPZP z Krajowej Integracji MPZP: czy plan obejmuje działkę, oznaczenie terenu, uchwała (zakres zależy od gminy)
+- Plan ogólny gminy z Rejestru Urbanistycznego: strefa, parametry zabudowy, obszar uzupełnienia zabudowy
+- Zagrożenie powodziowe (ISOK, Wody Polskie) i ochrona przyrody (GDOŚ)
+- Uzbrojenie terenu: sieci i odległość od działki (Krajowa Integracja Uzbrojenia Terenu), linie energetyczne (BDOT10k)
+- Rekomendacje i ryzyka AI (Claude) z podstawą w danych raportu
 
 ## Dla kogo
 
@@ -21,12 +23,13 @@ SprawdzDziałkę.com generuje automatyczne raporty planistyczne dla działek bud
 
 ## Cennik
 
-- Starter: 0 zł — pierwszy raport za darmo
-- Pro: 29 zł za raport — pełna analiza z rekomendacjami AI, bez subskrypcji
+- Pierwszy raport: 0 zł (jeden na konto)
+- Każdy kolejny: 29 zł brutto za raport, bez subskrypcji
+- Darmowy i płatny raport mają ten sam pełny zakres. Raport można wydrukować lub zapisać jako PDF z przeglądarki.
 
 ## Źródła danych
 
-Dane pobierane z oficjalnych rejestrów: GUGiK (ULDK), Generalna Dyrekcja Ochrony Środowiska (GDOŚ WFS), WFS urzędów gmin (MPZP), OpenStreetMap (media), ISOK KZGW (strefy zalewowe).
+Dane pobierane z rejestrów publicznych: GUGiK (ULDK, Krajowa Integracja MPZP, Krajowa Integracja Uzbrojenia Terenu, BDOT10k), Rejestr Urbanistyczny (plany ogólne), Wody Polskie (ISOK), GDOŚ, GIS Wrocławia, OpenStreetMap. Raport ma charakter informacyjny; nie zastępuje wypisu i wyrysu z planu.
 
 ## Kontakt
 

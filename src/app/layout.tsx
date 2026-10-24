@@ -1,18 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Playfair_Display } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { WebApplicationJsonLd, OrganizationJsonLd } from "@/components/seo/JsonLd";
 
+// latin-ext: polskie znaki (ą, ę, ł, ż…) z tego samego kroju, nie z zapasowego
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
+// identyfikatory działek (font-mono)
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin", "latin-ext"],
+});
+
+// Font zmienny (400–900): obejmuje też font-semibold używane w nagłówkach
 const playfair = Playfair_Display({
   variable: "--font-playfair",
-  subsets: ["latin-ext"],
-  weight: ["400", "700", "800", "900"],
+  subsets: ["latin", "latin-ext"],
   style: ["normal", "italic"],
 });
 
@@ -20,11 +27,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://sprawdzdzialke.com"),
 
   title: {
-    default: "SprawdzDziałkę.com — Sprawdź działkę online w 60 sekund",
+    default: "SprawdzDziałkę.com — Sprawdź działkę online przed zakupem",
     template: "%s | SprawdzDziałkę.com",
   },
   description:
-    "Sprawdź MPZP, media, ochronę przyrody i ryzyko zalewowe działki. AI-generowany raport planistyczny w minutę. Pierwszy raport za darmo.",
+    "Sprawdź MPZP, plan ogólny, media, ochronę przyrody i ryzyko zalewowe działki. Raport planistyczny z rejestrów publicznych, zwykle w mniej niż minutę. Pierwszy raport za darmo.",
   keywords: [
     "sprawdź działkę",
     "analiza działki",
@@ -40,31 +47,25 @@ export const metadata: Metadata = {
     "warunki zabudowy",
   ],
 
-  icons: {
-    icon: "/favicon.svg",
-  },
-
   alternates: {
     canonical: "https://sprawdzdzialke.com",
   },
 
   openGraph: {
-    title: "SprawdzDziałkę.com — Sprawdź działkę budowlaną online w 60 sekund",
+    title: "SprawdzDziałkę.com — Sprawdź działkę budowlaną online przed zakupem",
     description:
-      "Raport planistyczny w 60 sekund. MPZP, strefy Natura 2000, media i rekomendacje AI — wszystko w jednym miejscu.",
+      "Raport planistyczny zwykle w mniej niż minutę. MPZP, plan ogólny, strefy zalewowe, Natura 2000, media i rekomendacje AI — wszystko w jednym miejscu.",
     url: "https://sprawdzdzialke.com",
     siteName: "SprawdzDziałkę.com",
     locale: "pl_PL",
     type: "website",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "SprawdzDziałkę.com — raport planistyczny działki" }],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "SprawdzDziałkę.com — Sprawdź działkę w 60 sekund",
+    title: "SprawdzDziałkę.com — Sprawdź działkę przed zakupem",
     description:
       "Sprawdź swoją działkę przed zakupem — MPZP, strefy, media, rekomendacje AI.",
-    images: ["/og-image.png"],
   },
 
   robots: {
@@ -78,11 +79,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-
-  verification: {
-    // TODO: Dodaj po rejestracji w Google Search Console:
-    // google: "TWÓJ_KOD_WERYFIKACYJNY",
-  },
 };
 
 export default function RootLayout({
@@ -91,7 +87,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl" className={`${geistSans.variable} ${playfair.variable} h-full antialiased`}>
+    <html lang="pl" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         {/* Structured data — JSON-LD (global, renderowane raz) */}
         <WebApplicationJsonLd />

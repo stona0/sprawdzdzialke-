@@ -3,8 +3,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { CheckCircle2, Loader2, ArrowRight } from 'lucide-react'
+import { CheckCircle2, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { COMPANY } from '@/lib/company'
+import { GeneratingNotice } from '@/components/report/GeneratingNotice'
+import { RetryButton } from '@/components/report/RetryButton'
+import { REPORT_PRICE_LABEL } from '@/lib/pricing'
 
 interface Props {
   reportId: string | null
@@ -80,7 +84,7 @@ export default function PaymentSuccessClient({
             )}
             <div className="flex justify-between mt-1">
               <span className="text-gray-500">Kwota</span>
-              <span className="font-medium text-green-700">29 PLN ✓</span>
+              <span className="font-medium text-green-700">{REPORT_PRICE_LABEL}</span>
             </div>
           </div>
         )}
@@ -94,39 +98,34 @@ export default function PaymentSuccessClient({
                   <CheckCircle2 className="h-5 w-5" />
                   Raport gotowy! Przekierowuję…
                 </p>
-                <Link href={`/report/${reportId}`}>
-                  <Button className="w-full gap-2 bg-green-600 hover:bg-green-700">
+                <Button asChild className="w-full">
+                  <Link href={`/report/${reportId}`}>
                     Zobacz raport
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
+                    <ArrowRight />
+                  </Link>
+                </Button>
               </div>
             ) : status === 'failed' ? (
               <div className="space-y-3">
                 <p className="text-red-600 text-sm">
-                  Wystąpił błąd podczas generowania raportu. Skontaktuj się z nami.
+                  Nie udało się wygenerować raportu. Najczęściej to chwilowa niedostępność rejestrów
+                  publicznych — ponowienie jest bezpłatne. Jeśli znów się nie uda, napisz na{' '}
+                  <a href={`mailto:${COMPANY.email}`} className="underline underline-offset-2">{COMPANY.email}</a>
+                  {parcelId ? <> i podaj działkę <span className="font-mono">{parcelId}</span></> : null} — zwrócimy
+                  płatność (<Link href="/kontakt" className="underline underline-offset-2">kontakt</Link>).
                 </p>
-                <Link href="/dashboard">
-                  <Button variant="outline" className="w-full">Wróć do dashboardu</Button>
-                </Link>
+                <RetryButton reportId={reportId} variant="default" size="default" className="w-full" />
+                <Button asChild variant="outline" className="w-full">
+                  <Link href="/dashboard">Wróć do moich raportów</Link>
+                </Button>
               </div>
             ) : (
               <div className="space-y-3">
-                <p className="text-gray-600 text-sm flex items-center justify-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-green-600" />
-                  Generuję raport… ({polls > 0 ? `${polls * 3}s` : 'chwilkę'})
-                </p>
+                <GeneratingNotice className="border-0 bg-transparent p-0 text-left sm:p-0" />
                 {polls >= 20 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-gray-400">
-                      Generowanie trwa dłużej niż zwykle. Sprawdź raport za kilka minut.
-                    </p>
-                    <Link href="/dashboard">
-                      <Button variant="outline" size="sm" className="w-full">
-                        Przejdź do dashboardu
-                      </Button>
-                    </Link>
-                  </div>
+                  <Button asChild variant="outline" size="sm" className="w-full">
+                    <Link href="/dashboard">Przejdź do moich raportów</Link>
+                  </Button>
                 )}
               </div>
             )}
@@ -134,9 +133,9 @@ export default function PaymentSuccessClient({
         )}
 
         {!reportId && (
-          <Link href="/dashboard">
-            <Button className="w-full">Wróć do dashboardu</Button>
-          </Link>
+          <Button asChild className="w-full">
+            <Link href="/dashboard">Wróć do moich raportów</Link>
+          </Button>
         )}
       </div>
     </main>
