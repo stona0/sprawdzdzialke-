@@ -1,13 +1,16 @@
 import Link from 'next/link'
 import { Logo } from './Logo'
 
-// Linki prawne (regulamin, polityka prywatności) dopisać tutaj — jedna stopka dla całej witryny.
+// Jedna stopka dla całej witryny — strony prawne muszą być osiągalne z każdej strony publicznej.
 const LINKS = [
   { href: '/pricing', label: 'Cennik' },
   { href: '/blog', label: 'Blog' },
   { href: '/#faq', label: 'FAQ' },
   { href: '/login', label: 'Zaloguj się' },
   { href: '/register', label: 'Rejestracja' },
+  { href: '/regulamin', label: 'Regulamin' },
+  { href: '/polityka-prywatnosci', label: 'Polityka prywatności' },
+  { href: '/kontakt', label: 'Kontakt' },
 ]
 
 export function SiteFooter() {
