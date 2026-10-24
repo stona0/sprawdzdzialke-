@@ -1,0 +1,130 @@
+/**
+ * Trwały cache źródeł (L2) i bezpiecznik — przez supabase-js na mocku Supabase
+ * (PGlite ze schematem z repo). Bez sieci.
+ */
+import type { PGlite } from '@electric-sql/pglite'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
+import { cached, cachedSource, clearCache, isTripped, setPersistentCache, trip, type SourceResult } from '@/lib/http'
+import { supabaseSourceCache } from '@/lib/source-cache'
+import { startMockSupabase } from '../e2e/mock-supabase.mjs'
+
+let mock: Awaited<ReturnType<typeof startMockSupabase>>
+let svc: SupabaseClient
+const pg = () => mock.db() as PGlite
+const sql = async <T = Record<string, unknown>>(q: string, params: unknown[] = []) => (await pg().query<T>(q, params)).rows
+
+beforeAll(async () => {
+  mock = await startMockSupabase()
+  svc = createClient(mock.url, 'mock-service-role-key', { auth: { persistSession: false, autoRefreshToken: false } })
+})
+afterAll(async () => {
+  setPersistentCache(null)
+  await mock.close()
+})
+beforeEach(async () => {
+  await sql('DELETE FROM source_cache')
+  clearCache()
+  setPersistentCache(supabaseSourceCache(svc))
+})
+
+describe('trwały cache źródeł (source_cache)', () => {
+  const result = (status: SourceResult<unknown>['status'], data: unknown = null): SourceResult<unknown> =>
+    ({ source: 'Test', status, data, ms: 5, fetchedAt: '2026-10-01T10:00:00.000Z' })
+
+  it('nowa instancja (pusta pamięć) bierze wynik z bazy, bez zapytania do źródła', async () => {
+    const fn = vi.fn(async () => result('ok', { strefa: 'MN' }))
+    await cachedSource('test:a', 60_000, fn)
+    const [row] = await sql<{ key: string; value: { data: unknown } }>('SELECT key, value FROM source_cache')
+    expect(row.key).toBe('v1:test:a')
+    expect(row.value.data).toEqual({ strefa: 'MN' })
+
+    clearCache()
+    const again = await cachedSource('test:a', 60_000, fn)
+    expect(again.data).toEqual({ strefa: 'MN' })
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
+
+  it('błędów nie zapisujemy', async () => {
+    await cachedSource('test:b', 60_000, async () => result('error'))
+    expect(await sql('SELECT 1 FROM source_cache')).toHaveLength(0)
+  })
+
+  it('awaria źródła → przeterminowany wynik z flagą stale i oryginalną datą pobrania', async () => {
+    await cachedSource('test:c', 60_000, async () => result('ok', { x: 1 }))
+    await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 hour'`)
+    clearCache()
+    const r = await cachedSource('test:c', 60_000, async () => result('error'))
+    expect(r).toMatchObject({ status: 'ok', data: { x: 1 }, stale: true, fetchedAt: '2026-10-01T10:00:00.000Z' })
+
+    const thrown = await cachedSource('test:c', 60_000, async () => { throw new Error('offline') })
+    expect(thrown.stale).toBe(true)
+  })
+
+  it('wynik niepotwierdzony (różne odpowiedzi źródła) idzie do raportu świeży, ale nie do bazy ani pamięci', async () => {
+    const unconfirmed = { ...result('ok', { gaz: 4 }), unconfirmed: true }
+    const fn = vi.fn(async () => unconfirmed)
+    expect(await cachedSource('test:u', 60_000, fn)).toEqual(unconfirmed)
+    expect(await sql('SELECT 1 FROM source_cache')).toHaveLength(0)
+    await cachedSource('test:u', 60_000, fn)
+    expect(fn).toHaveBeenCalledTimes(2)
+
+    // przeterminowana kopia nie zastępuje świeżej odpowiedzi — tylko błędu
+    await cachedSource('test:u2', 60_000, async () => result('ok', { gaz: null }))
+    await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 hour'`)
+    clearCache()
+    const r = await cachedSource('test:u2', 60_000, async () => unconfirmed)
+    expect(r).toMatchObject({ data: { gaz: 4 }, unconfirmed: true })
+    expect(r.stale).toBeUndefined()
+  })
+
+  it('niepotwierdzony wynik bez danych (pusty obraz KIUT przy awarii powiatu) → kopia z danymi, jak przy błędzie', async () => {
+    await cachedSource('test:nc', 60_000, async () => result('ok', { gaz: 4 }))
+    await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 hour'`)
+    clearCache()
+    const r = await cachedSource('test:nc', 60_000, async () => ({ ...result('not_covered'), unconfirmed: true }))
+    expect(r).toMatchObject({ status: 'ok', data: { gaz: 4 }, stale: true })
+  })
+
+  it('po keep_until nie używamy starego wyniku', async () => {
+    await cachedSource('test:d', 60_000, async () => result('ok', { x: 1 }))
+    await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '2 days', keep_until = NOW() - interval '1 day'`)
+    clearCache()
+    expect((await cachedSource('test:d', 60_000, async () => result('error'))).status).toBe('error')
+  })
+
+  it('ULDK: kopia tylko przy awarii, nie przy odpowiedzi „brak działki”', async () => {
+    type P = { found: boolean; stale?: boolean }
+    const mark = (p: P) => ({ ...p, stale: true })
+    await cached<P>('uldk:t', 60_000, async () => ({ found: true }), { shouldCache: p => p.found, staleOnThrow: mark })
+    await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 hour'`)
+    clearCache()
+    expect(await cached<P>('uldk:t', 60_000, async () => ({ found: false }), { shouldCache: p => p.found, staleOnThrow: mark })).toEqual({ found: false })
+    clearCache()
+    expect(await cached<P>('uldk:t', 60_000, async () => { throw new Error('ULDK: HTTP 503') }, { shouldCache: p => p.found, staleOnThrow: mark })).toEqual({ found: true, stale: true })
+  })
+
+  it('bezpiecznik: awaria usługi w jednej instancji wyłącza ją na chwilę w innych', async () => {
+    expect(await isTripped('overpass')).toBe(false)
+    await trip('overpass', 60_000, 'timeout')
+    clearCache() // inna instancja
+    expect(await isTripped('overpass')).toBe(true)
+    await sql(`UPDATE source_cache SET fresh_until = NOW() - interval '1 second' WHERE key = 'v1:circuit:overpass'`)
+    clearCache()
+    expect(await isTripped('overpass')).toBe(false)
+  })
+
+  it('persist: false — tylko pamięć procesu, nic w bazie', async () => {
+    const fn = vi.fn(async () => ({ duze: 'dane' }))
+    await cached('kafel:t', 60_000, fn, { persist: false })
+    await cached('kafel:t', 60_000, fn, { persist: false })
+    expect(fn).toHaveBeenCalledTimes(1)
+    expect(await sql('SELECT 1 FROM source_cache')).toHaveLength(0)
+  })
+
+  it('niedostępna baza nie psuje pobierania', async () => {
+    setPersistentCache({ get: async () => { throw new Error('db down') }, set: async () => { throw new Error('db down') } })
+    const r = await cachedSource('test:e', 60_000, async () => result('ok', 1))
+    expect(r.data).toBe(1)
+  })
+})

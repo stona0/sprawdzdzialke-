@@ -1,0 +1,183 @@
+{
+ "id": "mazury-wies",
+ "tags": [
+  "wz_niemozliwe_brak_pog"
+ ],
+ "opis": "Mazury, wieś",
+ "parcelId": "281002_4.0001.116/11",
+ "data": {
+  "version": 2,
+  "parcelId": "281002_4.0001.116/11",
+  "generatedAt": "2026-10-23T09:50:08.624Z",
+  "parcel": {
+   "parcelId": "281002_4.0001.116/11",
+   "numer": "116/11",
+   "powierzchnia": 104320,
+   "obreb": "Miasto Mikołajki",
+   "gmina": "Mikołajki",
+   "teryt": "281002_4",
+   "terc": "281002",
+   "powiat": "powiat mrągowski",
+   "wojewodztwo": "warmińsko-mazurskie",
+   "wspolrzedne": {
+    "lat": 53.810096,
+    "lng": 21.570308
+   },
+   "geomWkt": "SRID=2180;POLYGON((669177.363214 663800.299966,669178.539958 663854.348975,669179.414491 663894.637979,669180.251601 663926.675037,669137.889956 663926.571039,669132.716941 663966.749572,669113.282174 663970.392183,669095.914939 663977.323423,669091.223205 663964.239772,669088.791693 663946.899369,669083.53342 663935.109891,669077.914303 663928.670819,669077.179 663923.179502,669072.400414 663924.884999,669065.383653 663919.0666,669051.761572 663898.510441,669037.955043 663837.664749,669040.076224 663817.762392,669043.778208 663809.545849,669041.564757 663774.889732,669041.650608 663738.138196,669038.349842 663719.70318,669036.348062 663700.244666,669029.296126 663686.094385,669034.527451 663641.717054,669031.361465 663641.207767,669035.784859 663605.978647,669065.60322 663562.86442,669088.294208 663550.852657,669124.025459 663505.17479,669168.865035 663447.882367,669172.556498 663445.006097,669177.157107 663439.325146,669190.702134 663426.425505,669197.025187 663422.79332,669224.440185 663383.691751,669248.563477 663353.508369,669258.374007 663341.463561,669281.003198 663314.258386,669285.638146 663308.778421,669297.371676 663315.439836,669289.675984 663322.353693,669253.536284 663368.330126,669251.909251 663367.154143,669203.648982 663429.070684,669206.793967 663431.389573,669208.883091 663439.589339,669245.005569 663459.509571,669239.22651 663470.807917,669248.659063 663478.204566,669239.135513 663490.357469,669263.140354 663504.115515,669273.781003 663508.745915,669286.355343 663508.640301,669305.083925 663500.247241,669325.20165 663533.047802,669417.076229 663620.876779,669417.224309 663650.394166,669197.752733 663742.208365,669191.217069 663757.285788,669177.363214 663800.299966))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:50:09.198Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Puszcza Piska"
+    },
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Ostoja Piska"
+    },
+    {
+     "type": "Park krajobrazowy",
+     "name": "Mazurski Park Krajobrazowy"
+    },
+    {
+     "type": "Park krajobrazowy",
+     "name": "Mazurski Park Krajobrazowy - otulina"
+    },
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Krainy Wielkich Jezior Mazurskich"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "woda": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "kanalizacja": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "gaz": {
+    "distanceM": 5,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 7,
+     "crosses": false,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-12-07",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Natura 2000 – obszar specjalnej ochrony ptaków (OSO) „Puszcza Piska”; Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Ostoja Piska”; Park krajobrazowy „Mazurski Park Krajobrazowy”; Park krajobrazowy „Mazurski Park Krajobrazowy - otulina”; Obszar chronionego krajobrazu „Krainy Wielkich Jezior Mazurskich”."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć elektroenergetyczna, wodociąg, kanalizacja (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Napowietrzna linia średniego napięcia w odległości 7 m od granicy działki (BDOT10k) — możliwa służebność przesyłu i ograniczenia zabudowy pod linią."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:50:09.198Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 142,
+    "fetchedAt": "2026-10-23T09:50:09.340Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 160,
+    "fetchedAt": "2026-10-23T09:50:09.358Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 174,
+    "fetchedAt": "2026-10-23T09:50:09.374Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 441,
+    "fetchedAt": "2026-10-23T09:50:09.643Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 1962,
+    "fetchedAt": "2026-10-23T09:50:11.167Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 22,
+    "fetchedAt": "2026-10-23T09:50:09.228Z"
+   }
+  ]
+ }
+}

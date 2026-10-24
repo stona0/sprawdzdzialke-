@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { parseMPZP } from '@/lib/anthropic'
 
+// Parsowanie długiej uchwały przez Claude trwa kilka minut.
+export const maxDuration = 300
+
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

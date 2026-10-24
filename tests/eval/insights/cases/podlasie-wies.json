@@ -1,0 +1,133 @@
+{
+ "id": "podlasie-wies",
+ "tags": [
+  "wz_niemozliwe_brak_pog"
+ ],
+ "opis": "Podlasie, wieś",
+ "parcelId": "200208_2.0003.2/4",
+ "data": {
+  "version": 2,
+  "parcelId": "200208_2.0003.2/4",
+  "generatedAt": "2026-10-23T09:50:14.642Z",
+  "parcel": {
+   "parcelId": "200208_2.0003.2/4",
+   "numer": "2/4",
+   "powierzchnia": 72399,
+   "obreb": "Brzozowo Chrzczonki",
+   "gmina": "Poświętne",
+   "teryt": "200208_2",
+   "terc": "200208",
+   "powiat": "powiat białostocki",
+   "wojewodztwo": "podlaskie",
+   "wspolrzedne": {
+    "lat": 52.898237,
+    "lng": 22.797318
+   },
+   "geomWkt": "SRID=2180;POLYGON((755070.064799834 565853.757367682,755075.568737791 565837.368991811,755130.800343549 565725.639874051,755273.901578002 565831.140562322,755347.96522951 565885.088839016,755398.902202141 565922.195877614,755454.185652544 565963.104903257,755553.567744815 566035.531276427,755492.066641652 566160.818711814,755070.064799834 565853.757367682))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:50:14.882Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Dolina Narwi"
+    }
+   ]
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-05-13",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Obszar chronionego krajobrazu „Dolina Narwi”."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:50:14.882Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 138,
+    "fetchedAt": "2026-10-23T09:50:15.021Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 67,
+    "fetchedAt": "2026-10-23T09:50:14.949Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 862,
+    "fetchedAt": "2026-10-23T09:50:15.745Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 338,
+    "fetchedAt": "2026-10-23T09:50:15.223Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 664,
+    "fetchedAt": "2026-10-23T09:50:15.551Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 4,
+    "fetchedAt": "2026-10-23T09:50:14.891Z"
+   }
+  ]
+ }
+}

@@ -1,0 +1,342 @@
+{
+  "version": 2,
+  "parcelId": "146301_1.0180.AR_176.7/2",
+  "generatedAt": "2026-10-23T12:09:41.897Z",
+  "parcel": {
+    "parcelId": "146301_1.0180.AR_176.7/2",
+    "numer": "7/2",
+    "powierzchnia": 963,
+    "obreb": "Krychnowice",
+    "gmina": "Radom (miasto)",
+    "teryt": "146301_1",
+    "terc": "146301",
+    "powiat": "powiat Radom",
+    "wojewodztwo": "mazowieckie",
+    "wspolrzedne": {
+      "lat": 51.355123,
+      "lng": 21.077346
+    },
+    "geomWkt": "SRID=2180;POLYGON((644615.267422053 389641.363774097,644608.486526222 389640.745597758,644587.528011817 389638.85395328,644586.223993497 389674.198567851,644614.016370713 389675.216601894,644614.081871312 389673.548379693,644615.267422053 389641.363774097))",
+    "found": true,
+    "fetchedAt": "2026-10-23T12:09:42.500Z"
+  },
+  "mpzp": {
+    "covered": false,
+    "wroclaw": null,
+    "kimpzp": [],
+    "status": "no_data"
+  },
+  "pog": {
+    "plan": {
+      "strefy": [
+        {
+          "oznaczenie": "1SJ",
+          "symbol": "SJ",
+          "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową jednorodzinną",
+          "maks_intensywnosc": 1.1,
+          "maks_udzial_zabudowy": 30,
+          "maks_wysokosc": 12,
+          "min_pbc": 30,
+          "profil_podstawowy": [
+            "teren zabudowy mieszkaniowej jednorodzinnej",
+            "teren usług",
+            "teren komunikacji",
+            "teren zieleni urządzonej",
+            "teren ogrodów działkowych",
+            "teren infrastruktury technicznej"
+          ],
+          "profil_dodatkowy": [
+            "teren zabudowy letniskowej lub rekreacji indywidualnej",
+            "teren zieleni naturalnej",
+            "teren lasu",
+            "teren wód"
+          ],
+          "sharePct": 100
+        }
+      ],
+      "obszar_uzupelnienia_zabudowy": "5OUZ",
+      "ouzSharePct": 100,
+      "obszar_zabudowy_srodmiejskiej": null,
+      "obowiazuje_od": "2026-05-23",
+      "uchwala": "Uchwała nr XLII/427/2026 Rady Miejskiej w Radomiu z dnia 27 kwietnia 2026 r.",
+      "zrodlo": "Rejestr Urbanistyczny",
+      "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/84"
+    },
+    "planStatus": "ok",
+    "draft": null,
+    "ru": {
+      "entry": {
+        "actId": 84,
+        "tytul": "Plan ogólny miasta Radom",
+        "status": "prawnie wiążący lub realizowany",
+        "obowiazujeOd": "2026-05-23",
+        "dataPublikacji": "2026-07-15",
+        "terc": "146301",
+        "gmina": "Radom"
+      },
+      "inForce": true,
+      "draft": {
+        "actId": 3777,
+        "tytul": "Plan ogólny miasta Radomia",
+        "status": "w opracowaniu",
+        "obowiazujeOd": "2026-07-17",
+        "dataPublikacji": "2026-10-05",
+        "terc": "146301",
+        "gmina": "Radom"
+      }
+    },
+    "inForce": true,
+    "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+    "verdict": "wz_mozliwe",
+    "title": "Możliwa decyzja o warunkach zabudowy (działka w OUZ)",
+    "text": "Działka leży w obszarze uzupełnienia zabudowy wyznaczonym w planie ogólnym. Można ubiegać się o decyzję WZ; jej ustalenia muszą być zgodne z planem ogólnym (strefa, parametry). Decyzja WZ wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+    "confidence": "wysoka"
+  },
+  "flood": {
+    "scenarios": [],
+    "oszp": false,
+    "risk": [],
+    "validTo": null
+  },
+  "nature": {
+    "onParcel": [],
+    "nearby": [
+      {
+        "type": "Obszar chronionego krajobrazu",
+        "name": "Lasy Przysusko – Szydłowieckie"
+      }
+    ]
+  },
+  "gesut": {
+    "energia": {
+      "distanceM": 100,
+      "crosses": false
+    },
+    "woda": {
+      "distanceM": 96,
+      "crosses": false
+    },
+    "kanalizacja": {
+      "distanceM": 73,
+      "crosses": false
+    },
+    "gaz": {
+      "distanceM": 62,
+      "crosses": false
+    }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+    "lines": [],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2024-01-23",
+    "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "findings": [
+    {
+      "level": "uwaga",
+      "basis": "przyroda",
+      "text": "W odległości do 300 m: Obszar chronionego krajobrazu „Lasy Przysusko – Szydłowieckie”."
+    }
+  ],
+  "sources": [
+    {
+      "source": "Dane ewidencyjne – ULDK (GUGiK)",
+      "status": "ok",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T12:09:42.500Z"
+    },
+    {
+      "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+      "status": "no_data",
+      "ms": 393,
+      "fetchedAt": "2026-10-23T12:09:42.895Z"
+    },
+    {
+      "source": "Plan ogólny – Rejestr Urbanistyczny",
+      "status": "ok",
+      "ms": 255,
+      "fetchedAt": "2026-10-23T12:09:42.756Z"
+    },
+    {
+      "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+      "status": "ok",
+      "ms": 1670,
+      "fetchedAt": "2026-10-23T12:09:44.426Z"
+    },
+    {
+      "source": "Projekt planu ogólnego – Rejestr Urbanistyczny",
+      "status": "no_data",
+      "ms": 145,
+      "fetchedAt": "2026-10-23T12:09:42.903Z"
+    },
+    {
+      "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+      "status": "no_data",
+      "ms": 1159,
+      "fetchedAt": "2026-10-23T12:09:43.662Z"
+    },
+    {
+      "source": "Ochrona przyrody – GDOŚ",
+      "status": "ok",
+      "ms": 393,
+      "fetchedAt": "2026-10-23T12:09:42.899Z"
+    },
+    {
+      "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+      "status": "ok",
+      "ms": 3069,
+      "fetchedAt": "2026-10-23T12:09:45.581Z"
+    },
+    {
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "no_data",
+      "ms": 4,
+      "fetchedAt": "2026-10-23T12:09:42.517Z"
+    }
+  ],
+  "utilityMap": "osadzona w HTML",
+  "ai": {
+    "rekomendacje": [
+      {
+        "tekst": "Potwierdź w urzędzie gminy Radom (miasto), czy działka 7/2 w obrębie Krychnowice leży w obszarze uzupełnienia zabudowy i jakie strefy oraz parametry obowiązują, licząc na wypis i wyrys z planu ogólnego. Dopytaj też o możliwość wydania decyzji o warunkach zabudowy oraz jej termin ważności.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "Sprawdź w starostwie powiatowym (geodezja) wypis z rejestru gruntów oraz zgodność powierzchni 963 m2 z dokumentami, a w księdze wieczystej potwierdź stan prawny i ewentualne obciążenia.",
+        "podstawa": [
+          "dzialka"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatorów sieci o warunki przyłączenia do wodociągu, kanalizacji, gazu i sieci elektroenergetycznej, ponieważ najbliższe przyłącza znajdują się w odległości od 62 do 100 m od granicy działki.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Zweryfikuj u regionalnej dyrekcji ochrony środowiska, jakie ograniczenia wynikają z sąsiedztwa Obszaru chronionego krajobrazu Lasy Przysusko – Szydłowieckie w odległości do 300 m od działki.",
+        "podstawa": [
+          "przyroda",
+          "ustalenia"
+        ]
+      }
+    ],
+    "ryzyka": [
+      {
+        "tekst": "Plan ogólny określa strefę 1SJ z maksymalną wysokością 12 m, intensywnością 1.1 oraz udziałem zabudowy do 30 proc., co ogranicza zakres zabudowy przy projektowaniu inwestycji.",
+        "podstawa": [
+          "plan_ogolny",
+          "ocena_zabudowy"
+        ]
+      },
+      {
+        "tekst": "Decyzja o warunkach zabudowy wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia, więc trzeba zaplanować inwestycję w tym czasie.",
+        "podstawa": [
+          "ocena_zabudowy"
+        ]
+      },
+      {
+        "tekst": "Brak danych o liniach niskiego napięcia i kablach w zakresie BDOT10K oznacza, że dostępność zasilania wymaga osobnej weryfikacji u operatora sieci.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Działka nie jest objęta MPZP, więc o warunkach zabudowy decyduje plan ogólny i decyzja WZ, a nie plan miejscowy.",
+        "podstawa": [
+          "mpzp",
+          "plan_ogolny"
+        ]
+      }
+    ],
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2282,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 950,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Potwierdź w urzędzie gminy Radom (miasto), czy działka 7/2 w obrębie Krychnowice leży w obszarze uzupełnienia zabudowy i jakie strefy oraz parametry obowiązują, licząc na wypis i wyrys z planu ogólnego. Dopytaj też o możliwość wydania decyzji o warunkach zabudowy oraz jej termin ważności.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "Sprawdź w starostwie powiatowym (geodezja) wypis z rejestru gruntów oraz zgodność powierzchni 963 m2 z dokumentami, a w księdze wieczystej potwierdź stan prawny i ewentualne obciążenia.",
+            "podstawa": [
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatorów sieci o warunki przyłączenia do wodociągu, kanalizacji, gazu i sieci elektroenergetycznej, ponieważ najbliższe przyłącza znajdują się w odległości od 62 do 100 m od granicy działki.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Zweryfikuj u regionalnej dyrekcji ochrony środowiska, jakie ograniczenia wynikają z sąsiedztwa Obszaru chronionego krajobrazu Lasy Przysusko – Szydłowieckie w odległości do 300 m od działki.",
+            "podstawa": [
+              "przyroda",
+              "ustalenia"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Plan ogólny określa strefę 1SJ z maksymalną wysokością 12 m, intensywnością 1.1 oraz udziałem zabudowy do 30 proc., co ogranicza zakres zabudowy przy projektowaniu inwestycji.",
+            "podstawa": [
+              "plan_ogolny",
+              "ocena_zabudowy"
+            ]
+          },
+          {
+            "tekst": "Decyzja o warunkach zabudowy wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia, więc trzeba zaplanować inwestycję w tym czasie.",
+            "podstawa": [
+              "ocena_zabudowy"
+            ]
+          },
+          {
+            "tekst": "Brak danych o liniach niskiego napięcia i kablach w zakresie BDOT10K oznacza, że dostępność zasilania wymaga osobnej weryfikacji u operatora sieci.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Działka nie jest objęta MPZP, więc o warunkach zabudowy decyduje plan ogólny i decyzja WZ, a nie plan miejscowy.",
+            "podstawa": [
+              "mpzp",
+              "plan_ogolny"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

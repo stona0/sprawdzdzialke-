@@ -1,0 +1,165 @@
+{
+ "id": "nysa-nysa-klodzka",
+ "tags": [
+  "wz_niemozliwe_brak_pog",
+  "powodz"
+ ],
+ "opis": "Nysa, dolina Nysy Kłodzkiej",
+ "parcelId": "160705_4.0003.878",
+ "data": {
+  "version": 2,
+  "parcelId": "160705_4.0003.878",
+  "generatedAt": "2026-10-23T09:49:35.930Z",
+  "parcel": {
+   "parcelId": "160705_4.0003.878",
+   "numer": "878",
+   "powierzchnia": 22665,
+   "obreb": "Radoszyn",
+   "gmina": "Nysa",
+   "teryt": "160705_4",
+   "terc": "160705",
+   "powiat": "powiat nyski",
+   "wojewodztwo": "opolskie",
+   "wspolrzedne": {
+    "lat": 50.475169,
+    "lng": 17.320306
+   },
+   "geomWkt": "SRID=2180;POLYGON((380893.316005809 291220.144445505,380894.018461596 291221.75680889,380914.748918663 291214.220459694,380922.563243001 291208.8272777,380934.93953622 291195.545692583,380941.665955471 291176.172575143,380949.368137222 291163.193839517,380961.075801457 291143.3138163,380927.385005619 291117.047829436,380917.886177943 291109.438732133,380894.27833404 291085.166142968,380875.57387665 291056.089356738,380872.998544023 291055.086329819,380858.565402491 291066.780335028,380850.957241672 291070.349552851,380836.528486673 291071.362996099,380830.922770883 291069.279064333,380826.665207481 291067.452779998,380822.771256268 291068.60518761,380817.7913445 291067.341623372,380813.524676638 291065.225612655,380811.008457987 291058.984431769,380808.691775072 291056.547133075,380805.588978028 291054.234540831,380801.381291714 291050.176599285,380797.679690101 291047.902825413,380796.506063965 291040.469408309,380798.962482011 291034.941998284,380798.131933171 291027.287791982,380799.812134884 291023.154829185,380791.013208514 291015.881030714,380788.14835739 291013.820972205,380786.589258582 291014.169977671,380786.130654542 291016.124466811,380752.654702133 291158.552108224,380777.126196431 291170.023583034,380786.040635477 291173.653604001,380893.316005809 291220.144445505))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:36.375Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [
+    "Q10",
+    "Q1",
+    "Q0.2",
+    "BUDOWLA"
+   ],
+   "oszp": true,
+   "risk": [
+    {
+     "scenario": "Q10",
+     "level": "niskie ryzyko"
+    },
+    {
+     "scenario": "Q1",
+     "level": "niskie ryzyko"
+    },
+    {
+     "scenario": "Q0.2",
+     "level": "niskie ryzyko"
+    },
+    {
+     "scenario": "BUDOWLA",
+     "level": "niskie ryzyko"
+    }
+   ],
+   "validTo": "2025-12-21"
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Forty Nyskie"
+    },
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Otmuchowsko - Nyski Obszar Chronionego Krajobrazu"
+    }
+   ]
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-01-19",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "ryzyko",
+    "basis": "powodz",
+    "text": "Działka leży w obszarze szczególnego zagrożenia powodzią (Q10%, Q1%). Obowiązują ograniczenia z ustawy Prawo wodne; zabudowa wymaga uzgodnień z PGW Wody Polskie, a ubezpieczenie może być droższe."
+   },
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Forty Nyskie”; Obszar chronionego krajobrazu „Otmuchowsko - Nyski Obszar Chronionego Krajobrazu”."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:36.375Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 109,
+    "fetchedAt": "2026-10-23T09:49:36.485Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 78,
+    "fetchedAt": "2026-10-23T09:49:36.453Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "ok",
+    "ms": 5274,
+    "fetchedAt": "2026-10-23T09:49:41.651Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 311,
+    "fetchedAt": "2026-10-23T09:49:36.689Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 1281,
+    "fetchedAt": "2026-10-23T09:49:37.660Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 27,
+    "fetchedAt": "2026-10-23T09:49:36.407Z"
+   }
+  ]
+ }
+}

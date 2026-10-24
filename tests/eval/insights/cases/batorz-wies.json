@@ -1,0 +1,231 @@
+{
+ "id": "batorz-wies",
+ "tags": [
+  "wz_niemozliwe_brak_pog",
+  "natura",
+  "projekt-pog"
+ ],
+ "opis": "Wieś bez MPZP (Lubelskie), plan ogólny w opracowaniu",
+ "parcelId": "060501_2.0004.273/4",
+ "data": {
+  "version": 2,
+  "parcelId": "060501_2.0004.273/4",
+  "generatedAt": "2026-10-23T09:48:49.170Z",
+  "parcel": {
+   "parcelId": "060501_2.0004.273/4",
+   "numer": "273/4",
+   "powierzchnia": 7480,
+   "obreb": "Batorz Pierwszy",
+   "gmina": "Batorz",
+   "teryt": "060501_2",
+   "terc": "060501",
+   "powiat": "powiat janowski",
+   "wojewodztwo": "lubelskie",
+   "wspolrzedne": {
+    "lat": 50.854059,
+    "lng": 22.492249
+   },
+   "geomWkt": "SRID=2180;POLYGON((745639.894064693 337670.952654199,745663.430798055 337677.652612488,745681.149604282 337682.724393192,745698.421564068 337687.674026588,745731.883760666 337697.253879149,745771.43162045 337708.549197138,745791.036700965 337714.152267478,745793.813486721 337762.294361637,745791.729191496 337761.687684538,745675.588159993 337728.109618201,745627.201460076 337714.073895608,745639.894064693 337670.952654199))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:48:49.421Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": {
+    "strefy": [
+     {
+      "oznaczenie": "107SZ",
+      "symbol": "SZ",
+      "nazwa": "strefa wielofunkcyjna z zabudową zagrodową",
+      "maks_intensywnosc": 1,
+      "maks_udzial_zabudowy": 50,
+      "maks_wysokosc": 15,
+      "min_pbc": 30,
+      "profil_podstawowy": [
+       "teren zabudowy zagrodowej",
+       "teren produkcji w gospodarstwach rolnych",
+       "teren akwakultury i obsługi rybactwa",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren usług",
+       "teren zieleni naturalnej",
+       "teren lasu",
+       "teren wód"
+      ],
+      "sharePct": 100
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": "275OUZ",
+    "ouzSharePct": 42.5,
+    "obszar_zabudowy_srodmiejskiej": null,
+    "obowiazuje_od": null,
+    "uchwala": null,
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/5264"
+   },
+   "ru": {
+    "entry": {
+     "actId": 5264,
+     "tytul": "Plan ogólny gminy Batorz",
+     "status": "w opracowaniu",
+     "obowiazujeOd": "2026-10-15",
+     "dataPublikacji": "2026-10-19",
+     "terc": "060501",
+     "gmina": "Batorz"
+    },
+    "inForce": false,
+    "draft": {
+     "actId": 5264,
+     "tytul": "Plan ogólny gminy Batorz",
+     "status": "w opracowaniu",
+     "obowiazujeOd": "2026-10-15",
+     "dataPublikacji": "2026-10-19",
+     "terc": "060501",
+     "gmina": "Batorz"
+    }
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: w opracowaniu). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Roztoczański (woj.lubelskie)"
+    }
+   ],
+   "nearby": []
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "woda": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "kanalizacja": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "gaz": {
+    "distanceM": null,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 67,
+     "crosses": false,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-05-13",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "ryzyko",
+    "basis": "przyroda",
+    "text": "Działka leży w obszarze chronionym: Obszar chronionego krajobrazu „Roztoczański (woj.lubelskie)”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć elektroenergetyczna, wodociąg, kanalizacja (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   },
+   {
+    "level": "uwaga",
+    "basis": "pog",
+    "text": "Plan ogólny gminy w Rejestrze Urbanistycznym: „w opracowaniu”."
+   },
+   {
+    "level": "uwaga",
+    "basis": "pog",
+    "text": "W projekcie planu ogólnego (w opracowaniu) działka leży w strefie 107SZ (strefa wielofunkcyjna z zabudową zagrodową), w projektowanym obszarze uzupełnienia zabudowy (43% działki). Projekt nie obowiązuje i może się jeszcze zmienić."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:48:49.421Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 529,
+    "fetchedAt": "2026-10-23T09:48:49.950Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 54,
+    "fetchedAt": "2026-10-23T09:48:49.475Z"
+   },
+   {
+    "source": "Projekt planu ogólnego – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 838,
+    "fetchedAt": "2026-10-23T09:48:50.313Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 411,
+    "fetchedAt": "2026-10-23T09:48:49.832Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 341,
+    "fetchedAt": "2026-10-23T09:48:49.763Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 1767,
+    "fetchedAt": "2026-10-23T09:48:51.189Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 2,
+    "fetchedAt": "2026-10-23T09:48:49.425Z"
+   }
+  ]
+ }
+}

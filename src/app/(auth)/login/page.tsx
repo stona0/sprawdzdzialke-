@@ -1,9 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { authErrorMessage, safeNext } from '@/lib/auth-redirect'
+import { startGoogleLogin } from '@/lib/auth-google'
+
+/** Dokąd wrócić po zalogowaniu — proxy dodaje ?redirectTo= przy wejściu na chronioną stronę. */
+const redirectTarget = () => new URLSearchParams(window.location.search).get('redirectTo')
 
 export default function LoginPage() {
   const router = useRouter()
@@ -11,6 +16,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  // Błąd z /auth/callback (Google, link z maila) przychodzi jako ?error=<kod>.
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get('error')
+    if (code) setError(authErrorMessage(code))
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -21,35 +32,18 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
-      if (error.message.toLowerCase().includes('email') && error.message.toLowerCase().includes('confirm')) {
-        setError('Potwierdź swój adres email – sprawdź skrzynkę pocztową.')
-      } else {
-        setError(error.message || 'Nieprawidłowy email lub hasło.')
-      }
+      setError(authErrorMessage(error.code, error.message))
       setLoading(false)
       return
     }
 
-    router.push('/dashboard')
+    router.push(safeNext(redirectTarget()))
   }
 
   async function handleGoogleLogin() {
-    const supabase = createClient()
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        skipBrowserRedirect: false,
-      },
-    })
-    if (error) {
-      setError('Nie udało się połączyć z Google. Spróbuj ponownie.')
-      return
-    }
-    // @supabase/ssr v0.10+ zwraca URL zamiast automatycznie redirectować
-    if (data?.url) {
-      window.location.href = data.url
-    }
+    setError('')
+    const message = await startGoogleLogin(redirectTarget())
+    if (message) setError(message)
   }
 
   return (
@@ -101,7 +95,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
                 {error}
               </p>
             )}

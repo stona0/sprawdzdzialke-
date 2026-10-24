@@ -20,7 +20,8 @@ const PROTECTED_PREFIXES = [
   '/cennik',  // legacy URL — middleware przepuści do next.config redirect
 ]
 
-// Prefixy API wymagające sesji (z wyjątkiem webhook)
+// Prefixy API wymagające sesji. Publiczne celowo: /api/payments/webhook (podpis Stripe)
+// i /api/cron/* (sprawdza CRON_SECRET) — nie dopisywać ich tutaj.
 const PROTECTED_API_PREFIXES = [
   '/api/parcel',
   '/api/report',

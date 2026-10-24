@@ -1,0 +1,207 @@
+{
+ "id": "pog-czerniejewo-poza-ouz",
+ "tags": [
+  "wz_niemozliwe_poza_ouz",
+  "pog-ru"
+ ],
+ "opis": "Czerniejewo: plan ogólny w mocy (RU), strefa SN, poza OUZ",
+ "parcelId": "300302_5.0005.73",
+ "data": {
+  "version": 2,
+  "parcelId": "300302_5.0005.73",
+  "generatedAt": "2026-10-23T09:49:20.954Z",
+  "parcel": {
+   "parcelId": "300302_5.0005.73",
+   "numer": "73",
+   "powierzchnia": 9376,
+   "obreb": "Goraniec",
+   "gmina": "Czerniejewo",
+   "teryt": "300302_5",
+   "terc": "300302",
+   "powiat": "powiat gnieźnieński",
+   "wojewodztwo": "wielkopolskie",
+   "wspolrzedne": {
+    "lat": 52.443558,
+    "lng": 17.545058
+   },
+   "geomWkt": "SRID=2180;POLYGON((401004.008240667 509673.42380645,401023.032355093 509701.874804869,401275.772432106 509576.10848998,401263.151613456 509546.889136937,401004.008240667 509673.42380645))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:21.792Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "28SO",
+      "symbol": "SO",
+      "nazwa": "strefa otwarta",
+      "maks_intensywnosc": null,
+      "maks_udzial_zabudowy": null,
+      "maks_wysokosc": null,
+      "min_pbc": null,
+      "profil_podstawowy": [
+       "teren rolnictwa z zakazem zabudowy",
+       "teren lasu",
+       "teren zieleni naturalnej",
+       "teren wód",
+       "teren komunikacji",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [],
+      "sharePct": 67.2
+     },
+     {
+      "oznaczenie": "1SN",
+      "symbol": "SN",
+      "nazwa": "strefa zieleni i rekreacji",
+      "maks_intensywnosc": 0.2,
+      "maks_udzial_zabudowy": 20,
+      "maks_wysokosc": 6,
+      "min_pbc": 50,
+      "profil_podstawowy": [
+       "teren zieleni urządzonej",
+       "teren plaży",
+       "teren wód",
+       "teren komunikacji",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren usług kultury i rozrywki",
+       "teren zieleni naturalnej"
+      ],
+      "sharePct": 32.8
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": null,
+    "ouzSharePct": 0,
+    "obszar_zabudowy_srodmiejskiej": null,
+    "obowiazuje_od": "2026-09-01",
+    "uchwala": "Uchwała nr XXXII/199/26 z dnia 23 lipca 2026 r.",
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/5093"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 5093,
+     "tytul": "Plan ogólny gminy Czerniejewo",
+     "status": "prawnie wiążący lub realizowany",
+     "obowiazujeOd": "2026-09-01",
+     "dataPublikacji": "2026-10-16",
+     "terc": "300302",
+     "gmina": "Czerniejewo"
+    },
+    "inForce": true,
+    "draft": null
+   },
+   "inForce": true,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_poza_ouz",
+   "title": "Nowa decyzja WZ co do zasady niemożliwa (poza OUZ)",
+   "text": "Gmina ma obowiązujący plan ogólny, ale działka nie leży w obszarze uzupełnienia zabudowy. Od 1.09.2026 nowej decyzji o warunkach zabudowy dla budynków co do zasady nie można tu uzyskać — zabudowa wymaga uchwalenia miejscowego planu. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Grądy w Czerniejewie"
+    }
+   ]
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 206,
+     "crosses": false,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-12-05",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Grądy w Czerniejewie”."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:21.792Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 138,
+    "fetchedAt": "2026-10-23T09:49:21.930Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 139,
+    "fetchedAt": "2026-10-23T09:49:21.931Z"
+   },
+   {
+    "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 535,
+    "fetchedAt": "2026-10-23T09:49:22.466Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 187,
+    "fetchedAt": "2026-10-23T09:49:21.979Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 241,
+    "fetchedAt": "2026-10-23T09:49:22.034Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 1427,
+    "fetchedAt": "2026-10-23T09:49:23.220Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 3,
+    "fetchedAt": "2026-10-23T09:49:21.797Z"
+   }
+  ]
+ }
+}

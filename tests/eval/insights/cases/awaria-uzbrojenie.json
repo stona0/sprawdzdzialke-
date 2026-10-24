@@ -1,0 +1,149 @@
+{
+ "id": "awaria-uzbrojenie",
+ "tags": [
+  "wz_niemozliwe_brak_pog",
+  "natura",
+  "awaria-zrodla"
+ ],
+ "opis": "Milicz, Natura 2000 (awaria KIUT, BDOT10k i OSM)",
+ "parcelId": "021303_4.0001.AR_18.19/9",
+ "data": {
+  "version": 2,
+  "parcelId": "021303_4.0001.AR_18.19/9",
+  "generatedAt": "2026-10-23T09:50:25.214Z",
+  "parcel": {
+   "parcelId": "021303_4.0001.AR_18.19/9",
+   "numer": "19/9",
+   "powierzchnia": 2970,
+   "obreb": "Milicz",
+   "gmina": "Milicz",
+   "teryt": "021303_4",
+   "terc": "021303",
+   "powiat": "powiat milicki",
+   "wojewodztwo": "dolnośląskie",
+   "wspolrzedne": {
+    "lat": 51.526142,
+    "lng": 17.270576
+   },
+   "geomWkt": "SRID=2180;POLYGON((380016.704837304 408072.050472049,380028.539620789 408035.432738605,380120.674186691 408004.71482447,380110.832659914 408036.507154511,380086.017776065 408028.86937966,380077.946195242 408060.707494303,380066.602200086 408063.021708146,380051.5897317 408066.075795779,380016.704837304 408072.050472049))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:50:25.665Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Dolina Baryczy"
+    },
+    {
+     "type": "Park krajobrazowy",
+     "name": "Park Krajobrazowy Dolina Baryczy"
+    }
+   ],
+   "nearby": [
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Ostoja nad Baryczą"
+    },
+    {
+     "type": "Rezerwat przyrody",
+     "name": "Stawy Milickie"
+    }
+   ]
+  },
+  "gesut": null,
+  "gesutStatus": "error",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-12-21",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "ryzyko",
+    "basis": "przyroda",
+    "text": "Działka leży w obszarze chronionym: Natura 2000 – obszar specjalnej ochrony ptaków (OSO) „Dolina Baryczy”; Park krajobrazowy „Park Krajobrazowy Dolina Baryczy”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:50:25.665Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 399,
+    "fetchedAt": "2026-10-23T09:50:26.066Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 85,
+    "fetchedAt": "2026-10-23T09:50:25.750Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 1310,
+    "fetchedAt": "2026-10-23T09:50:26.978Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 426,
+    "fetchedAt": "2026-10-23T09:50:26.095Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "error",
+    "error": "fetch failed (symulowana awaria źródła)",
+    "ms": 400,
+    "fetchedAt": "2026-10-23T09:50:26.070Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 6,
+    "fetchedAt": "2026-10-23T09:50:25.677Z"
+   }
+  ]
+ }
+}

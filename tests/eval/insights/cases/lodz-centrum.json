@@ -1,0 +1,122 @@
+{
+ "id": "lodz-centrum",
+ "tags": [
+  "wz_niemozliwe_brak_pog"
+ ],
+ "opis": "Łódź, śródmieście",
+ "parcelId": "106105_9.0006.121/1",
+ "data": {
+  "version": 2,
+  "parcelId": "106105_9.0006.121/1",
+  "generatedAt": "2026-10-23T09:49:50.325Z",
+  "parcel": {
+   "parcelId": "106105_9.0006.121/1",
+   "numer": "121/1",
+   "powierzchnia": 540,
+   "obreb": "S-6",
+   "gmina": "Łódź (miasto)",
+   "teryt": "106105_9",
+   "terc": "106105",
+   "powiat": "powiat Łódź",
+   "wojewodztwo": "łódzkie",
+   "wspolrzedne": {
+    "lat": 51.767951,
+    "lng": 19.458075
+   },
+   "geomWkt": "SRID=2180;POLYGON((531591.623838327 433593.001943227,531611.780309164 433595.87353422,531608.170370541 433621.946340378,531608.15271627 433622.116473471,531587.996656189 433619.274858484,531591.623838327 433593.001943227))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:50.822Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": []
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-04-22",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:50.822Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 136,
+    "fetchedAt": "2026-10-23T09:49:50.958Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 50,
+    "fetchedAt": "2026-10-23T09:49:50.872Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 535,
+    "fetchedAt": "2026-10-23T09:49:51.358Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "no_data",
+    "ms": 326,
+    "fetchedAt": "2026-10-23T09:49:51.150Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 714,
+    "fetchedAt": "2026-10-23T09:49:51.539Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 10,
+    "fetchedAt": "2026-10-23T09:49:50.835Z"
+   }
+  ]
+ }
+}

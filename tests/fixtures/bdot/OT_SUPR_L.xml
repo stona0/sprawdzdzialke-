@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<gml:FeatureCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ot="urn:gugik:specyfikacje:gmlas:bazaDanychObiektowTopograficznych10k:2.0" gml:id="GUGiK_OT_SUPR_L" xsi:schemaLocation="urn:gugik:specyfikacje:gmlas:bazaDanychObiektowTopograficznych10k:2.0 ../XSD/BDOT10k_BDOO.xsd">
+	<gml:featureMember>
+		<ot:OT_SUPR_L gml:id="id_28BA1C52-430A-8554-E053-CC2BA8C0F941">
+			<ot:lokalnyId>28BA1C52-430A-8554-E053-CC2BA8C0F941</ot:lokalnyId>
+			<ot:przestrzenNazw>PL.PZGiK.283.BDOT10k</ot:przestrzenNazw>
+			<ot:wersja>2023-12-31T12:00:00</ot:wersja>
+			<ot:poczatekWersjiObiektu>2023-12-31T12:00:00</ot:poczatekWersjiObiektu>
+			<ot:oznaczenieZmiany>GI-TOPO.600.116.2023</ot:oznaczenieZmiany>
+			<ot:zrodloDanychGeometrycznych>ortofotomapa</ot:zrodloDanychGeometrycznych>
+			<ot:kategoriaIstnienia>nieczynny</ot:kategoriaIstnienia>
+			<ot:kodKarto10k>0010_441</ot:kodKarto10k>
+			<ot:geometria>
+				<gml:Curve gml:id="id-48df72be-95cc-483e-84b5-b1ecb88e3aa2-0" srsName="EPSG:2180" srsDimension="2">
+					<gml:segments>
+						<gml:LineStringSegment>
+							<gml:posList>572314.94 243037.42 572321.42 242934.56 572363.82 242902.71</gml:posList>
+						</gml:LineStringSegment>
+					</gml:segments>
+				</gml:Curve>
+			</ot:geometria>
+			<ot:rodzaj>wodociągowy</ot:rodzaj>
+		</ot:OT_SUPR_L>
+	</gml:featureMember>
+	<gml:featureMember>
+		<ot:OT_SUPR_L gml:id="id_28BA1C52-42C2-8554-E053-CC2BA8C0F941">
+			<ot:lokalnyId>28BA1C52-42C2-8554-E053-CC2BA8C0F941</ot:lokalnyId>
+			<ot:przestrzenNazw>PL.PZGiK.283.BDOT10k</ot:przestrzenNazw>
+			<ot:wersja>2024-09-27T13:36:39</ot:wersja>
+			<ot:poczatekWersjiObiektu>2024-09-27T13:36:39</ot:poczatekWersjiObiektu>
+			<ot:oznaczenieZmiany>RO-IV.7520.6.2024</ot:oznaczenieZmiany>
+			<ot:zrodloDanychGeometrycznych>ortofotomapa</ot:zrodloDanychGeometrycznych>
+			<ot:kategoriaIstnienia>eksploatowany</ot:kategoriaIstnienia>
+			<ot:kodKarto10k>0010_438</ot:kodKarto10k>
+			<ot:geometria>
+				<gml:Curve gml:id="id-0ac14b03-d364-43fd-9e2d-532f92469f0d-0" srsName="EPSG:2180" srsDimension="2">
+					<gml:segments>
+						<gml:LineStringSegment>
+							<gml:posList>558726.13 245302.19 558739.26 245299.94</gml:posList>
+						</gml:LineStringSegment>
+					</gml:segments>
+				</gml:Curve>
+			</ot:geometria>
+			<ot:rodzaj>benzynowy</ot:rodzaj>
+		</ot:OT_SUPR_L>
+	</gml:featureMember>
+</gml:FeatureCollection>

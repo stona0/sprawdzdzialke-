@@ -1,0 +1,210 @@
+[
+ {
+  "slug": "wroclaw-stare-miasto",
+  "opis": "Miasto z MPZP (Wrocław, Rynek) — teren 12UA*UC, strefa konserwatorska",
+  "parcelId": "026401_1.0001.2395"
+ },
+ {
+  "slug": "wroclaw-lipa-piotrowska",
+  "opis": "Miasto bez MPZP, w obszarze uzupełnienia zabudowy planu ogólnego",
+  "parcelId": "026401_1.0054.888"
+ },
+ {
+  "slug": "wroclaw-pilczyce",
+  "opis": "Teren nad Odrą w strefie zagrożenia powodziowego (Q1%) i w obszarze Natura 2000",
+  "parcelId": "026401_1.0041.442"
+ },
+ {
+  "slug": "klodzko-centrum",
+  "opis": "Dolny Śląsk, działka w strefie zagrożenia powodziowego Nysy Kłodzkiej",
+  "parcelId": "020802_1.0010.AR_3.27/16"
+ },
+ {
+  "slug": "dlugoleka-kielczow",
+  "opis": "Dolny Śląsk, gmina podmiejska Wrocławia — MPZP z krajowej integracji, brak POG w rejestrze",
+  "parcelId": "022302_2.0020.440/1"
+ },
+ {
+  "slug": "batorz-wies",
+  "opis": "Wieś bez MPZP (Lubelskie), plan ogólny w opracowaniu",
+  "parcelId": "060501_2.0004.273/4"
+ },
+ {
+  "slug": "milicz-natura2000",
+  "opis": "Działka w obszarze Natura 2000 i Parku Krajobrazowym Dolina Baryczy",
+  "parcelId": "021303_4.0001.AR_18.19/9"
+ },
+ {
+  "slug": "siechnice-ouz",
+  "opis": "Gmina z planem ogólnym w Rejestrze Urbanistycznym, bez MPZP — strefa SJ, w obszarze uzupełnienia zabudowy",
+  "parcelId": "022308_5.0021.24"
+ },
+ {
+  "slug": "siechnice-poza-ouz",
+  "opis": "Gmina z planem ogólnym (RU), działka poza OUZ, objęta MPZP",
+  "parcelId": "022308_5.0010.11"
+ },
+ {
+  "slug": "radom-pog",
+  "opis": "POG w mocy i nowsza wersja w opracowaniu — wcześniej raport mówił „brak planu ogólnego”",
+  "parcelId": "146301_1.0180.AR_176.7/2"
+ },
+ {
+  "slug": "sieradz-projekt-pog",
+  "opis": "Gmina bez planu w mocy, projekt planu ogólnego w RU — OUZ w projekcie (informacyjnie)",
+  "parcelId": "101408_2.0021.44/2"
+ },
+ {
+  "slug": "sobotka-linia-110kv",
+  "opis": "Działka pod napowietrzną linią 110 kV (BDOT10k), obok linia SN",
+  "parcelId": "022307_4.0003.541"
+ },
+ {
+  "slug": "krakow-podgorze-linia-nn",
+  "opis": "Działka pod linią najwyższego napięcia 220–400 kV (BDOT10k)",
+  "parcelId": "126104_9.0078.270"
+ },
+ {
+  "slug": "krakow-stare-miasto",
+  "opis": "Miasto spoza Dolnego Śląska — MPZP z krajowej integracji z symbolem terenu (KP.1)",
+  "parcelId": "126105_9.0001.580/4"
+ },
+ {
+  "slug": "pog-wierzbica-ouz",
+  "opis": "Wierzbica: plan ogólny w mocy (RU), strefa SJ, w OUZ",
+  "parcelId": "060312_2.0011.29"
+ },
+ {
+  "slug": "pog-kutno-poza-ouz",
+  "opis": "Kutno: plan ogólny w mocy (RU), strefa SN, poza OUZ",
+  "parcelId": "100201_1.0001.15/1"
+ },
+ {
+  "slug": "pog-ełk-ouz",
+  "opis": "Ełk: plan ogólny w mocy (RU), strefa SJ, w OUZ",
+  "parcelId": "280501_1.0001.1366/35"
+ },
+ {
+  "slug": "pog-rokietnica-poza-ouz",
+  "opis": "Rokietnica: plan ogólny w mocy (RU), strefa SN, poza OUZ",
+  "parcelId": "302113_2.0004.255"
+ },
+ {
+  "slug": "pog-przemęt-ouz",
+  "opis": "Przemęt: plan ogólny w mocy (RU), strefa SJ, w OUZ",
+  "parcelId": "302901_2.0025.17/1"
+ },
+ {
+  "slug": "pog-czerniejewo-poza-ouz",
+  "opis": "Czerniejewo: plan ogólny w mocy (RU), strefa SN, poza OUZ",
+  "parcelId": "300302_5.0005.73"
+ },
+ {
+  "slug": "torun-wisla",
+  "opis": "Toruń, okolice Wisły",
+  "parcelId": "046301_1.0065.40/4"
+ },
+ {
+  "slug": "opole-odra",
+  "opis": "Opole, okolice Odry",
+  "parcelId": "166101_1.0103.1533"
+ },
+ {
+  "slug": "sandomierz-wisla",
+  "opis": "Sandomierz, dolina Wisły",
+  "parcelId": "260901_1.0003.1354/3"
+ },
+ {
+  "slug": "nysa-nysa-klodzka",
+  "opis": "Nysa, dolina Nysy Kłodzkiej",
+  "parcelId": "160705_4.0003.878"
+ },
+ {
+  "slug": "goniadz-biebrza",
+  "opis": "Goniądz, dolina Biebrzy",
+  "parcelId": "200801_4.0001.1007"
+ },
+ {
+  "slug": "kampinos-skraj",
+  "opis": "Skraj Puszczy Kampinoskiej",
+  "parcelId": "141402_2.0002.118/1"
+ },
+ {
+  "slug": "ustrzyki-gorne",
+  "opis": "Bieszczady, Ustrzyki Górne",
+  "parcelId": "180105_2.0026.37/7"
+ },
+ {
+  "slug": "gdansk-centrum",
+  "opis": "Gdańsk, śródmieście",
+  "parcelId": "226101_1.0089.474/27"
+ },
+ {
+  "slug": "lodz-centrum",
+  "opis": "Łódź, śródmieście",
+  "parcelId": "106105_9.0006.121/1"
+ },
+ {
+  "slug": "lublin-przedmiescie",
+  "opis": "Lublin, dzielnica mieszkaniowa",
+  "parcelId": "066301_1.0030.AR_7.24/17"
+ },
+ {
+  "slug": "bialystok-obrzeza",
+  "opis": "Białystok, obrzeża",
+  "parcelId": "206101_1.0001.322/2"
+ },
+ {
+  "slug": "szczecin-obrzeza",
+  "opis": "Szczecin, obrzeża",
+  "parcelId": "326201_1.4001.1/60"
+ },
+ {
+  "slug": "mazury-wies",
+  "opis": "Mazury, wieś",
+  "parcelId": "281002_4.0001.116/11"
+ },
+ {
+  "slug": "podkarpacie-wies",
+  "opis": "Podkarpacie, wieś",
+  "parcelId": "181614_4.0001.2156/1"
+ },
+ {
+  "slug": "wielkopolska-wies",
+  "opis": "Wielkopolska, wieś",
+  "parcelId": "302504_5.0006.11/6"
+ },
+ {
+  "slug": "podlasie-wies",
+  "opis": "Podlasie, wieś",
+  "parcelId": "200208_2.0003.2/4"
+ },
+ {
+  "slug": "pomorze-wies",
+  "opis": "Pomorze, wieś",
+  "parcelId": "220101_2.0004.233"
+ },
+ {
+  "slug": "slask-podmiejska",
+  "opis": "Śląsk, gmina podmiejska",
+  "parcelId": "240802_1.0033.AR_1.37/5"
+ },
+ {
+  "slug": "awaria-powodz-przyroda",
+  "opis": "Siechnice (OUZ) (awaria ISOK i GDOŚ)",
+  "parcelId": "022308_5.0021.24",
+  "degrade": "wody\\.isok\\.gov\\.pl|sdi\\.gdos\\.gov\\.pl"
+ },
+ {
+  "slug": "awaria-mpzp-pog",
+  "opis": "Długołęka, Kiełczów (awaria KIMPZP i Rejestru Urbanistycznego)",
+  "parcelId": "022302_2.0020.440/1",
+  "degrade": "KrajowaIntegracjaMiejscowych|rejestr-urbanistyczny\\.gov\\.pl"
+ },
+ {
+  "slug": "awaria-uzbrojenie",
+  "opis": "Milicz, Natura 2000 (awaria KIUT, BDOT10k i OSM)",
+  "parcelId": "021303_4.0001.AR_18.19/9",
+  "degrade": "KrajowaIntegracjaUzbrojenia|overpass|power-lines"
+ }
+]

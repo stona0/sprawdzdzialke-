@@ -1,0 +1,299 @@
+{
+  "version": 2,
+  "parcelId": "022302_2.0020.440/1",
+  "generatedAt": "2026-10-23T12:08:52.498Z",
+  "parcel": {
+    "parcelId": "022302_2.0020.440/1",
+    "numer": "440/1",
+    "powierzchnia": 14914,
+    "obreb": "Kiełczów",
+    "gmina": "Długołęka",
+    "teryt": "022302_2",
+    "terc": "022302",
+    "powiat": "powiat wrocławski",
+    "wojewodztwo": "dolnośląskie",
+    "wspolrzedne": {
+      "lat": 51.126725,
+      "lng": 17.190359
+    },
+    "geomWkt": "SRID=2180;POLYGON((373453.202579166 363656.26738235,373404.281956213 363940.23650035,373359.711270874 363894.099760405,373411.047391406 363603.980078844,373453.202579166 363656.26738235))",
+    "found": true,
+    "fetchedAt": "2026-10-23T12:08:53.451Z"
+  },
+  "mpzp": {
+    "covered": true,
+    "wroclaw": null,
+    "kimpzp": [
+      {
+        "tytul": "Miejscowy plan zagospodarowania przestrzennego terenów w obrębie Kiełczów w gminie Długołęka - część „B”",
+        "symbol": null,
+        "przeznaczenie": null,
+        "uchwala": "Uchwała nr XXXVIII/664/2006 Rady Gminy Długołęka z dnia 31 stycznia 2006 r. w sprawie uchwalenia miejscowego planu zagospodarowania przestrzennego terenów w obrębie Kiełczów w gminie Długołęka - część „B”",
+        "obowiazujeOd": "2/21/25, 12:00 AM",
+        "status": "Prawnie wiążący lub realizowany",
+        "link": "https://www.gov.pl/zagospodarowanieprzestrzenne/app/AktPlanowaniaPrzestrzennego/PL.ZIPPZP.2649/022302-MPZP/mpzp_KIE-2/20250221T000001",
+        "warstwa": "app.AktPlanowaniaPrzestrzennego.MPZP"
+      }
+    ],
+    "status": "ok"
+  },
+  "pog": {
+    "plan": null,
+    "planStatus": "not_covered",
+    "draft": null,
+    "ru": {
+      "entry": null,
+      "inForce": false,
+      "draft": null
+    },
+    "inForce": false,
+    "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+    "verdict": "mpzp",
+    "title": "Działka objęta miejscowym planem (MPZP)",
+    "text": "O tym, co i jak można zbudować, decydują ustalenia obowiązującego MPZP — dla terenów objętych planem nie wydaje się decyzji o warunkach zabudowy. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+    "confidence": "wysoka"
+  },
+  "flood": {
+    "scenarios": [
+      "WAL"
+    ],
+    "oszp": false,
+    "risk": [
+      {
+        "scenario": "WAL",
+        "level": "niskie ryzyko"
+      }
+    ],
+    "validTo": "2025-12-21"
+  },
+  "nature": {
+    "onParcel": [],
+    "nearby": [
+      {
+        "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+        "name": "Lasy Grędzińskie"
+      }
+    ]
+  },
+  "gesut": {
+    "energia": {
+      "distanceM": 126,
+      "crosses": false
+    },
+    "woda": {
+      "distanceM": null,
+      "crosses": false
+    },
+    "kanalizacja": {
+      "distanceM": 119,
+      "crosses": false
+    },
+    "gaz": {
+      "distanceM": null,
+      "crosses": false
+    }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+    "lines": [],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2023-11-08",
+    "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "findings": [
+    {
+      "level": "uwaga",
+      "basis": "powodz",
+      "text": "Działka w zasięgu scenariusza: scenariusz zniszczenia wału przeciwpowodziowego."
+    },
+    {
+      "level": "uwaga",
+      "basis": "przyroda",
+      "text": "W odległości do 300 m: Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Lasy Grędzińskie”."
+    }
+  ],
+  "sources": [
+    {
+      "source": "Dane ewidencyjne – ULDK (GUGiK)",
+      "status": "ok",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T12:08:53.451Z"
+    },
+    {
+      "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+      "status": "ok",
+      "ms": 403,
+      "fetchedAt": "2026-10-23T12:08:53.856Z"
+    },
+    {
+      "source": "Plan ogólny – Rejestr Urbanistyczny",
+      "status": "no_data",
+      "ms": 123,
+      "fetchedAt": "2026-10-23T12:08:53.575Z"
+    },
+    {
+      "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+      "status": "ok",
+      "ms": 920,
+      "fetchedAt": "2026-10-23T12:08:54.374Z"
+    },
+    {
+      "source": "Ochrona przyrody – GDOŚ",
+      "status": "ok",
+      "ms": 1276,
+      "fetchedAt": "2026-10-23T12:08:54.732Z"
+    },
+    {
+      "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+      "status": "ok",
+      "ms": 439,
+      "fetchedAt": "2026-10-23T12:08:53.900Z"
+    },
+    {
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "no_data",
+      "ms": 6,
+      "fetchedAt": "2026-10-23T12:08:53.469Z"
+    }
+  ],
+  "utilityMap": "osadzona w HTML",
+  "ai": {
+    "rekomendacje": [
+      {
+        "tekst": "Potwierdź w urzędzie gminy Długołęka aktualne ustalenia MPZP dla obrębu Kiełczów, w tym wypis i wyrys z planu, ponieważ pole symbol i przeznaczenie w danych są puste. Zapytaj też, czy dla działki 440/1 nie obowiązuje inna dokumentacja.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "mpzp"
+        ]
+      },
+      {
+        "tekst": "Sprawdź w starostwie powiatowym (geodezja) lub w wypisie z rejestru gruntów, czy działka 440/1 o powierzchni 14914 m2 jest w całości objęta wskazanym planem, bo dane nie precyzują tego dla całej działki.",
+        "podstawa": [
+          "dzialka",
+          "mpzp"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatora sieci elektroenergetycznej o warunki przyłączenia, ponieważ najbliższa sieć jest około 126 m od granicy działki, a kanalizacja około 119 m.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Ustal u operatora sieci wodociągowej i gazowej, czy da się je doprowadzić, bo w promieniu 100 m od działki nie stwierdzono ani wodociągu, ani sieci gazowej.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      }
+    ],
+    "ryzyka": [
+      {
+        "tekst": "Dane o uzbrojeniu nie obejmują linii niskiego napięcia i kabli, więc brak wskazań w tym zakresie nie oznacza braku przyłączy. Trzeba to zweryfikować u operatora.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Działka jest w zasięgu scenariusza zniszczenia wału przeciwpowodziowego, choć poziom ryzyka oznaczono jako niski. Warto zapytać PGW Wody Polskie o szczegóły tego scenariusza.",
+        "podstawa": [
+          "powodz"
+        ]
+      },
+      {
+        "tekst": "W odległości do 300 m znajduje się obszar Natura 2000 Lasy Grędzińskie, co może wpływać na zakres możliwych inwestycji. Przed zakupem skonsultuj to z regionalną dyrekcją ochrony środowiska.",
+        "podstawa": [
+          "przyroda"
+        ]
+      },
+      {
+        "tekst": "Brak wpisu planu ogólnego w rejestrze nie zostal potwierdzony w dokumentach gminy. Sprawdź w urzędzie gminy, czy obowiązuje inny dokument planistyczny.",
+        "podstawa": [
+          "plan_ogolny"
+        ]
+      }
+    ],
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2401,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 913,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Potwierdź w urzędzie gminy Długołęka aktualne ustalenia MPZP dla obrębu Kiełczów, w tym wypis i wyrys z planu, ponieważ pole symbol i przeznaczenie w danych są puste. Zapytaj też, czy dla działki 440/1 nie obowiązuje inna dokumentacja.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "mpzp"
+            ]
+          },
+          {
+            "tekst": "Sprawdź w starostwie powiatowym (geodezja) lub w wypisie z rejestru gruntów, czy działka 440/1 o powierzchni 14914 m2 jest w całości objęta wskazanym planem, bo dane nie precyzują tego dla całej działki.",
+            "podstawa": [
+              "dzialka",
+              "mpzp"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatora sieci elektroenergetycznej o warunki przyłączenia, ponieważ najbliższa sieć jest około 126 m od granicy działki, a kanalizacja około 119 m.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Ustal u operatora sieci wodociągowej i gazowej, czy da się je doprowadzić, bo w promieniu 100 m od działki nie stwierdzono ani wodociągu, ani sieci gazowej.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Dane o uzbrojeniu nie obejmują linii niskiego napięcia i kabli, więc brak wskazań w tym zakresie nie oznacza braku przyłączy. Trzeba to zweryfikować u operatora.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Działka jest w zasięgu scenariusza zniszczenia wału przeciwpowodziowego, choć poziom ryzyka oznaczono jako niski. Warto zapytać PGW Wody Polskie o szczegóły tego scenariusza.",
+            "podstawa": [
+              "powodz"
+            ]
+          },
+          {
+            "tekst": "W odległości do 300 m znajduje się obszar Natura 2000 Lasy Grędzińskie, co może wpływać na zakres możliwych inwestycji. Przed zakupem skonsultuj to z regionalną dyrekcją ochrony środowiska.",
+            "podstawa": [
+              "przyroda"
+            ]
+          },
+          {
+            "tekst": "Brak wpisu planu ogólnego w rejestrze nie zostal potwierdzony w dokumentach gminy. Sprawdź w urzędzie gminy, czy obowiązuje inny dokument planistyczny.",
+            "podstawa": [
+              "plan_ogolny"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

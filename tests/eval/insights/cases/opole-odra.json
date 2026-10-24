@@ -1,0 +1,181 @@
+{
+ "id": "opole-odra",
+ "tags": [
+  "wz_mozliwe",
+  "pog-ru"
+ ],
+ "opis": "Opole, okolice Odry",
+ "parcelId": "166101_1.0103.1533",
+ "data": {
+  "version": 2,
+  "parcelId": "166101_1.0103.1533",
+  "generatedAt": "2026-10-23T09:49:29.349Z",
+  "parcel": {
+   "parcelId": "166101_1.0103.1533",
+   "numer": "1533",
+   "powierzchnia": 837,
+   "obreb": "Opole",
+   "gmina": "Opole (miasto)",
+   "teryt": "166101_1",
+   "terc": "166101",
+   "powiat": "powiat Opole",
+   "wojewodztwo": "opolskie",
+   "wspolrzedne": {
+    "lat": 50.663872,
+    "lng": 17.93501
+   },
+   "geomWkt": "SRID=2180;POLYGON((424771.000367559 311290.919641068,424770.202328434 311301.443844192,424769.336283298 311312.980076408,424769.012274178 311317.289882675,424761.869731514 311316.554403382,424761.638222173 311319.041474075,424739.133663344 311316.939148925,424741.268795119 311288.583856748,424771.000367559 311290.919641068))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:30.105Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "70SW",
+      "symbol": "SW",
+      "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową wielorodzinną",
+      "maks_intensywnosc": 5,
+      "maks_udzial_zabudowy": 100,
+      "maks_wysokosc": 30,
+      "min_pbc": 30,
+      "profil_podstawowy": [
+       "teren zabudowy mieszkaniowej wielorodzinnej",
+       "teren usług",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren zabudowy mieszkaniowej jednorodzinnej",
+       "teren zieleni naturalnej",
+       "teren wód"
+      ],
+      "sharePct": 100
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": "137OUZ",
+    "ouzSharePct": 100,
+    "obszar_zabudowy_srodmiejskiej": "3OZS",
+    "obowiazuje_od": "2026-01-19",
+    "uchwala": "Uchwała Nr XXIV/399/25 Rady Miasta Opola z dnia 18 grudnia 2025 r.",
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/19"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 19,
+     "tytul": "Plan ogólny Opola",
+     "status": "prawnie wiążący lub realizowany",
+     "obowiazujeOd": "2026-01-19",
+     "dataPublikacji": "2026-07-08",
+     "terc": "166101",
+     "gmina": "Opole"
+    },
+    "inForce": true,
+    "draft": null
+   },
+   "inForce": true,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_mozliwe",
+   "title": "Możliwa decyzja o warunkach zabudowy (działka w OUZ)",
+   "text": "Działka leży w obszarze uzupełnienia zabudowy wyznaczonym w planie ogólnym. Można ubiegać się o decyzję WZ; jej ustalenia muszą być zgodne z planem ogólnym (strefa, parametry). Decyzja WZ wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Lasy Stobrawsko - Turawskie"
+    }
+   ]
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-08-16",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Obszar chronionego krajobrazu „Lasy Stobrawsko - Turawskie”."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:30.105Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 215,
+    "fetchedAt": "2026-10-23T09:49:30.321Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 220,
+    "fetchedAt": "2026-10-23T09:49:30.325Z"
+   },
+   {
+    "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 3456,
+    "fetchedAt": "2026-10-23T09:49:33.781Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 368,
+    "fetchedAt": "2026-10-23T09:49:30.475Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 359,
+    "fetchedAt": "2026-10-23T09:49:30.467Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 1262,
+    "fetchedAt": "2026-10-23T09:49:31.373Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 10,
+    "fetchedAt": "2026-10-23T09:49:30.123Z"
+   }
+  ]
+ }
+}

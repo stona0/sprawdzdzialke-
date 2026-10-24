@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { authErrorMessage, callbackUrl } from '@/lib/auth-redirect'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -16,12 +17,14 @@ export default function ForgotPasswordPage() {
     setError('')
 
     const supabase = createClient()
+    // Link z maila niesie `code`, który wymienia /auth/callback — dopiero potem formularz nowego hasła.
+    // (Wcześniej link prowadził na /login, który `code` ignoruje, więc reset nie działał.)
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/login`,
+      redirectTo: callbackUrl(window.location.origin, '/reset-password'),
     })
 
     if (error) {
-      setError(error.message || 'Nie udało się wysłać maila. Spróbuj ponownie.')
+      setError(authErrorMessage(error.code, error.message))
       setLoading(false)
       return
     }
@@ -72,7 +75,7 @@ export default function ForgotPasswordPage() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
-                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
                   {error}
                 </p>
               )}

@@ -1,0 +1,362 @@
+{
+  "version": 2,
+  "parcelId": "022308_5.0010.11",
+  "generatedAt": "2026-10-23T12:09:35.514Z",
+  "parcel": {
+    "parcelId": "022308_5.0010.11",
+    "numer": "11",
+    "powierzchnia": 17215,
+    "obreb": "Ozorzyce",
+    "gmina": "Siechnice",
+    "teryt": "022308_5",
+    "terc": "022308",
+    "powiat": "powiat wrocławski",
+    "wojewodztwo": "dolnośląskie",
+    "wspolrzedne": {
+      "lat": 51.001652,
+      "lng": 17.087238
+    },
+    "geomWkt": "SRID=2180;POLYGON((365898.753083484 350099.240308761,365891.813076237 350118.947402801,365879.011323088 350147.210976383,365861.205430993 350180.930507881,365850.202333323 350195.144734337,365752.020310388 349953.684397841,365773.16441606 349952.337892955,365834.652034089 349949.374386547,365898.753083484 350099.240308761))",
+    "found": true,
+    "fetchedAt": "2026-10-23T12:09:36.201Z"
+  },
+  "mpzp": {
+    "covered": true,
+    "wroclaw": null,
+    "kimpzp": [
+      {
+        "tytul": "Miejscowy plan zagospodarowania przestrzennego obrębu Ozorzyce, gmina Święta Katarzyna",
+        "symbol": "OZO-2",
+        "przeznaczenie": null,
+        "uchwala": null,
+        "obowiazujeOd": null,
+        "status": "uchwalony, obowiązujący w części",
+        "link": null,
+        "warstwa": "1"
+      }
+    ],
+    "status": "ok"
+  },
+  "pog": {
+    "plan": {
+      "strefy": [
+        {
+          "oznaczenie": "1SR",
+          "symbol": "SR",
+          "nazwa": "strefa produkcji rolniczej",
+          "maks_intensywnosc": 1,
+          "maks_udzial_zabudowy": 50,
+          "maks_wysokosc": 15,
+          "min_pbc": 30,
+          "profil_podstawowy": [
+            "teren produkcji w gospodarstwach rolnych",
+            "teren wielkotowarowej produkcji rolnej",
+            "teren akwakultury i obsługi rybactwa",
+            "teren komunikacji",
+            "teren ogrodów działkowych",
+            "teren infrastruktury technicznej"
+          ],
+          "profil_dodatkowy": [
+            "teren biogazowni",
+            "teren elektrowni słonecznej",
+            "teren lasu",
+            "teren rolnictwa z zakazem zabudowy",
+            "teren wód",
+            "teren zieleni naturalnej",
+            "teren zieleni urządzonej"
+          ],
+          "sharePct": 61.8
+        },
+        {
+          "oznaczenie": "68SO",
+          "symbol": "SO",
+          "nazwa": "strefa otwarta",
+          "maks_intensywnosc": null,
+          "maks_udzial_zabudowy": null,
+          "maks_wysokosc": null,
+          "min_pbc": null,
+          "profil_podstawowy": [
+            "teren rolnictwa z zakazem zabudowy",
+            "teren lasu",
+            "teren zieleni naturalnej",
+            "teren wód",
+            "teren komunikacji",
+            "teren ogrodów działkowych",
+            "teren infrastruktury technicznej"
+          ],
+          "profil_dodatkowy": [
+            "teren zieleni urządzonej"
+          ],
+          "sharePct": 38.2
+        }
+      ],
+      "obszar_uzupelnienia_zabudowy": null,
+      "ouzSharePct": 0,
+      "obszar_zabudowy_srodmiejskiej": null,
+      "obowiazuje_od": "2026-09-24",
+      "uchwala": "Uchwała nr XXXI/447/26 Rady Miejskiej w Siechnicach z dnia 27 sierpnia 2026 r.",
+      "zrodlo": "Rejestr Urbanistyczny",
+      "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/2336"
+    },
+    "planStatus": "ok",
+    "draft": null,
+    "ru": {
+      "entry": {
+        "actId": 2336,
+        "tytul": "Plan ogólny Gminy Siechnice",
+        "status": "prawnie wiążący lub realizowany",
+        "obowiazujeOd": "2026-09-24",
+        "dataPublikacji": "2026-09-24",
+        "terc": "022308",
+        "gmina": "Siechnice"
+      },
+      "inForce": true,
+      "draft": null
+    },
+    "inForce": true,
+    "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+    "verdict": "mpzp",
+    "title": "Działka objęta miejscowym planem (MPZP)",
+    "text": "O tym, co i jak można zbudować, decydują ustalenia obowiązującego MPZP — dla terenów objętych planem nie wydaje się decyzji o warunkach zabudowy. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+    "confidence": "wysoka"
+  },
+  "flood": {
+    "scenarios": [],
+    "oszp": false,
+    "risk": [],
+    "validTo": null
+  },
+  "nature": {
+    "onParcel": [],
+    "nearby": [
+      {
+        "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+        "name": "Grądy w Dolinie Odry"
+      }
+    ]
+  },
+  "gesut": {
+    "energia": {
+      "distanceM": 96,
+      "crosses": false
+    },
+    "woda": {
+      "distanceM": 51,
+      "crosses": false
+    },
+    "kanalizacja": {
+      "distanceM": 51,
+      "crosses": false
+    },
+    "gaz": {
+      "distanceM": null,
+      "crosses": false
+    }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+    "lines": [],
+    "pipelines": [],
+    "radiusM": 300,
+    "dataDate": "2023-11-08",
+    "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "findings": [
+    {
+      "level": "uwaga",
+      "basis": "przyroda",
+      "text": "W odległości do 300 m: Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Grądy w Dolinie Odry”."
+    }
+  ],
+  "sources": [
+    {
+      "source": "Dane ewidencyjne – ULDK (GUGiK)",
+      "status": "ok",
+      "ms": 0,
+      "fetchedAt": "2026-10-23T12:09:36.201Z"
+    },
+    {
+      "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+      "status": "ok",
+      "ms": 351,
+      "fetchedAt": "2026-10-23T12:09:36.553Z"
+    },
+    {
+      "source": "Plan ogólny – Rejestr Urbanistyczny",
+      "status": "ok",
+      "ms": 190,
+      "fetchedAt": "2026-10-23T12:09:26.682Z"
+    },
+    {
+      "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+      "status": "ok",
+      "ms": 766,
+      "fetchedAt": "2026-10-23T12:09:36.979Z"
+    },
+    {
+      "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+      "status": "no_data",
+      "ms": 441,
+      "fetchedAt": "2026-10-23T12:09:36.644Z"
+    },
+    {
+      "source": "Ochrona przyrody – GDOŚ",
+      "status": "ok",
+      "ms": 419,
+      "fetchedAt": "2026-10-23T12:09:36.624Z"
+    },
+    {
+      "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+      "status": "ok",
+      "ms": 525,
+      "fetchedAt": "2026-10-23T12:09:36.737Z"
+    },
+    {
+      "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+      "status": "no_data",
+      "ms": 11,
+      "fetchedAt": "2026-10-23T12:09:36.224Z"
+    }
+  ],
+  "utilityMap": "osadzona w HTML",
+  "ai": {
+    "rekomendacje": [
+      {
+        "tekst": "Zamów w urzędzie gminy Siechnice wypis i wyrys z miejscowego planu zagospodarowania przestrzennego dla obrębu Ozorzyce (symbol OZO-2) i potwierdź, jakie funkcje i parametry zabudowy dopuszcza dla działki. Brak przeznaczenia i daty uchwały w danych wymaga weryfikacji.",
+        "podstawa": [
+          "ocena_zabudowy",
+          "mpzp"
+        ]
+      },
+      {
+        "tekst": "Ustal w urzędzie gminy, która część działki o powierzchni 17215 m2 leży w strefie 1SR (strefa produkcji rolniczej, 61,8%), a która w strefie 68SO (strefa otwarta, 38,2%), i jakie wskaźniki obowiązują w każdej z nich.",
+        "podstawa": [
+          "plan_ogolny",
+          "dzialka"
+        ]
+      },
+      {
+        "tekst": "Zleć w starostwie powiatowym (geodezja) lub geodecie sprawdzenie w księdze wieczystej i wypisie z rejestru gruntów, czy granice i sposób użytkowania działki 11 zgadzają się z danymi z ewidencji.",
+        "podstawa": [
+          "dzialka"
+        ]
+      },
+      {
+        "tekst": "Zapytaj operatorów sieci o warunki przyłączenia do sieci elektroenergetycznej, wodociągowej i kanalizacyjnej, ponieważ najbliższe sieci są oddalone od granicy działki o kilkadziesiąt do blisko 100 metrów.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      }
+    ],
+    "ryzyka": [
+      {
+        "tekst": "Część działki objęta strefą otwartą 68SO nie ma określonych wskaźników w danych, co może ograniczać zabudowę w tej części.",
+        "podstawa": [
+          "plan_ogolny"
+        ]
+      },
+      {
+        "tekst": "W odległości do 300 m od działki znajduje się obszar Natura 2000 Grądy w Dolinie Odry, co może wpływać na procedury i zakres inwestycji.",
+        "podstawa": [
+          "przyroda",
+          "ustalenia"
+        ]
+      },
+      {
+        "tekst": "Sieć gazowa nie została stwierdzona w promieniu 100 m, a dane o liniach niskiego napięcia i kablach są niepełne, więc koszt i możliwość przyłączenia mogą być większe niż zakładano.",
+        "podstawa": [
+          "uzbrojenie"
+        ]
+      },
+      {
+        "tekst": "Dane o przeznaczeniu i uchwale MPZP są puste, więc nie da się na ich podstawie ocenić, czy plan dopuszcza zamierzony sposób użytkowania.",
+        "podstawa": [
+          "mpzp"
+        ]
+      }
+    ],
+    "model": "claude-haiku-5-5",
+    "odrzucone": 0,
+    "meta": {
+      "servedModel": "claude-haiku-5-5",
+      "usage": {
+        "input_tokens": 2422,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        },
+        "output_tokens": 919,
+        "output_tokens_details": {
+          "thinking_tokens": 0
+        },
+        "service_tier": "standard",
+        "inference_geo": "global",
+        "speed": "standard"
+      },
+      "stopReason": "end_turn",
+      "raw": {
+        "rekomendacje": [
+          {
+            "tekst": "Zamów w urzędzie gminy Siechnice wypis i wyrys z miejscowego planu zagospodarowania przestrzennego dla obrębu Ozorzyce (symbol OZO-2) i potwierdź, jakie funkcje i parametry zabudowy dopuszcza dla działki. Brak przeznaczenia i daty uchwały w danych wymaga weryfikacji.",
+            "podstawa": [
+              "ocena_zabudowy",
+              "mpzp"
+            ]
+          },
+          {
+            "tekst": "Ustal w urzędzie gminy, która część działki o powierzchni 17215 m2 leży w strefie 1SR (strefa produkcji rolniczej, 61,8%), a która w strefie 68SO (strefa otwarta, 38,2%), i jakie wskaźniki obowiązują w każdej z nich.",
+            "podstawa": [
+              "plan_ogolny",
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Zleć w starostwie powiatowym (geodezja) lub geodecie sprawdzenie w księdze wieczystej i wypisie z rejestru gruntów, czy granice i sposób użytkowania działki 11 zgadzają się z danymi z ewidencji.",
+            "podstawa": [
+              "dzialka"
+            ]
+          },
+          {
+            "tekst": "Zapytaj operatorów sieci o warunki przyłączenia do sieci elektroenergetycznej, wodociągowej i kanalizacyjnej, ponieważ najbliższe sieci są oddalone od granicy działki o kilkadziesiąt do blisko 100 metrów.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          }
+        ],
+        "ryzyka": [
+          {
+            "tekst": "Część działki objęta strefą otwartą 68SO nie ma określonych wskaźników w danych, co może ograniczać zabudowę w tej części.",
+            "podstawa": [
+              "plan_ogolny"
+            ]
+          },
+          {
+            "tekst": "W odległości do 300 m od działki znajduje się obszar Natura 2000 Grądy w Dolinie Odry, co może wpływać na procedury i zakres inwestycji.",
+            "podstawa": [
+              "przyroda",
+              "ustalenia"
+            ]
+          },
+          {
+            "tekst": "Sieć gazowa nie została stwierdzona w promieniu 100 m, a dane o liniach niskiego napięcia i kablach są niepełne, więc koszt i możliwość przyłączenia mogą być większe niż zakładano.",
+            "podstawa": [
+              "uzbrojenie"
+            ]
+          },
+          {
+            "tekst": "Dane o przeznaczeniu i uchwale MPZP są puste, więc nie da się na ich podstawie ocenić, czy plan dopuszcza zamierzony sposób użytkowania.",
+            "podstawa": [
+              "mpzp"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

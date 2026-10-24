@@ -1,8 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { after, NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createServiceClient } from '@/lib/supabase/server'
-import { generateReport } from '@/lib/report-generator'
+import { enqueueReport, runReportJob } from '@/lib/report-queue'
 import Stripe from 'stripe'
+
+export const maxDuration = 60
 
 export async function POST(request: NextRequest) {
   const body = await request.text()
@@ -52,34 +54,36 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Parcel mismatch' }, { status: 403 })
     }
 
-    // Nie przetwarzaj powtórnie — idempotencja
-    if (report.status === 'completed' || report.status === 'generating') {
-      console.log('[webhook] Report already processed:', reportId, report.status)
+    // Idempotencja: Stripe ponawia webhooki. Gotowego raportu nie generujemy drugi raz;
+    // dla pozostałych stanów kroki niżej są bezpieczne do powtórzenia.
+    if (report.status === 'completed') {
+      console.log('[webhook] Report already completed:', reportId)
       return NextResponse.json({ received: true })
     }
 
     // ── Zapisz płatność ─────────────────────────────────────────────
-    await supabase.from('payments').insert({
+    await supabase.from('payments').upsert({
       user_id: userId,
       report_id: reportId,
       stripe_session_id: session.id,
       amount: (session.amount_total ?? 0) / 100,
       status: 'paid',
-    })
+    }, { onConflict: 'stripe_session_id', ignoreDuplicates: true })
 
-    // ── Oznacz raport jako opłacony i generuj ───────────────────────
+    // ── Oznacz raport jako opłacony i dodaj do kolejki ──────────────
     await supabase
       .from('reports')
       .update({ paid: true, status: 'generating' })
       .eq('id', reportId)
 
-    generateReport(parcelId, gmina, userId, reportId).catch(async (err) => {
-      console.error('[webhook] generateReport failed:', err)
-      await supabase
-        .from('reports')
-        .update({ status: 'failed' })
-        .eq('id', reportId)
-    })
+    try {
+      await enqueueReport(supabase, reportId, { freeSlot: false })
+    } catch (err) {
+      // 500 → Stripe ponowi webhook, a powyższe kroki są idempotentne.
+      console.error('[webhook] enqueue failed:', err)
+      return NextResponse.json({ error: 'Queue unavailable' }, { status: 500 })
+    }
+    after(() => runReportJob(supabase, reportId))
   }
 
   return NextResponse.json({ received: true })

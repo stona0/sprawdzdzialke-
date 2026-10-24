@@ -1,0 +1,272 @@
+{
+ "id": "torun-wisla",
+ "tags": [
+  "wz_niemozliwe_poza_ouz",
+  "powodz",
+  "natura",
+  "pog-ru"
+ ],
+ "opis": "Toruń, okolice Wisły",
+ "parcelId": "046301_1.0065.40/4",
+ "data": {
+  "version": 2,
+  "parcelId": "046301_1.0065.40/4",
+  "generatedAt": "2026-10-23T09:49:23.220Z",
+  "parcel": {
+   "parcelId": "046301_1.0065.40/4",
+   "numer": "40/4",
+   "powierzchnia": 201860,
+   "obreb": "Obręb 65",
+   "gmina": "Toruń (miasto)",
+   "teryt": "046301_1",
+   "terc": "046301",
+   "powiat": "powiat Toruń",
+   "wojewodztwo": "kujawsko-pomorskie",
+   "wspolrzedne": {
+    "lat": 53.004511,
+    "lng": 18.618507
+   },
+   "geomWkt": "SRID=2180;POLYGON((473918.042570638 571059.905032096,473923.097961146 571039.695402133,473933.863033287 571018.966412988,473950.590268512 570971.378729409,473999.398301036 570931.539413475,474004.937864469 570931.722049476,474044.919286518 570931.934275731,474084.868712579 570933.436253263,474121.790319198 570934.260827503,474181.731454058 570935.22425097,474208.222684657 570934.18531193,474234.690418208 570935.045676874,474240.763315086 570934.771120252,474281.163855988 570945.691726866,474338.377245997 570943.844710622,474348.057012239 570944.919117933,474360.121088495 570944.960825738,474376.123148711 570945.727215736,474403.099423713 570947.220145478,474452.226282808 570951.762473699,474471.020501593 570950.640936696,474508.919796558 570950.622326922,474513.745418385 570950.495087734,474542.378965338 570949.706132335,474573.078698687 570950.157688398,474587.982052349 570952.408601547,474610.724047161 570956.299296095,474639.792725377 570961.630967827,474686.341439824 570971.226525063,474720.321285326 570977.549159097,474734.343693262 570984.000090973,474754.029172611 570985.154892924,474766.41690647 570985.471936658,474767.406904695 570994.113462316,474776.663501819 571030.074933439,474782.276197366 571067.76629538,474785.107490029 571105.966177882,474782.014947851 571144.378573008,474775.773540758 571184.184138011,474765.967113706 571221.34086062,474753.18642253 571257.35968543,474740.13523479 571293.332309785,474732.821000108 571332.89297599,474731.828812084 571335.565372973,474700.30879582 571302.083108575,474695.762632211 571295.729950586,474672.757592553 571283.00770533,474665.860656271 571279.375867973,474660.285880567 571274.516250983,474653.08142734 571268.899774028,474636.160611526 571260.300435785,474619.296118729 571248.572000115,474612.458377147 571246.318592478,474589.382347215 571234.956599738,474576.626745809 571230.476938266,474559.265109747 571223.952626971,474535.67668706 571218.134788169,474524.204930203 571217.565108796,474492.076473516 571213.565408739,474485.290660851 571206.433907369,474474.483906066 571201.947065019,474437.639084723 571198.742720578,474373.448878337 571192.661351874,474333.577016547 571193.137244181,474318.394856804 571196.697091718,474295.957478183 571195.300810281,474269.456768563 571192.791805573,474232.824947558 571189.094753785,474210.276114042 571187.590084837,474148.492333807 571179.19639249,474158.652027157 571140.135731608,474131.989197296 571126.714865181,474092.838199856 571111.509147521,473995.263551652 571076.57895918,473960.848109244 571064.105710652,473951.455644245 571060.698553449,473918.042570638 571059.905032096))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:23.937Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "47SO",
+      "symbol": "SO",
+      "nazwa": "strefa otwarta",
+      "maks_intensywnosc": 0.1,
+      "maks_udzial_zabudowy": 5,
+      "maks_wysokosc": 5,
+      "min_pbc": 95,
+      "profil_podstawowy": [
+       "teren rolnictwa z zakazem zabudowy",
+       "teren lasu",
+       "teren zieleni naturalnej",
+       "teren wód",
+       "teren komunikacji",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren zieleni urządzonej"
+      ],
+      "sharePct": 93.2
+     },
+     {
+      "oznaczenie": "13SK",
+      "symbol": "SK",
+      "nazwa": "strefa komunikacyjna",
+      "maks_intensywnosc": null,
+      "maks_udzial_zabudowy": null,
+      "maks_wysokosc": null,
+      "min_pbc": null,
+      "profil_podstawowy": [
+       "teren autostrady",
+       "teren drogi ekspresowej",
+       "teren drogi głównej ruchu przyspieszonego",
+       "teren drogi głównej",
+       "teren komunikacji kolejowej i szynowej",
+       "teren komunikacji kolei linowej",
+       "teren komunikacji wodnej",
+       "teren komunikacji lotniczej",
+       "teren obsługi komunikacji",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren drogi zbiorczej",
+       "teren usług handlu detalicznego",
+       "teren usług gastronomii",
+       "teren usług turystyki",
+       "teren zieleni urządzonej",
+       "teren lasu",
+       "teren zieleni naturalnej",
+       "teren wód"
+      ],
+      "sharePct": 6.8
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": null,
+    "ouzSharePct": 0,
+    "obszar_zabudowy_srodmiejskiej": null,
+    "obowiazuje_od": "2026-06-18",
+    "uchwala": "Uchwała nr 449/26 Rady Miasta Torunia z dnia 28 maja 2026 r.",
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/680"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 680,
+     "tytul": "Plan ogólny miasta Torunia",
+     "status": "prawnie wiążący lub realizowany",
+     "obowiazujeOd": "2026-06-18",
+     "dataPublikacji": "2026-08-04",
+     "terc": "046301",
+     "gmina": "Toruń"
+    },
+    "inForce": true,
+    "draft": null
+   },
+   "inForce": true,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_poza_ouz",
+   "title": "Nowa decyzja WZ co do zasady niemożliwa (poza OUZ)",
+   "text": "Gmina ma obowiązujący plan ogólny, ale działka nie leży w obszarze uzupełnienia zabudowy. Od 1.09.2026 nowej decyzji o warunkach zabudowy dla budynków co do zasady nie można tu uzyskać — zabudowa wymaga uchwalenia miejscowego planu. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [
+    "Q10",
+    "Q1",
+    "Q0.2",
+    "BUDOWLA"
+   ],
+   "oszp": true,
+   "risk": [
+    {
+     "scenario": "Q10",
+     "level": "niskie ryzyko"
+    },
+    {
+     "scenario": "Q1",
+     "level": "niskie ryzyko"
+    },
+    {
+     "scenario": "Q0.2",
+     "level": "niskie ryzyko"
+    },
+    {
+     "scenario": "BUDOWLA",
+     "level": "niskie ryzyko"
+    }
+   ],
+   "validTo": "2025-12-21"
+  },
+  "nature": {
+   "onParcel": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Dolina Dolnej Wisły"
+    },
+    {
+     "type": "Rezerwat przyrody",
+     "name": "Kępa Bazarowa im. Bogdana Chrapkowskiego"
+    }
+   ],
+   "nearby": [
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Forty w Toruniu"
+    },
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Wydmowy na południe od Torunia"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 1,
+    "crosses": false
+   },
+   "woda": {
+    "distanceM": null,
+    "crosses": false
+   },
+   "kanalizacja": {
+    "distanceM": 5,
+    "crosses": false
+   },
+   "gaz": {
+    "distanceM": 4,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-09-27",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "ryzyko",
+    "basis": "powodz",
+    "text": "Działka leży w obszarze szczególnego zagrożenia powodzią (Q10%, Q1%). Obowiązują ograniczenia z ustawy Prawo wodne; zabudowa wymaga uzgodnień z PGW Wody Polskie, a ubezpieczenie może być droższe."
+   },
+   {
+    "level": "ryzyko",
+    "basis": "przyroda",
+    "text": "Działka leży w obszarze chronionym: Natura 2000 – obszar specjalnej ochrony ptaków (OSO) „Dolina Dolnej Wisły”; Rezerwat przyrody „Kępa Bazarowa im. Bogdana Chrapkowskiego”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:23.937Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 294,
+    "fetchedAt": "2026-10-23T09:49:24.231Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 128,
+    "fetchedAt": "2026-10-23T09:49:24.065Z"
+   },
+   {
+    "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 882,
+    "fetchedAt": "2026-10-23T09:49:24.947Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "ok",
+    "ms": 2780,
+    "fetchedAt": "2026-10-23T09:49:26.718Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 660,
+    "fetchedAt": "2026-10-23T09:49:24.601Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 5405,
+    "fetchedAt": "2026-10-23T09:49:29.348Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 36,
+    "fetchedAt": "2026-10-23T09:49:23.979Z"
+   }
+  ]
+ }
+}

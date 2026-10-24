@@ -46,3 +46,10 @@ next-env.d.ts
 
 # Claude
 .claude/
+
+# Playwright
+/test-results/
+/playwright-report/
+
+# Dane z ETL (scripts/etl) — wgrywane do Storage, nie do repo
+/data/

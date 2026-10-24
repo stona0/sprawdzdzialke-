@@ -51,9 +51,12 @@ export interface MPZPResult {
 }
 
 export async function parseMPZP(pdfBase64: string, gmina: string): Promise<MPZPResult> {
-  const response = await getClient().messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 8096,
+  // claude-sonnet-4-20250514 został wycofany (API zwraca „model not found”).
+  // Uchwały mają dziesiątki terenów, więc odpowiedź bywa długa — streaming chroni przed timeoutem HTTP.
+  const response = await getClient().messages.stream({
+    model: 'claude-opus-5-5',
+    max_tokens: 32000,
+    output_config: { effort: 'medium' },
     system: MPZP_SYSTEM_PROMPT,
     messages: [
       {
@@ -74,9 +77,13 @@ export async function parseMPZP(pdfBase64: string, gmina: string): Promise<MPZPR
         ],
       },
     ],
-  })
+  }).finalMessage()
 
-  const text = response.content[0].type === 'text' ? response.content[0].text : ''
+  if (response.stop_reason === 'refusal') throw new Error('Claude odmówił przetworzenia dokumentu')
+  if (response.stop_reason === 'max_tokens') throw new Error('Odpowiedź Claude została ucięta (max_tokens)')
+
+  // Przy włączonym myśleniu pierwszym blokiem jest „thinking”, nie tekst.
+  const text = response.content.flatMap(b => (b.type === 'text' ? [b.text] : [])).join('')
 
   const jsonMatch = text.match(/\{[\s\S]*\}/)
   if (!jsonMatch) {

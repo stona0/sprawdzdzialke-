@@ -1,0 +1,194 @@
+{
+ "id": "pog-przemęt-ouz",
+ "tags": [
+  "wz_mozliwe",
+  "natura",
+  "pog-ru"
+ ],
+ "opis": "Przemęt: plan ogólny w mocy (RU), strefa SJ, w OUZ",
+ "parcelId": "302901_2.0025.17/1",
+ "data": {
+  "version": 2,
+  "parcelId": "302901_2.0025.17/1",
+  "generatedAt": "2026-10-23T09:49:18.944Z",
+  "parcel": {
+   "parcelId": "302901_2.0025.17/1",
+   "numer": "17/1",
+   "powierzchnia": 877,
+   "obreb": "Solec",
+   "gmina": "Przemęt",
+   "teryt": "302901_2",
+   "terc": "302901",
+   "powiat": "powiat wolsztyński",
+   "wojewodztwo": "wielkopolskie",
+   "wspolrzedne": {
+    "lat": 52.030426,
+    "lng": 16.15668
+   },
+   "geomWkt": "SRID=2180;POLYGON((305042.209425269 466499.339986367,304995.055964508 466496.181500739,304993.723202387 466517.95415768,305027.933382276 466519.731794623,305042.209425269 466499.339986367))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:19.551Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "2SJ",
+      "symbol": "SJ",
+      "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową jednorodzinną",
+      "maks_intensywnosc": 0.7,
+      "maks_udzial_zabudowy": 35,
+      "maks_wysokosc": 10,
+      "min_pbc": 45,
+      "profil_podstawowy": [
+       "teren zabudowy mieszkaniowej jednorodzinnej",
+       "teren usług",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren zieleni naturalnej",
+       "teren lasu",
+       "teren wód"
+      ],
+      "sharePct": 100
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": "28OUZ",
+    "ouzSharePct": 100,
+    "obszar_zabudowy_srodmiejskiej": null,
+    "obowiazuje_od": "2026-09-01",
+    "uchwala": "Uchwała nr 176/2026",
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/5261"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 5261,
+     "tytul": "Plan ogólny gminy Przemęt",
+     "status": "prawnie wiążący lub realizowany",
+     "obowiazujeOd": "2026-09-01",
+     "dataPublikacji": "2026-10-19",
+     "terc": "302901",
+     "gmina": "Przemęt"
+    },
+    "inForce": true,
+    "draft": null
+   },
+   "inForce": true,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_mozliwe",
+   "title": "Możliwa decyzja o warunkach zabudowy (działka w OUZ)",
+   "text": "Działka leży w obszarze uzupełnienia zabudowy wyznaczonym w planie ogólnym. Można ubiegać się o decyzję WZ; jej ustalenia muszą być zgodne z planem ogólnym (strefa, parametry). Decyzja WZ wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Przemęcko-Wschowski i kompleks leśny Włoszakowice"
+    }
+   ],
+   "nearby": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Wielki Łęg Obrzański"
+    }
+   ]
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 41,
+     "crosses": false,
+     "status": null
+    }
+   ],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-02-15",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "ryzyko",
+    "basis": "przyroda",
+    "text": "Działka leży w obszarze chronionym: Obszar chronionego krajobrazu „Przemęcko-Wschowski i kompleks leśny Włoszakowice”. Inwestycja może wymagać oceny oddziaływania na środowisko i uzgodnień z RDOŚ."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:19.551Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 97,
+    "fetchedAt": "2026-10-23T09:49:19.648Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 51,
+    "fetchedAt": "2026-10-23T09:49:19.602Z"
+   },
+   {
+    "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 601,
+    "fetchedAt": "2026-10-23T09:49:20.203Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 441,
+    "fetchedAt": "2026-10-23T09:49:19.993Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 334,
+    "fetchedAt": "2026-10-23T09:49:19.888Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 1398,
+    "fetchedAt": "2026-10-23T09:49:20.954Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 3,
+    "fetchedAt": "2026-10-23T09:49:19.560Z"
+   }
+  ]
+ }
+}

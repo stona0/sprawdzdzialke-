@@ -1,0 +1,327 @@
+{
+ "id": "bialystok-obrzeza",
+ "tags": [
+  "wz_niemozliwe_poza_ouz",
+  "pog-ru"
+ ],
+ "opis": "Białystok, obrzeża",
+ "parcelId": "206101_1.0001.322/2",
+ "data": {
+  "version": 2,
+  "parcelId": "206101_1.0001.322/2",
+  "generatedAt": "2026-10-23T09:49:53.126Z",
+  "parcel": {
+   "parcelId": "206101_1.0001.322/2",
+   "numer": "322/2",
+   "powierzchnia": 18118,
+   "obreb": "Bacieczki",
+   "gmina": "Białystok (miasto)",
+   "teryt": "206101_1",
+   "terc": "206101",
+   "powiat": "powiat Białystok",
+   "wojewodztwo": "podlaskie",
+   "wspolrzedne": {
+    "lat": 53.160394,
+    "lng": 23.089517
+   },
+   "geomWkt": "SRID=2180;POLYGON((773195.964861847 596191.898331143,773147.888791182 596161.91192391,773134.053932806 596153.283033464,773339.321417514 596096.468396045,773344.554503397 596095.04986005,773363.871203645 596089.824145999,773385.377210093 596145.865994474,773392.046159219 596156.309583961,773388.394209503 596159.06207179,773390.698075634 596161.96068104,773322.933186916 596215.865469971,773195.964861847 596191.898331143))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:53.610Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "17SP",
+      "symbol": "SP",
+      "nazwa": "strefa gospodarcza",
+      "maks_intensywnosc": 4.2,
+      "maks_udzial_zabudowy": 60,
+      "maks_wysokosc": 30,
+      "min_pbc": 10,
+      "profil_podstawowy": [
+       "teren produkcji",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren usług",
+       "teren zieleni naturalnej",
+       "teren lasu",
+       "teren wód"
+      ],
+      "sharePct": 54.2
+     },
+     {
+      "oznaczenie": "33SN",
+      "symbol": "SN",
+      "nazwa": "strefa zieleni i rekreacji",
+      "maks_intensywnosc": null,
+      "maks_udzial_zabudowy": null,
+      "maks_wysokosc": null,
+      "min_pbc": 80,
+      "profil_podstawowy": [
+       "teren zieleni urządzonej",
+       "teren plaży",
+       "teren wód",
+       "teren komunikacji",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren zieleni naturalnej",
+       "teren lasu"
+      ],
+      "sharePct": 27.3
+     },
+     {
+      "oznaczenie": "16SP",
+      "symbol": "SP",
+      "nazwa": "strefa gospodarcza",
+      "maks_intensywnosc": 3.6,
+      "maks_udzial_zabudowy": 60,
+      "maks_wysokosc": 25,
+      "min_pbc": 10,
+      "profil_podstawowy": [
+       "teren produkcji",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren usług",
+       "teren zieleni naturalnej",
+       "teren lasu",
+       "teren wód"
+      ],
+      "sharePct": 13.1
+     },
+     {
+      "oznaczenie": "6SH",
+      "symbol": "SH",
+      "nazwa": "strefa handlu wielkopowierzchniowego",
+      "maks_intensywnosc": 2.7,
+      "maks_udzial_zabudowy": 60,
+      "maks_wysokosc": 18,
+      "min_pbc": 10,
+      "profil_podstawowy": [
+       "teren handlu wielkopowierzchniowego",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren usług",
+       "teren składów i magazynów",
+       "teren elektrowni słonecznej",
+       "teren zieleni naturalnej",
+       "teren lasu",
+       "teren wód"
+      ],
+      "sharePct": 5.4
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": null,
+    "ouzSharePct": 0,
+    "obszar_zabudowy_srodmiejskiej": null,
+    "obowiazuje_od": "2026-07-15",
+    "uchwala": "Uchwała nr XXVII/453/26 Rady Miasta Białystok z dnia 25 czerwca 2026 r.",
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/90"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 90,
+     "tytul": "Plan ogólny miasta Białegostoku",
+     "status": "prawnie wiążący lub realizowany",
+     "obowiazujeOd": "2026-07-15",
+     "dataPublikacji": "2026-07-16",
+     "terc": "206101",
+     "gmina": "Białystok"
+    },
+    "inForce": true,
+    "draft": null
+   },
+   "inForce": true,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_poza_ouz",
+   "title": "Nowa decyzja WZ co do zasady niemożliwa (poza OUZ)",
+   "text": "Gmina ma obowiązujący plan ogólny, ale działka nie leży w obszarze uzupełnienia zabudowy. Od 1.09.2026 nowej decyzji o warunkach zabudowy dla budynków co do zasady nie można tu uzyskać — zabudowa wymaga uchwalenia miejscowego planu. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Puszcza Knyszyńska"
+    },
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Ostoja Knyszyńska"
+    },
+    {
+     "type": "Natura 2000 – specjalny obszar ochrony siedlisk (SOO)",
+     "name": "Dolina Biebrzy"
+    },
+    {
+     "type": "Park narodowy",
+     "name": "Biebrzański Park Narodowy - otulina"
+    },
+    {
+     "type": "Park krajobrazowy",
+     "name": "Park Krajobrazowy Puszczy Knyszyńskiej im. profesora Witolda Sławińskiego"
+    },
+    {
+     "type": "Park krajobrazowy",
+     "name": "Park Krajobrazowy Puszczy Knyszyńskiej im. profesora Witolda Sławińskiego - otulina"
+    },
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Dolina Narwi"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "woda": {
+    "distanceM": 5,
+    "crosses": false
+   },
+   "kanalizacja": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "gaz": {
+    "distanceM": 101,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [
+    {
+     "klasa": "MV",
+     "distanceM": 0,
+     "crosses": true,
+     "status": null
+    },
+    {
+     "klasa": "HV",
+     "distanceM": 214,
+     "crosses": false,
+     "status": null
+    }
+   ],
+   "pipelines": [
+    {
+     "rodzaj": "ciepłowniczy",
+     "distanceM": 0,
+     "crosses": true,
+     "status": null
+    }
+   ],
+   "radiusM": 300,
+   "dataDate": "2024-05-13",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Natura 2000 – obszar specjalnej ochrony ptaków (OSO) „Puszcza Knyszyńska”; Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Ostoja Knyszyńska”; Natura 2000 – specjalny obszar ochrony siedlisk (SOO) „Dolina Biebrzy”; Park narodowy „Biebrzański Park Narodowy - otulina”; Park krajobrazowy „Park Krajobrazowy Puszczy Knyszyńskiej im. profesora Witolda Sławińskiego”; Park krajobrazowy „Park Krajobrazowy Puszczy Knyszyńskiej im. profesora Witolda Sławińskiego - otulina”; Obszar chronionego krajobrazu „Dolina Narwi”."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć elektroenergetyczna, kanalizacja (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Napowietrzna linia średniego napięcia przebiega przez działkę (BDOT10k) — możliwa służebność przesyłu i ograniczenia zabudowy pod linią."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Rurociąg ciepłowniczy przebiega przez działkę (BDOT10k) — strefa ochronna lub służebność może ograniczać zabudowę; sprawdź u operatora."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:53.610Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 298,
+    "fetchedAt": "2026-10-23T09:49:53.909Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 61,
+    "fetchedAt": "2026-10-23T09:49:53.671Z"
+   },
+   {
+    "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 2204,
+    "fetchedAt": "2026-10-23T09:49:55.875Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 202,
+    "fetchedAt": "2026-10-23T09:49:53.813Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 309,
+    "fetchedAt": "2026-10-23T09:49:53.921Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 1537,
+    "fetchedAt": "2026-10-23T09:49:55.152Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "ok",
+    "ms": 14,
+    "fetchedAt": "2026-10-23T09:49:53.630Z"
+   }
+  ]
+ }
+}

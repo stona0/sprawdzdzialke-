@@ -1,0 +1,155 @@
+{
+ "id": "podkarpacie-wies",
+ "tags": [
+  "wz_niemozliwe_brak_pog"
+ ],
+ "opis": "Podkarpacie, wieś",
+ "parcelId": "181614_4.0001.2156/1",
+ "data": {
+  "version": 2,
+  "parcelId": "181614_4.0001.2156/1",
+  "generatedAt": "2026-10-23T09:50:11.168Z",
+  "parcel": {
+   "parcelId": "181614_4.0001.2156/1",
+   "numer": "2156/1",
+   "powierzchnia": 1618,
+   "obreb": "Tyczyn",
+   "gmina": "Tyczyn",
+   "teryt": "181614_4",
+   "terc": "181614",
+   "powiat": "powiat rzeszowski",
+   "wojewodztwo": "podkarpackie",
+   "wspolrzedne": {
+    "lat": 49.949878,
+    "lng": 22.049945
+   },
+   "geomWkt": "SRID=2180;POLYGON((718736.926228465 235862.015259792,718728.576988106 235911.654573641,718723.975817998 235895.197403352,718712.303943948 235857.005708138,718707.609936483 235838.035423293,718703.891604436 235824.47258896,718703.372014334 235822.208125989,718722.050629384 235827.298789201,718741.900681262 235832.720855493,718736.926228465 235862.015259792))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:50:11.455Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Hyżnieńsko-Gwoźnicki Obszar Chronionego Krajobrazu"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 105,
+    "crosses": false
+   },
+   "woda": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "kanalizacja": {
+    "distanceM": 124,
+    "crosses": false
+   },
+   "gaz": {
+    "distanceM": null,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-06-10",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Obszar chronionego krajobrazu „Hyżnieńsko-Gwoźnicki Obszar Chronionego Krajobrazu”."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: wodociąg (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:50:11.455Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 109,
+    "fetchedAt": "2026-10-23T09:50:11.565Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 91,
+    "fetchedAt": "2026-10-23T09:50:11.546Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 1447,
+    "fetchedAt": "2026-10-23T09:50:12.903Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 329,
+    "fetchedAt": "2026-10-23T09:50:11.786Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 969,
+    "fetchedAt": "2026-10-23T09:50:12.428Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 6,
+    "fetchedAt": "2026-10-23T09:50:11.465Z"
+   }
+  ]
+ }
+}

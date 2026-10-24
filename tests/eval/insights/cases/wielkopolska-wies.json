@@ -1,0 +1,133 @@
+{
+ "id": "wielkopolska-wies",
+ "tags": [
+  "wz_niemozliwe_brak_pog"
+ ],
+ "opis": "Wielkopolska, wieś",
+ "parcelId": "302504_5.0006.11/6",
+ "data": {
+  "version": 2,
+  "parcelId": "302504_5.0006.11/6",
+  "generatedAt": "2026-10-23T09:50:12.903Z",
+  "parcel": {
+   "parcelId": "302504_5.0006.11/6",
+   "numer": "11/6",
+   "powierzchnia": 24774,
+   "obreb": "Czarne Piątkowo",
+   "gmina": "Środa Wielkopolska",
+   "teryt": "302504_5",
+   "terc": "302504",
+   "powiat": "powiat średzki",
+   "wojewodztwo": "wielkopolskie",
+   "wspolrzedne": {
+    "lat": 52.199008,
+    "lng": 17.399501
+   },
+   "geomWkt": "SRID=2180;POLYGON((390605.026953002 482475.077176163,390677.830334654 482472.636458971,390692.243423073 482814.823795459,390620.027695653 482826.08312089,390623.053122349 482801.73889315,390619.68445448 482735.442829755,390619.725724989 482709.609511965,390617.495348021 482670.584183004,390611.23088565 482626.422620664,390606.526393795 482571.412959142,390605.026953002 482475.077176163))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:50:13.308Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": null,
+   "planStatus": "not_covered",
+   "draft": null,
+   "ru": {
+    "entry": null,
+    "inForce": false,
+    "draft": null
+   },
+   "inForce": false,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_niemozliwe_brak_pog",
+   "title": "Brak obowiązującego planu ogólnego gminy",
+   "text": "Według Rejestru Urbanistycznego (stan na 2026-10-23) gmina nie ma obowiązującego planu ogólnego (status: brak wpisu w rejestrze). Jeśli to aktualne, od 1.09.2026 nie można w niej uzyskać nowej decyzji o warunkach zabudowy, a zabudowa terenu bez MPZP wymaga uchwalenia planu. Rejestr bywa opóźniony względem uchwał gmin — koniecznie potwierdź stan w urzędzie gminy.",
+   "confidence": "srednia"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Natura 2000 – obszar specjalnej ochrony ptaków (OSO)",
+     "name": "Dolina Środkowej Warty"
+    }
+   ]
+  },
+  "gesut": null,
+  "gesutStatus": "not_covered",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2023-12-04",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Natura 2000 – obszar specjalnej ochrony ptaków (OSO) „Dolina Środkowej Warty”."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:50:13.308Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 223,
+    "fetchedAt": "2026-10-23T09:50:13.531Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "no_data",
+    "ms": 54,
+    "fetchedAt": "2026-10-23T09:50:13.362Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 608,
+    "fetchedAt": "2026-10-23T09:50:13.916Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 318,
+    "fetchedAt": "2026-10-23T09:50:13.627Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "not_covered",
+    "ms": 1333,
+    "fetchedAt": "2026-10-23T09:50:14.642Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 3,
+    "fetchedAt": "2026-10-23T09:50:13.313Z"
+   }
+  ]
+ }
+}

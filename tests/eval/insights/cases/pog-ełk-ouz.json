@@ -1,0 +1,201 @@
+{
+ "id": "pog-ełk-ouz",
+ "tags": [
+  "wz_mozliwe",
+  "pog-ru"
+ ],
+ "opis": "Ełk: plan ogólny w mocy (RU), strefa SJ, w OUZ",
+ "parcelId": "280501_1.0001.1366/35",
+ "data": {
+  "version": 2,
+  "parcelId": "280501_1.0001.1366/35",
+  "generatedAt": "2026-10-23T09:49:15.216Z",
+  "parcel": {
+   "parcelId": "280501_1.0001.1366/35",
+   "numer": "1366/35",
+   "powierzchnia": 209,
+   "obreb": "Ełk 1",
+   "gmina": "Ełk (miasto)",
+   "teryt": "280501_1",
+   "terc": "280501",
+   "powiat": "powiat ełcki",
+   "wojewodztwo": "warmińsko-mazurskie",
+   "wspolrzedne": {
+    "lat": 53.831207,
+    "lng": 22.338362
+   },
+   "geomWkt": "SRID=2180;POLYGON((719617.365638714 668108.030141953,719618.329596199 668109.31767178,719618.627697561 668110.806481279,719621.934404336 668115.210914838,719606.775789444 668124.946132964,719603.862317324 668126.814489417,719604.295731674 668127.406871029,719600.721734374 668129.996798537,719594.378565438 668122.245838817,719595.430295835 668121.485287865,719596.676208226 668123.060845997,719606.254261414 668116.129035197,719607.030777198 668115.550773502,719616.834635164 668108.415273914,719617.365638714 668108.030141953))",
+   "found": true,
+   "fetchedAt": "2026-10-23T09:49:15.695Z"
+  },
+  "mpzp": {
+   "covered": false,
+   "wroclaw": null,
+   "kimpzp": [],
+   "status": "no_data"
+  },
+  "pog": {
+   "plan": {
+    "strefy": [
+     {
+      "oznaczenie": "7SJ",
+      "symbol": "SJ",
+      "nazwa": "strefa wielofunkcyjna z zabudową mieszkaniową jednorodzinną",
+      "maks_intensywnosc": 1.2,
+      "maks_udzial_zabudowy": 40,
+      "maks_wysokosc": 11,
+      "min_pbc": 40,
+      "profil_podstawowy": [
+       "teren zabudowy mieszkaniowej jednorodzinnej",
+       "teren usług",
+       "teren komunikacji",
+       "teren zieleni urządzonej",
+       "teren ogrodów działkowych",
+       "teren infrastruktury technicznej"
+      ],
+      "profil_dodatkowy": [
+       "teren zieleni naturalnej"
+      ],
+      "sharePct": 100
+     }
+    ],
+    "obszar_uzupelnienia_zabudowy": "15OUZ",
+    "ouzSharePct": 100,
+    "obszar_zabudowy_srodmiejskiej": null,
+    "obowiazuje_od": "2026-08-01",
+    "uchwala": "Uchwała nr LVIII.635.2023 Rady Miasta Ełku z dnia 29 listopada 2023 r.",
+    "zrodlo": "Rejestr Urbanistyczny",
+    "url": "https://rejestr-urbanistyczny.gov.pl/published/pog/5471"
+   },
+   "planStatus": "ok",
+   "draft": null,
+   "ru": {
+    "entry": {
+     "actId": 5471,
+     "tytul": "Plan ogólny gminy Miasta Ełku",
+     "status": "prawnie wiążący lub realizowany",
+     "obowiazujeOd": "2026-08-01",
+     "dataPublikacji": "2026-10-21",
+     "terc": "280501",
+     "gmina": "Ełk"
+    },
+    "inForce": true,
+    "draft": null
+   },
+   "inForce": true,
+   "source": "Rejestru Urbanistycznego"
+  },
+  "assessment": {
+   "verdict": "wz_mozliwe",
+   "title": "Możliwa decyzja o warunkach zabudowy (działka w OUZ)",
+   "text": "Działka leży w obszarze uzupełnienia zabudowy wyznaczonym w planie ogólnym. Można ubiegać się o decyzję WZ; jej ustalenia muszą być zgodne z planem ogólnym (strefa, parametry). Decyzja WZ wydana po 1.01.2026 wygasa po 5 latach od uprawomocnienia. Przed zakupem potwierdź to w urzędzie gminy (wypis i wyrys z planu / zaświadczenie).",
+   "confidence": "wysoka"
+  },
+  "flood": {
+   "scenarios": [],
+   "oszp": false,
+   "risk": [],
+   "validTo": null
+  },
+  "nature": {
+   "onParcel": [],
+   "nearby": [
+    {
+     "type": "Obszar chronionego krajobrazu",
+     "name": "Obszar Chronionego Krajobrazu Pojezierza Ełckiego"
+    }
+   ]
+  },
+  "gesut": {
+   "energia": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "woda": {
+    "distanceM": 0,
+    "crosses": true
+   },
+   "kanalizacja": {
+    "distanceM": 1,
+    "crosses": false
+   },
+   "gaz": {
+    "distanceM": 3,
+    "crosses": false
+   }
+  },
+  "gesutStatus": "ok",
+  "osm": null,
+  "powerLines": {
+   "lines": [],
+   "pipelines": [],
+   "radiusM": 300,
+   "dataDate": "2024-02-14",
+   "datasetVersion": "20261023"
+  },
+  "sip": null,
+  "utilityMapUrl": null,
+  "findings": [
+   {
+    "level": "uwaga",
+    "basis": "przyroda",
+    "text": "W odległości do 300 m: Obszar chronionego krajobrazu „Obszar Chronionego Krajobrazu Pojezierza Ełckiego”."
+   },
+   {
+    "level": "uwaga",
+    "basis": "uzbrojenie",
+    "text": "Przez działkę przebiega: sieć elektroenergetyczna, wodociąg (wg KIUT). Może to oznaczać pas ochronny lub służebność przesyłu ograniczające zabudowę."
+   }
+  ],
+  "sources": [
+   {
+    "source": "Dane ewidencyjne – ULDK (GUGiK)",
+    "status": "ok",
+    "ms": 0,
+    "fetchedAt": "2026-10-23T09:49:15.695Z"
+   },
+   {
+    "source": "MPZP – Krajowa Integracja MPZP (GUGiK)",
+    "status": "no_data",
+    "ms": 123,
+    "fetchedAt": "2026-10-23T09:49:15.818Z"
+   },
+   {
+    "source": "Plan ogólny – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 64,
+    "fetchedAt": "2026-10-23T09:49:15.759Z"
+   },
+   {
+    "source": "Plan ogólny (strefy) – Rejestr Urbanistyczny",
+    "status": "ok",
+    "ms": 1074,
+    "fetchedAt": "2026-10-23T09:49:16.833Z"
+   },
+   {
+    "source": "Zagrożenie powodziowe – ISOK / Wody Polskie",
+    "status": "no_data",
+    "ms": 515,
+    "fetchedAt": "2026-10-23T09:49:16.211Z"
+   },
+   {
+    "source": "Ochrona przyrody – GDOŚ",
+    "status": "ok",
+    "ms": 310,
+    "fetchedAt": "2026-10-23T09:49:16.009Z"
+   },
+   {
+    "source": "Uzbrojenie terenu – KIUT/GESUT (GUGiK)",
+    "status": "ok",
+    "ms": 1247,
+    "fetchedAt": "2026-10-23T09:49:16.949Z"
+   },
+   {
+    "source": "Linie napowietrzne i rurociągi – BDOT10k (GUGiK)",
+    "status": "no_data",
+    "ms": 11,
+    "fetchedAt": "2026-10-23T09:49:15.715Z"
+   }
+  ]
+ }
+}
