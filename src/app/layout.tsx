@@ -76,11 +76,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-
-  verification: {
-    // TODO: Dodaj po rejestracji w Google Search Console:
-    // google: "TWÓJ_KOD_WERYFIKACYJNY",
-  },
 };
 
 export default function RootLayout({
