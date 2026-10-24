@@ -663,6 +663,8 @@ Braki, które blokują uruchomienie płatnej usługi dla konsumentów. Tu też z
 - Obietnica „Eksport do PDF” (`/pricing`, `PaymentGate`): PDF nie istnieje, przycisk wywołuje `print()`. Teraz jest „wydruk lub zapis do PDF z przeglądarki”. Napis przycisku w `ReportView` zmienia sesja UI.
 - „Parametry zabudowy z MPZP (symbol, wysokość, PBC, dach)” w `PaymentGate`: Krajowa Integracja MPZP zwykle podaje tylko symbol i uchwałę, a parametry daje plan ogólny z Rejestru Urbanistycznego, jeśli gmina go opublikowała.
 
+- Makieta raportu pod hero: dane Długołęki 556/6 (MPZP „MN… Uchwała nr XXI/143/2023” obok rekomendacji „Brak MPZP — złóż wniosek o WZ”), adres `/report/556-6-dlugoleka` i emoji jako ikony. Teraz to skrót prawdziwego raportu z `reports-sample/siechnice-ouz.json` (23.10.2026): układ i nazwy sekcji z `html.ts`, ikony lucide, adres z UUID, etykieta „Przykładowy raport”, przy 375 px jedna kolumna. Z tej samej strony usunięty teaser „Starter/Pro/Popularne/PDF” i lista źródeł z „GDOŚ WFS”, „ISOK KZGW”, „OpenStreetMap” (OSM służy już tylko za zapasowe źródło linii).
+
 ### Strony prawne
 Dodane `/regulamin`, `/polityka-prywatnosci` i `/kontakt` (grupa `src/app/(legal)`) oraz ich adresy w `sitemap.ts`. Dane firmy pochodzą z `src/lib/company.ts`. **Teksty to wzór napisany bez prawnika.** Dopóki `LEGAL_DRAFT = true` (`src/lib/legal.ts`), strony pokazują baner i uwagi „Do weryfikacji”.
 

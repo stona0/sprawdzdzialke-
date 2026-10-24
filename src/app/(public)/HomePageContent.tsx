@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { MapPin, FileText, Shield, Zap, ChevronRight, Check } from 'lucide-react'
+import { MapPin, FileText, Shield, Zap, ChevronRight, Check, Compass, Map as MapIcon, ShieldCheck, Sparkles, CheckCircle2, AlertTriangle, type LucideIcon } from 'lucide-react'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 
 export default function HomePageContent() {
@@ -32,8 +32,8 @@ export default function HomePageContent() {
           </h1>
 
           <p className="mt-5 text-center text-lg md:text-xl text-gray-600 max-w-xl leading-relaxed">
-            Raport planistyczny w 60 sekund. MPZP, strefy Natura 2000,
-            media i rekomendacje AI — wszystko w jednym miejscu.
+            Raport planistyczny zwykle w mniej niż minutę. MPZP, plan ogólny, strefy zalewowe,
+            Natura 2000, uzbrojenie i rekomendacje AI — wszystko w jednym miejscu.
           </p>
 
           {/* CTA buttons */}
@@ -53,121 +53,74 @@ export default function HomePageContent() {
           </div>
         </div>
 
-        {/* Floating mockup */}
-        <div className="w-full max-w-4xl px-6 relative">
-          <div className="absolute bottom-0 inset-x-6 h-32 pointer-events-none z-10 rounded-b-2xl" style={{ background: 'linear-gradient(to bottom, transparent, white)' }} />
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden" style={{ maxHeight: '500px', overflow: 'hidden' }}>
+        {/* Makieta: skrót prawdziwego raportu (reports-sample/siechnice-ouz.json, 23.10.2026) w układzie z src/lib/report/html.ts */}
+        <div className="w-full max-w-4xl px-4 sm:px-6 relative">
+          <div className="absolute bottom-0 inset-x-4 sm:inset-x-6 h-32 pointer-events-none z-10 rounded-b-2xl" style={{ background: 'linear-gradient(to bottom, transparent, white)' }} />
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden" style={{ maxHeight: '520px' }}>
             {/* Pasek przeglądarki */}
-            <div className="bg-gray-100 border-b border-gray-200 px-4 py-3 flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-400" />
-              <div className="w-3 h-3 rounded-full bg-yellow-400" />
-              <div className="w-3 h-3 rounded-full bg-green-400" />
-              <div className="flex-1 mx-4 bg-white rounded-md px-3 py-1 text-xs text-gray-400 border border-gray-200">
-                sprawdzdzialke.com/report/556-6-dlugoleka
+            <div className="bg-gray-100 border-b border-gray-200 px-4 py-3 flex items-center gap-2" aria-hidden="true">
+              <div className="w-3 h-3 rounded-full bg-red-400 shrink-0" />
+              <div className="w-3 h-3 rounded-full bg-yellow-400 shrink-0" />
+              <div className="w-3 h-3 rounded-full bg-green-400 shrink-0" />
+              <div className="flex-1 min-w-0 mx-2 sm:mx-4 bg-white rounded-md px-3 py-1 text-xs text-gray-400 border border-gray-200 truncate">
+                sprawdzdzialke.com/report/7c1e4b9a-2d3f-4e8b-9a61-5b0f2c8d1e47
               </div>
             </div>
 
             {/* Treść raportu */}
-            <div className="p-5 bg-white">
-              <div className="flex items-start justify-between mb-4 pb-3 border-b border-gray-100">
+            <div className="p-4 sm:p-5 bg-white text-[13px] sm:text-xs">
+              <div className="flex flex-wrap items-start justify-between gap-2 mb-4 pb-3 border-b border-gray-100">
                 <div>
                   <p className="text-xs font-semibold text-green-700 mb-1 font-playfair">SprawdzDziałkę.com</p>
                   <h2 className="text-base font-semibold text-gray-900 leading-tight font-playfair">
-                    Raport działki <strong>556/6</strong><br/>Długołęka
+                    Raport działki <strong>24</strong><br />Siechnice, obręb Żerniki Wrocławskie
                   </h2>
-                  <p className="text-xs text-gray-400 mt-1">Wygenerowano: 17.05.2026, 12:41</p>
+                  <p className="text-xs text-gray-400 mt-1">Wygenerowano: 23.10.2026, 14:09</p>
                 </div>
                 <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-200 rounded-full px-2.5 py-0.5 whitespace-nowrap">
-                  Raport planistyczny
+                  Przykładowy raport
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                {/* Dane podstawowe */}
-                <div className="border border-gray-100 rounded-xl p-3">
-                  <div className="flex items-center gap-1.5 mb-2.5 pb-2 border-b border-gray-100">
-                    <span className="w-5 h-5 bg-green-50 rounded-md flex items-center justify-center text-xs">📍</span>
-                    <span className="font-semibold text-gray-800 font-playfair">Dane podstawowe</span>
-                  </div>
-                  {[['Numer działki','556/6'],['Gmina','Długołęka'],['Powiat','powiat wrocławski'],['Województwo','dolnośląskie'],['Powierzchnia','734 m²'],['Współrzędne','50.971, 17.192']].map(([k,v]) => (
-                    <div key={k} className="flex justify-between py-1 border-b border-gray-50 last:border-0">
-                      <span className="text-gray-400">{k}</span>
-                      <span className="font-medium text-gray-800">{v}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <MockSection icon={Compass} title="Podsumowanie" full>
+                  <MockStatus tone="ok">
+                    <strong>Możliwa decyzja o warunkach zabudowy (działka w OUZ).</strong> W obszarze uzupełnienia zabudowy planu ogólnego leży ok. 76% działki.
+                  </MockStatus>
+                  <MockStatus tone="warn">Przez działkę przebiega sieć gazowa (wg KIUT) — możliwy pas ochronny lub służebność przesyłu.</MockStatus>
+                </MockSection>
 
-                {/* Media */}
-                <div className="border border-gray-100 rounded-xl p-3">
-                  <div className="flex items-center gap-1.5 mb-2.5 pb-2 border-b border-gray-100">
-                    <span className="w-5 h-5 bg-green-50 rounded-md flex items-center justify-center text-xs">⚡</span>
-                    <span className="font-semibold text-gray-800 font-playfair">Media i uzbrojenie</span>
-                  </div>
-                  {['Wodociąg','Kanalizacja','Gaz','Energia elektryczna'].map(m => (
-                    <div key={m} className="flex justify-between py-1 border-b border-gray-50 last:border-0">
-                      <span className="text-gray-400">{m}</span>
-                      <span className="text-green-600 font-semibold flex items-center gap-1">
-                        <Check className="w-2.5 h-2.5" /> Tak
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                <MockSection icon={MapPin} title="Dane ewidencyjne">
+                  <MockRows rows={[['Numer działki', '24'], ['Obręb', 'Żerniki Wrocławskie'], ['Gmina', 'Siechnice'], ['Powiat', 'wrocławski'], ['Powierzchnia', '16 843 m²']]} />
+                </MockSection>
 
-                {/* MPZP */}
-                <div className="border border-gray-100 rounded-xl p-3">
-                  <div className="flex items-center gap-1.5 mb-2.5 pb-2 border-b border-gray-100">
-                    <span className="w-5 h-5 bg-green-50 rounded-md flex items-center justify-center text-xs">📋</span>
-                    <span className="font-semibold text-gray-800 font-playfair">Plan zagospodarowania</span>
-                  </div>
-                  {[['Symbol terenu','MN – zabudowa mieszkaniowa'],['Wysokość max','9 m (2 kondygnacje)'],['Min. pow. biol. czynna','30%'],['Typ dachu','dwuspadowy, 35–45°'],['Źródło','Uchwała nr XXI/143/2023']].map(([k,v]) => (
-                    <div key={k} className="flex justify-between py-1 border-b border-gray-50 last:border-0">
-                      <span className="text-gray-400">{k}</span>
-                      <span className="font-medium text-gray-800 text-right max-w-[55%]">{v}</span>
-                    </div>
-                  ))}
-                </div>
+                <MockSection icon={MapIcon} title="MPZP i plan ogólny">
+                  <MockRows rows={[['MPZP', 'brak obowiązującego planu'], ['Strefa planu ogólnego', '685SJ, wielofunkcyjna z zab. jednorodzinną'], ['Maks. wysokość', '12 m'], ['Min. pow. biol. czynna', '50%'], ['Obszar uzupełnienia zabudowy', 'tak, 76% działki']]} />
+                </MockSection>
 
-                {/* Strefy */}
-                <div className="border border-gray-100 rounded-xl p-3">
-                  <div className="flex items-center gap-1.5 mb-2.5 pb-2 border-b border-gray-100">
-                    <span className="w-5 h-5 bg-green-50 rounded-md flex items-center justify-center text-xs">🛡</span>
-                    <span className="font-semibold text-gray-800 font-playfair">Strefy i ograniczenia</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    <div className="flex gap-1.5 bg-green-50 rounded-lg px-2 py-1.5 leading-snug">
-                      <span className="text-green-600 flex-shrink-0">✅</span>
-                      <span className="text-green-800">Brak zagrożenia zalewowego (ISOK Q500)</span>
-                    </div>
-                    <div className="flex gap-1.5 bg-amber-50 rounded-lg px-2 py-1.5 leading-snug">
-                      <span className="text-amber-500 flex-shrink-0">⚠️</span>
-                      <span className="text-amber-800">Natura 2000 (OSO): Grądy Odrzańskie</span>
-                    </div>
-                    <div className="flex gap-1.5 bg-green-50 rounded-lg px-2 py-1.5 leading-snug">
-                      <span className="text-green-600 flex-shrink-0">✅</span>
-                      <span className="text-green-800">Brak strefy konserwatorskiej</span>
-                    </div>
-                  </div>
-                </div>
+                <MockSection icon={ShieldCheck} title="Zagrożenia i ochrona">
+                  <MockStatus tone="ok">Poza obszarami zagrożenia powodziowego (ISOK)</MockStatus>
+                  <MockStatus tone="ok">Brak form ochrony przyrody na działce (GDOŚ)</MockStatus>
+                </MockSection>
 
-                {/* Rekomendacje AI – full width */}
-                <div className="col-span-2 border border-gray-100 rounded-xl p-3">
-                  <div className="flex items-center gap-1.5 mb-2.5 pb-2 border-b border-gray-100">
-                    <span className="w-5 h-5 bg-green-50 rounded-md flex items-center justify-center text-xs">✨</span>
-                    <span className="font-semibold text-gray-800 font-playfair">Rekomendacje AI</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-x-4">
+                <MockSection icon={Zap} title="Uzbrojenie terenu">
+                  <MockRows rows={[['Wodociąg', '0 m od granicy'], ['Kanalizacja', '1 m od granicy'], ['Energia elektryczna', '8 m od granicy'], ['Gaz', 'przebiega przez działkę']]} />
+                </MockSection>
+
+                <MockSection icon={Sparkles} title="Rekomendacje AI" full>
+                  <ul className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-2">
                     {[
-                      'Działka w pełni uzbrojona — gotowa do zabudowy.',
-                      'Skonsultuj ograniczenia Natura 2000 z gminą.',
-                      'Brak MPZP — złóż wniosek o warunki zabudowy.',
-                    ].map(r => (
-                      <div key={r} className="flex gap-1.5 text-gray-600">
-                        <span className="text-green-500 font-bold flex-shrink-0">→</span>
-                        <span>{r}</span>
-                      </div>
+                      ['Zamów w urzędzie gminy wypis i wyrys z planu ogólnego i potwierdź możliwość uzyskania WZ.', 'ocena zabudowy, plan ogólny'],
+                      ['Sprawdź w księdze wieczystej, czy dla sieci gazowej ustanowiono służebność przesyłu.', 'uzbrojenie'],
+                      ['Zapytaj operatora sieci gazowej o pas ochronny, zanim wybierzesz miejsce budynku.', 'uzbrojenie'],
+                    ].map(([text, basis]) => (
+                      <li key={text} className="flex gap-1.5 text-gray-600">
+                        <ChevronRight className="w-3.5 h-3.5 text-green-600 shrink-0 mt-0.5" aria-hidden="true" />
+                        <span>{text} <span className="block text-gray-400">Podstawa: {basis}</span></span>
+                      </li>
                     ))}
-                  </div>
-                </div>
+                  </ul>
+                </MockSection>
               </div>
             </div>
           </div>
@@ -179,7 +132,7 @@ export default function HomePageContent() {
             Dane prosto z oficjalnych źródeł
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 px-6">
-            {['Geoportal.gov.pl', 'ULDK GUGiK', 'GDOŚ WFS', 'ISOK KZGW', 'OpenStreetMap'].map(src => (
+            {['ULDK GUGiK', 'Krajowa Integracja MPZP', 'Rejestr Urbanistyczny', 'ISOK Wody Polskie', 'GDOŚ', 'KIUT GUGiK'].map(src => (
               <span key={src} className="text-white font-bold text-sm md:text-base tracking-tight drop-shadow">
                 {src}
               </span>
@@ -237,36 +190,36 @@ export default function HomePageContent() {
       </section>
 
       {/* ── PRICING TEASER ───────────────────────────────────────────────────── */}
-      <section className="max-w-6xl mx-auto px-6 py-24">
+      {/* Jak /pricing: darmowy i płatny raport mają ten sam zakres (api/report/generate różni je tylko flagą paid) */}
+      <section className="max-w-4xl mx-auto px-6 py-24">
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="border border-gray-200 rounded-2xl p-8">
-            <div className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-2">Starter</div>
+          <div className="border border-gray-200 rounded-2xl p-8 flex flex-col">
+            <div className="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-2">Pierwszy raport</div>
             <div className="text-4xl font-bold text-gray-900 mb-1 font-playfair">0 zł</div>
-            <p className="text-gray-500 text-sm mb-6">Pierwszy raport gratis</p>
-            <ul className="space-y-3 mb-8">
-              {['1 raport gratis', 'Dane podstawowe ULDK', 'Ochrona przyrody GDOŚ', 'Media i uzbrojenie'].map(f => (
-                <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
-                  <Check className="w-4 h-4 text-green-600 flex-shrink-0" /> {f}
-                </li>
-              ))}
-            </ul>
-            <Link href="/register" className="block text-center border border-gray-300 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-50 transition-colors">Zacznij za darmo</Link>
+            <p className="text-gray-500 text-sm mb-8">Jeden na konto, bez podawania karty</p>
+            <Link href="/register" className="mt-auto block text-center border border-gray-300 text-gray-700 font-medium py-3 rounded-full hover:bg-gray-50 transition-colors">Zacznij za darmo</Link>
           </div>
 
-          <div className="bg-gray-900 rounded-2xl p-8 text-white relative overflow-hidden">
-            <div className="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">Popularne</div>
-            <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-2">Pro</div>
+          <div className="bg-gray-900 rounded-2xl p-8 text-white flex flex-col">
+            <div className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-2">Każdy kolejny</div>
             <div className="text-4xl font-bold mb-1 font-playfair">29 zł</div>
-            <p className="text-gray-400 text-sm mb-6">za raport · bez subskrypcji</p>
-            <ul className="space-y-3 mb-8">
-              {['Pełny raport PDF', 'Rekomendacje Claude AI', 'Strefy zalewowe ISOK', 'Analiza ryzyk inwestycyjnych', 'Dostęp bez limitu czasowego'].map(f => (
-                <li key={f} className="flex items-center gap-2 text-sm text-gray-300">
-                  <Check className="w-4 h-4 text-green-400 flex-shrink-0" /> {f}
-                </li>
-              ))}
-            </ul>
-            <Link href="/register" className="block text-center bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-xl transition-colors">Sprawdź swoją działkę →</Link>
+            <p className="text-gray-400 text-sm mb-8">za raport · jednorazowo · bez subskrypcji</p>
+            <Link href="/register" className="mt-auto flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white font-semibold py-3 rounded-full transition-colors">
+              Sprawdź swoją działkę <ChevronRight className="w-4 h-4" />
+            </Link>
           </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-500 mb-3">Każdy raport ma ten sam pełny zakres:</p>
+          <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-700">
+            {['Ocena możliwości zabudowy', 'MPZP i plan ogólny', 'Zagrożenia i ochrona przyrody', 'Uzbrojenie terenu', 'Rekomendacje AI'].map(f => (
+              <li key={f} className="flex items-center gap-1.5">
+                <Check className="w-4 h-4 text-green-600 shrink-0" /> {f}
+              </li>
+            ))}
+          </ul>
+          <Link href="/pricing" className="inline-block mt-4 text-sm text-green-700 underline underline-offset-2">Szczegóły w cenniku</Link>
         </div>
       </section>
 
@@ -287,5 +240,43 @@ export default function HomePageContent() {
         </Link>
       </section>
     </>
+  )
+}
+
+// ── Elementy makiety raportu ─────────────────────────────────────────────────
+function MockSection({ icon: Icon, title, full = false, children }: { icon: LucideIcon; title: string; full?: boolean; children: React.ReactNode }) {
+  return (
+    <div className={`border border-gray-100 rounded-xl p-3 ${full ? 'sm:col-span-2' : ''}`}>
+      <div className="flex items-center gap-1.5 mb-2.5 pb-2 border-b border-gray-100">
+        <span className="w-5 h-5 bg-green-50 text-green-700 rounded-md flex items-center justify-center shrink-0">
+          <Icon className="w-3.5 h-3.5" aria-hidden="true" />
+        </span>
+        <span className="font-semibold text-gray-800 font-playfair">{title}</span>
+      </div>
+      <div className="space-y-1.5">{children}</div>
+    </div>
+  )
+}
+
+function MockRows({ rows }: { rows: [string, string][] }) {
+  return (
+    <div>
+      {rows.map(([k, v]) => (
+        <div key={k} className="flex justify-between gap-3 py-1 border-b border-gray-50 last:border-0">
+          <span className="text-gray-400">{k}</span>
+          <span className="font-medium text-gray-800 text-right">{v}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function MockStatus({ tone, children }: { tone: 'ok' | 'warn'; children: React.ReactNode }) {
+  const Icon = tone === 'ok' ? CheckCircle2 : AlertTriangle
+  return (
+    <div className={`flex gap-1.5 rounded-lg px-2 py-1.5 leading-snug ${tone === 'ok' ? 'bg-green-50 text-green-900' : 'bg-amber-50 text-amber-900'}`}>
+      <Icon className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${tone === 'ok' ? 'text-green-600' : 'text-amber-600'}`} aria-hidden="true" />
+      <span>{children}</span>
+    </div>
   )
 }
