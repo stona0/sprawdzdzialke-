@@ -1,13 +1,14 @@
 import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { OG_IMAGE } from '@/lib/og-image'
 
 // Podgląd linku (Facebook, LinkedIn, komunikatory). Bez przykładowych liczb —
 // pokazuje tylko, z jakich części składa się prawdziwy raport (src/lib/report/html.ts).
 // Font: domyślny Geist z next/og (ma polskie znaki).
 
-export const alt = 'SprawdźDziałkę.com — raport planistyczny działki'
-export const size = { width: 1200, height: 630 }
+export const alt = OG_IMAGE.alt
+export const size = { width: OG_IMAGE.width, height: OG_IMAGE.height }
 export const contentType = 'image/png'
 
 const GREEN = '#15803d'

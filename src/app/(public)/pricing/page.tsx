@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Check, ChevronRight } from 'lucide-react'
 import { COMPANY } from '@/lib/company'
+import { OG_IMAGE } from '@/lib/og-image'
 
 export const metadata: Metadata = {
   title: 'Cennik',
@@ -13,6 +14,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Cennik — SprawdzDziałkę.com',
     description: 'Pierwszy raport za darmo, każdy kolejny 29 zł. Ten sam pełny raport: MPZP, plan ogólny, zagrożenia, uzbrojenie, rekomendacje AI.',
+    url: 'https://sprawdzdzialke.com/pricing',
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cennik — SprawdzDziałkę.com',
+    images: [OG_IMAGE.url],
   },
 }
 
