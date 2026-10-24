@@ -152,8 +152,8 @@ test('moje raporty: „Zapłać” przy raporcie bez płatności, bez drugiej p�
   await expect(page.getByRole('dialog')).toBeVisible()
   await page.getByRole('button', { name: 'Anuluj' }).click()
 
-  // Serwer nie zaczyna płatności za raport, który już jest gotowy
-  const again = await page.request.post('/api/payments/create-checkout', { data: { reportId: completed } })
+  // Serwer nie zaczyna płatności za raport, który już jest gotowy (zgoda podana — bez niej trasa odpowiada 400)
+  const again = await page.request.post('/api/payments/create-checkout', { data: { reportId: completed, withdrawalConsent: true } })
   expect(again.status()).toBe(409)
 
   // Ponowienie nieudanego raportu — bez opłaty, raport przechodzi przez kolejkę od nowa
