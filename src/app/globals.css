@@ -1,14 +1,64 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/*
+ * Tokeny shadcn/ui — prymitywy w src/components/ui używają klas bg-primary,
+ * border-input, text-muted-foreground itd. Bez tych zmiennych Tailwind nie
+ * generował tych klas i przyciski czy separatory były niewidoczne.
+ * Primary = zieleń marki (#15803d, jak favicon i raport). Tylko motyw jasny.
+ */
 :root {
+  --radius: 0.75rem;
+
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111827;
+  --card: #ffffff;
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+
+  --primary: #15803d;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #111827;
+  --muted: #f3f4f6;
+  --muted-foreground: #4b5563;
+  --accent: #f0fdf4;
+  --accent-foreground: #14532d;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  --border: #e5e7eb;
+  --input: #d1d5db;
+  --ring: #15803d;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -18,8 +68,17 @@
   font-family: var(--font-playfair), Georgia, serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+@layer base {
+  /* Tailwind 4 domyślnie rysuje obramowania w currentColor */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  }
 }
