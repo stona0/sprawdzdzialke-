@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { FileWarning } from 'lucide-react'
 
 export default function ReportError({
   error,
@@ -17,7 +18,9 @@ export default function ReportError({
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center space-y-6">
-        <div className="text-5xl">📄</div>
+        <div className="mx-auto w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+          <FileWarning className="w-7 h-7" aria-hidden="true" />
+        </div>
         <div>
           <h1 className="text-xl font-bold text-gray-900 mb-2 font-playfair">
             Nie udało się załadować raportu
