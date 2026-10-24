@@ -131,14 +131,12 @@ export default async function BlogArticlePage({
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link
             href="/"
-            className="text-lg font-bold tracking-tight text-gray-900"
-            style={{ fontFamily: 'var(--font-playfair)' }}
+            className="text-lg font-bold tracking-tight text-gray-900 font-playfair"
           >
             Sprawdź<span className="text-green-700">Działkę</span>.pl
           </Link>
           <div
-            className="hidden md:flex items-center gap-8 text-gray-700"
-            style={{ fontFamily: 'var(--font-playfair)', fontSize: '1rem' }}
+            className="hidden md:flex items-center gap-8 text-gray-700 font-playfair text-base"
           >
             <Link href="/blog" className="hover:text-gray-900 transition-colors">
               Blog
@@ -152,8 +150,7 @@ export default async function BlogArticlePage({
           </div>
           <Link
             href="/register"
-            className="bg-gray-900 text-white text-sm px-5 py-2 rounded-full hover:bg-gray-700 transition-colors"
-            style={{ fontFamily: 'var(--font-playfair)' }}
+            className="bg-gray-900 text-white text-sm px-5 py-2 rounded-full hover:bg-gray-700 transition-colors font-playfair"
           >
             Zacznij za darmo
           </Link>
@@ -192,8 +189,7 @@ export default async function BlogArticlePage({
               </span>
             </div>
             <h1
-              className="text-3xl md:text-4xl lg:text-[2.5rem] text-gray-900 leading-tight tracking-tight"
-              style={{ fontFamily: 'var(--font-playfair)', fontWeight: 700 }}
+              className="text-3xl md:text-4xl lg:text-[2.5rem] text-gray-900 leading-tight tracking-tight font-playfair font-bold"
             >
               {article.title}
             </h1>
@@ -212,8 +208,7 @@ export default async function BlogArticlePage({
               prose-a:text-green-700 prose-a:underline prose-a:underline-offset-2 hover:prose-a:text-green-600
               prose-strong:text-gray-900
               prose-table:border-collapse prose-th:bg-gray-50 prose-th:p-3 prose-th:text-left prose-th:border prose-th:border-gray-200 prose-td:p-3 prose-td:border prose-td:border-gray-200
-            "
-            style={{ fontFamily: 'var(--font-playfair)' }}
+             font-playfair"
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
 
@@ -221,8 +216,7 @@ export default async function BlogArticlePage({
           {article.faq.length > 0 && (
             <section className="mt-14 border-t border-gray-200 pt-10">
               <h2
-                className="text-2xl font-bold text-gray-900 mb-6"
-                style={{ fontFamily: 'var(--font-playfair)' }}
+                className="text-2xl font-bold text-gray-900 mb-6 font-playfair"
               >
                 Często zadawane pytania
               </h2>
@@ -249,8 +243,7 @@ export default async function BlogArticlePage({
           {/* CTA */}
           <section className="mt-14 bg-green-50 border border-green-200 rounded-xl p-8 text-center">
             <h3
-              className="text-xl font-bold text-gray-900"
-              style={{ fontFamily: 'var(--font-playfair)' }}
+              className="text-xl font-bold text-gray-900 font-playfair"
             >
               Sprawdź swoją działkę w 60 sekund
             </h3>
@@ -259,8 +252,7 @@ export default async function BlogArticlePage({
             </p>
             <Link
               href="/register"
-              className="inline-block mt-4 bg-green-700 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-green-600 transition-colors"
-              style={{ fontFamily: 'var(--font-playfair)' }}
+              className="inline-block mt-4 bg-green-700 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-green-600 transition-colors font-playfair"
             >
               Pierwszy raport za darmo →
             </Link>
@@ -270,8 +262,7 @@ export default async function BlogArticlePage({
           {related.length > 0 && (
             <section className="mt-14">
               <h3
-                className="text-xl font-bold text-gray-900 mb-4"
-                style={{ fontFamily: 'var(--font-playfair)' }}
+                className="text-xl font-bold text-gray-900 mb-4 font-playfair"
               >
                 Powiązane artykuły
               </h3>
