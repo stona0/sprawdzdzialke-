@@ -2,9 +2,12 @@
 
 import { useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Printer, ArrowLeft, RefreshCw } from 'lucide-react'
+import { Printer, ArrowLeft, AlertTriangle, CreditCard } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { GeneratingNotice } from './GeneratingNotice'
+import { PayButton } from './PayButton'
+import { RetryButton } from './RetryButton'
 
 interface Props {
   reportId: string
@@ -12,9 +15,11 @@ interface Props {
   status: string
   parcelId: string
   gmina: string
+  /** Początek generowania (utworzenie zadania w kolejce) — do licznika czasu. */
+  startedAt?: string
 }
 
-export default function ReportView({ reportId, htmlContent, status, parcelId, gmina }: Props) {
+export default function ReportView({ reportId, htmlContent, status, parcelId, gmina, startedAt }: Props) {
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const router = useRouter()
 
@@ -38,38 +43,29 @@ export default function ReportView({ reportId, htmlContent, status, parcelId, gm
       {/* Pasek nawigacji – ukryty przy druku */}
       <div className="print:hidden sticky top-0 z-10 bg-white border-b shadow-sm">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-          <Link href="/dashboard">
-            <Button variant="ghost" size="sm" className="gap-1.5">
-              <ArrowLeft className="h-4 w-4" />
-              Dashboard
-            </Button>
-          </Link>
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/dashboard">
+              <ArrowLeft />
+              Moje raporty
+            </Link>
+          </Button>
 
-          <div className="flex items-center gap-2">
-            {status === 'generating' && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5"
-                onClick={() => router.refresh()}
-              >
-                <RefreshCw className="h-4 w-4" />
-                Odśwież
-              </Button>
-            )}
-            {htmlContent && (
-              <Button size="sm" className="gap-1.5" onClick={handlePrint}>
-                <Printer className="h-4 w-4" />
-                Pobierz PDF
-              </Button>
-            )}
-          </div>
+          {htmlContent && (
+            // Raport to strona HTML — PDF powstaje z okna drukowania przeglądarki
+            <Button size="sm" onClick={handlePrint}>
+              <Printer />
+              Drukuj / zapisz PDF
+            </Button>
+          )}
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8 print:p-0 print:max-w-none">
         {!htmlContent && status === 'generating' && (
-          <GeneratingState parcelId={parcelId} gmina={gmina} />
+          <div className="space-y-3">
+            <ParcelHeading parcelId={parcelId} gmina={gmina} />
+            <GeneratingNotice startedAt={startedAt} className="bg-white" />
+          </div>
         )}
 
         {!htmlContent && status === 'failed' && (
@@ -77,7 +73,7 @@ export default function ReportView({ reportId, htmlContent, status, parcelId, gm
         )}
 
         {!htmlContent && status === 'pending' && (
-          <PendingPaymentState />
+          <PendingPaymentState parcelId={parcelId} gmina={gmina} reportId={reportId} />
         )}
 
         {htmlContent && (
@@ -104,17 +100,11 @@ export default function ReportView({ reportId, htmlContent, status, parcelId, gm
   )
 }
 
-function GeneratingState({ parcelId, gmina }: { parcelId: string; gmina: string }) {
+function ParcelHeading({ parcelId, gmina }: { parcelId: string; gmina: string }) {
   return (
-    <div className="bg-white rounded-lg shadow p-12 text-center">
-      <div className="animate-spin h-10 w-10 border-4 border-green-600 border-t-transparent rounded-full mx-auto mb-4" />
-      <h2 className="text-lg font-semibold mb-2">Generuję raport…</h2>
-      <p className="text-gray-500 text-sm mb-1">Działka: <strong>{parcelId}</strong></p>
-      <p className="text-gray-500 text-sm">Gmina: <strong>{gmina}</strong></p>
-      <p className="text-xs text-gray-400 mt-4">
-        Raport jest przygotowywany. Kliknij „Odśwież" za kilka sekund.
-      </p>
-    </div>
+    <p className="text-sm text-muted-foreground">
+      Działka <span className="font-mono text-gray-900">{parcelId}</span> · {gmina}
+    </p>
   )
 }
 
@@ -128,31 +118,37 @@ function ErrorState({
   reportId: string
 }) {
   return (
-    <div className="bg-white rounded-lg shadow p-12 text-center">
-      <div className="text-4xl mb-4">⚠️</div>
-      <h2 className="text-lg font-semibold mb-2 text-red-600">Błąd generowania raportu</h2>
-      <p className="text-gray-500 text-sm mb-6">
-        Wystąpił problem podczas generowania raportu dla działki{' '}
-        <strong>{parcelId}</strong> w gminie <strong>{gmina}</strong>.
+    <div className="rounded-2xl border bg-white p-8 text-center sm:p-12">
+      <AlertTriangle className="mx-auto mb-4 h-10 w-10 text-red-600" aria-hidden />
+      <h1 className="mb-2 text-lg font-semibold text-gray-900">Nie udało się wygenerować raportu</h1>
+      <p className="mx-auto mb-6 max-w-md text-sm text-muted-foreground">
+        Działka <span className="font-mono text-gray-900">{parcelId}</span> w gminie {gmina}. Najczęściej
+        przyczyną jest chwilowa niedostępność rejestrów publicznych. Ponowienie jest bezpłatne.
       </p>
-      <Link href="/dashboard">
-        <Button variant="outline">Wróć do dashboardu</Button>
-      </Link>
+      <div className="flex flex-col justify-center gap-3 sm:flex-row">
+        <RetryButton reportId={reportId} variant="default" size="default" />
+        <Button asChild variant="outline">
+          <Link href="/dashboard">Moje raporty</Link>
+        </Button>
+      </div>
     </div>
   )
 }
 
-function PendingPaymentState() {
+function PendingPaymentState({ parcelId, gmina, reportId }: { parcelId: string; gmina: string; reportId: string }) {
   return (
-    <div className="bg-white rounded-lg shadow p-12 text-center">
-      <div className="text-4xl mb-4">💳</div>
-      <h2 className="text-lg font-semibold mb-2">Oczekuje na płatność</h2>
-      <p className="text-gray-500 text-sm mb-6">
-        Raport zostanie wygenerowany po potwierdzeniu płatności przez Stripe.
+    <div className="rounded-2xl border bg-white p-8 text-center sm:p-12">
+      <CreditCard className="mx-auto mb-4 h-10 w-10 text-muted-foreground" aria-hidden />
+      <h1 className="mb-2 text-lg font-semibold text-gray-900">Raport czeka na płatność</h1>
+      <p className="mx-auto mb-6 max-w-md text-sm text-muted-foreground">
+        Raport zostanie wygenerowany po potwierdzeniu płatności. Jeśli płatność jest już zrobiona, ta strona odświeży się sama.
       </p>
-      <Link href="/dashboard">
-        <Button variant="outline">Wróć do dashboardu</Button>
-      </Link>
+      <div className="flex flex-col justify-center gap-3 sm:flex-row">
+        <PayButton reportId={reportId} parcelId={parcelId} gmina={gmina} size="default" />
+        <Button asChild variant="outline">
+          <Link href="/dashboard">Moje raporty</Link>
+        </Button>
+      </div>
     </div>
   )
 }

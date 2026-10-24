@@ -3,13 +3,13 @@ export default function DashboardLoading() {
     <main className="min-h-screen bg-white">
       {/* Nav skeleton */}
       <nav className="border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="h-5 w-40 bg-gray-100 rounded animate-pulse" />
           <div className="h-4 w-32 bg-gray-100 rounded animate-pulse" />
         </div>
       </nav>
 
-      <div className="max-w-4xl mx-auto px-6 py-12 space-y-14">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-12 space-y-14">
         {/* Header skeleton */}
         <div>
           <div className="h-10 w-64 bg-gray-100 rounded animate-pulse mb-3" />

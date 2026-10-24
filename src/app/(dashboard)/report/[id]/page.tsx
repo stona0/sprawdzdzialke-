@@ -3,7 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { createClient, createServiceClient } from '@/lib/supabase/server'
 import ReportView from '@/components/report/ReportView'
 import { resolveReportStatus } from '@/lib/report-status'
-import { runReportJob } from '@/lib/report-queue'
+import { getReportJob, runReportJob } from '@/lib/report-queue'
 
 // Odświeżanie strony może wznowić przerwane zadanie kolejki (after() poniżej).
 export const maxDuration = 60
@@ -32,6 +32,11 @@ export default async function ReportPage({ params }: Props) {
 
   const { status, kick } = await resolveReportStatus(supabaseService, report)
   if (kick) after(() => runReportJob(supabaseService, report.id))
+  // Licznik czasu liczy od dodania do kolejki — raport płatny powstaje przed płatnością.
+  // Kolejka z ponowieniami kończy się w kilka minut; starsze zadanie to ręczne ponowienie
+  // (created_at się nie zmienia) — wtedy licznik startuje od otwarcia strony.
+  const job = status === 'generating' ? await getReportJob(supabaseService, report.id) : null
+  const startedAt = job && Date.now() - Date.parse(job.created_at) < 15 * 60_000 ? job.created_at : undefined
 
   return (
     <ReportView
@@ -40,6 +45,7 @@ export default async function ReportPage({ params }: Props) {
       status={status}
       parcelId={report.parcel_id}
       gmina={report.gmina}
+      startedAt={startedAt}
     />
   )
 }
