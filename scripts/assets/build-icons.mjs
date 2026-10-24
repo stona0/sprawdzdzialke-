@@ -1,4 +1,4 @@
-// Generuje ikony z public/favicon.svg (jedno źródło znaku):
+// Generuje ikony z src/app/icon.svg (jedno źródło znaku; Next podaje je też jako <link rel="icon">):
 //   src/app/favicon.ico    — 16/32/48 px (PNG w kontenerze ICO; Safari i /favicon.ico z wyszukiwarek)
 //   src/app/apple-icon.png — 180 px, bez zaokrągleń (iOS zaokrągla sam, przezroczyste rogi byłyby czarne)
 //   public/logo.png        — 512 px, logo organizacji w JSON-LD
@@ -9,7 +9,7 @@ import path from 'node:path'
 import sharp from 'sharp'
 
 const root = path.resolve(import.meta.dirname, '../..')
-const svg = readFileSync(path.join(root, 'public/favicon.svg'), 'utf8')
+const svg = readFileSync(path.join(root, 'src/app/icon.svg'), 'utf8')
 const square = svg.replace(/ rx="\d+"/, '')
 
 const png = (source, size) =>

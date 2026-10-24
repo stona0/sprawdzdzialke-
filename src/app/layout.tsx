@@ -40,10 +40,6 @@ export const metadata: Metadata = {
     "warunki zabudowy",
   ],
 
-  icons: {
-    icon: "/favicon.svg",
-  },
-
   alternates: {
     canonical: "https://sprawdzdzialke.com",
   },
