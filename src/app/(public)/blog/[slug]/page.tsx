@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { articles, getArticleBySlug, getAllSlugs, getRelatedArticles } from '@/lib/blog/articles';
 import type { Metadata } from 'next';
+import { OG_IMAGE } from '@/lib/og-image';
 
 /* ────────────────────────────────────────────────────────────────────────── */
 /*  Static params — pre-render all articles at build time                    */
@@ -34,11 +35,13 @@ export async function generateMetadata({
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
       url: `https://sprawdzdzialke.com/blog/${article.slug}`,
+      images: [OG_IMAGE],
     },
     twitter: {
       card: 'summary_large_image',
       title: article.metaTitle,
       description: article.metaDescription,
+      images: [OG_IMAGE.url],
     },
     alternates: {
       canonical: `https://sprawdzdzialke.com/blog/${article.slug}`,
@@ -169,7 +172,7 @@ export default async function BlogArticlePage({
           <div
             className="
               prose prose-lg max-w-none
-              prose-headings:font-bold prose-headings:tracking-tight
+              prose-headings:font-playfair prose-headings:font-bold prose-headings:tracking-tight
               prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
               prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
               prose-p:text-gray-700 prose-p:leading-relaxed
@@ -177,7 +180,7 @@ export default async function BlogArticlePage({
               prose-a:text-green-700 prose-a:underline prose-a:underline-offset-2 hover:prose-a:text-green-600
               prose-strong:text-gray-900
               prose-table:border-collapse prose-th:bg-gray-50 prose-th:p-3 prose-th:text-left prose-th:border prose-th:border-gray-200 prose-td:p-3 prose-td:border prose-td:border-gray-200
-             font-playfair"
+            "
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
 
@@ -214,7 +217,7 @@ export default async function BlogArticlePage({
             <h3
               className="text-xl font-bold text-gray-900 font-playfair"
             >
-              Sprawdź swoją działkę w 60 sekund
+              Sprawdź swoją działkę przed zakupem
             </h3>
             <p className="mt-2 text-gray-600">
               MPZP, media, Natura 2000, strefy zalewowe i rekomendacje AI w jednym raporcie.
@@ -240,7 +243,7 @@ export default async function BlogArticlePage({
                   <Link
                     key={r.slug}
                     href={`/blog/${r.slug}`}
-                    className="block border border-gray-200 rounded-lg p-4 hover:border-green-300 hover:shadow-sm transition-all"
+                    className="group block border border-gray-200 rounded-lg p-4 hover:border-green-300 hover:shadow-sm transition-all"
                   >
                     <h4 className="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-green-700">
                       {r.title}

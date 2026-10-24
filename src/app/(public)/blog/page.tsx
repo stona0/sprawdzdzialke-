@@ -2,14 +2,26 @@ import Link from 'next/link';
 import { FileText, Clock, ChevronRight } from 'lucide-react';
 import { articles } from '@/lib/blog/articles';
 import type { Metadata } from 'next';
+import { OG_IMAGE } from '@/lib/og-image';
 
 export const metadata: Metadata = {
   title: 'Blog — Poradniki o działkach i nieruchomościach',
   description:
     'Praktyczne poradniki o zakupie działek, MPZP, warunkach zabudowy, mediach i strefach ochronnych. Wiedza, która pomoże Ci podjąć lepszą decyzję.',
+  // Bez własnego canonical /blog dziedziczył canonical strony głównej z layoutu.
+  alternates: {
+    canonical: 'https://sprawdzdzialke.com/blog',
+  },
   openGraph: {
     title: 'Blog — SprawdzDziałkę.com',
     description: 'Poradniki o działkach budowlanych, MPZP, warunkach zabudowy i więcej.',
+    url: 'https://sprawdzdzialke.com/blog',
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Blog — SprawdzDziałkę.com',
+    images: [OG_IMAGE.url],
   },
 };
 
@@ -88,7 +100,7 @@ export default function BlogPage() {
           <h2
             className="text-2xl md:text-3xl text-white font-playfair font-bold"
           >
-            Sprawdź swoją działkę w 60 sekund
+            Sprawdź swoją działkę przed zakupem
           </h2>
           <p className="mt-3 text-gray-400 max-w-lg mx-auto">
             MPZP, strefy ochronne, media, Natura 2000 i rekomendacje AI — wszystko w jednym raporcie.
