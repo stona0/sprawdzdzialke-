@@ -137,9 +137,20 @@ export function isLabel(c: Component): boolean {
   return (c.minorStd >= 0.95 && c.fill >= 0.35) || (c.minorStd >= 1.15 && c.fill >= 0.2)
 }
 
+export interface NativeMask {
+  /** 0/255 w rozdzielczości obrazu, z którego wzięto geometrię. */
+  mask: Uint8Array
+  width: number
+  height: number
+  /** Piksele siatki pełnej rozdzielczości na piksel maski (2 dla obrazu w połowie rozdzielczości). */
+  scale: number
+}
+
 export interface NetworkMasks {
   /** Maska 0/255 na siatce pełnej rozdzielczości, jedna na sieć z palety. */
   masks: Uint8Array[]
+  /** Ta sama geometria w rozdzielczości źródła — do wektoryzacji bez powiększania blokami 2×2 (null = brak sieci). */
+  native: Array<NativeMask | null>
   /** Skąd wzięto geometrię sieci: 'half' (bez opisów), 'full' (opisy odfiltrowane), null (brak sieci). */
   source: Array<'half' | 'full' | null>
   /** Pikseli usuniętych jako opisy w ścieżce pełnej rozdzielczości. */
@@ -210,6 +221,7 @@ export function networkMasks(fulls: Rgba | Rgba[], halves: Rgba | Rgba[] | null,
   }
 
   const masks: Uint8Array[] = []
+  const native: NetworkMasks['native'] = []
   const source: NetworkMasks['source'] = []
   for (let c = 0; c < palette.length; c++) {
     let nFull = 0, nHalf = 0
@@ -227,6 +239,13 @@ export function networkMasks(fulls: Rgba | Rgba[], halves: Rgba | Rgba[] | null,
     for (let p = 0; p < n; p++) if (pick[p] === c) { mask[p] = 255; any = true }
     masks.push(mask)
     source.push(any ? (useHalf ? 'half' : 'full') : null)
+    if (!any) native.push(null)
+    else if (useHalf) {
+      const halfCls = halfUnion!.cls
+      const m = new Uint8Array(halfCls.length)
+      for (let p = 0; p < halfCls.length; p++) if (halfCls[p] === c) m[p] = 255
+      native.push({ mask: m, width: half!.width, height: half!.height, scale: width / half!.width })
+    } else native.push({ mask, width, height, scale: 1 })
   }
-  return { masks, source, labelPixels, stable: stable && source.some(s => s !== null) }
+  return { masks, native, source, labelPixels, stable: stable && source.some(s => s !== null) }
 }

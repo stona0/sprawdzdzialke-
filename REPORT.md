@@ -593,7 +593,57 @@ Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia
 - `tests/e2e/auth.spec.ts`: 7 testów na mocku Supabase, którego `/auth/v1/settings` odpowiada jak staging. Sprawdzają: błędne hasło, powrót na `redirectTo`, `redirectTo` na obcą domenę, wyłączony Google, błąd dostawcy w callbacku, `?next=` na obcą domenę, reset hasła bez sesji. Wszystkie przechodzą.
 - `npm test` 156/156; `npm run build` OK.
 
-**Nie sprawdzono:** pełnej ścieżki Google (wymaga konfiguracji właściciela i jego konta Google) ani resetu hasła z prawdziwym mailem.
+**Konfiguracja i weryfikacja na stagingu (24.10.2026):**
+- Właściciel skonfigurował Google w Google Cloud i Supabase według `docs/STAGING.md`. Ekran zgody jest w trybie „Testing” z listą testerów, bo publikacja wymaga polityki prywatności, której jeszcze nie ma.
+- `/auth/v1/settings`: `google = true`.
+- `authorize` zwraca 302 do accounts.google.com z `redirect_uri` projektu stagingu, a Google przechodzi do wyboru konta (bez `redirect_uri_mismatch` i `invalid_client`).
+- Właściciel zalogował się przez Google na `testdzialki.netlify.app` (wdrożona starsza wersja kodu; ścieżka OAuth bez zmian) i trafił do panelu.
+- W bazie stagingu Supabase dołączył tożsamość Google do istniejącego konta z tym samym adresem: `providers = [email, google]`, profil istnieje.
+
+**Nie sprawdzono:**
+- rejestracji nowego konta wyłącznie przez Google (ten sam trigger `handle_new_user` co przy e-mailu, potwierdzony 23.10);
+- resetu hasła z prawdziwym mailem;
+- nowych komunikatów błędów na wdrożonym stagingu, bo Netlify nie ma kredytów. Sprawdzone tylko lokalnie, testami e2e.
+
+### Mapa uzbrojenia: linie wektorowe, widok przycięty do działki
+
+**Uwagi właściciela do wersji z sekcji 15:** „linie poszarpane” i „za dużo naraz”.
+
+**Przyczyny:**
+- Pogrubianie rastra (rozmycie i próg) dawało koraliki, plamy i schodki. Geometria z obrazu 600×375 była powiększana blokami 2×2, a resztki opisów puchły razem z linią.
+- Każda sieć w promieniu ~420 m miała ten sam mocny styl, więc działka ginęła pod liniami.
+
+**Zmiana:**
+- **Linie wektorowe** (`src/lib/kiut-vector.ts`). Każda sieć jest zamieniana na polilinie: szkielet 1 px, graf, usunięcie krótkich odgałęzień i kropek, zmostkowanie przerw, wygładzenie. Mapa rysuje je jako SVG linią stałej grubości z białą obwódką pod każdą siecią. Obwódka oddziela sąsiednie sieci, więc na styku czerwonej i niebieskiej linii nie powstaje mieszany kolor.
+- **Widok przycięty do działki** (`focusView` w `src/lib/utility-map.ts`):
+  - działka z marginesem co najmniej 120 m, szerokość widoku od 420 do 840 m;
+  - zdjęcie i działki ewidencyjne pobierane dla tego widoku, więc są ostrzejsze;
+  - sieci KIUT nadal pobierane dla całego obszaru 840×525 m, bo w większym zbliżeniu serwery powiatowe dokładają opisy średnic.
+- **Skupienie na działce.** Sieci do ok. 100 m od granicy działki mają pełny kolor, dalsze są cienkie i wyblakłe (40%). Granice działek ewidencyjnych są przygaszone. Podpis mapy w raporcie to wyjaśnia.
+- **Wybór właściciela:** wariant B (przycięty) i wyblakłe dalsze sieci. Porównanie wariantów: `mapa-porownanie-{sobotka,batorz,milicz}.jpg`.
+- **Cache** w Storage: klucz `v6`. Mapy `v5` nie są już używane.
+
+**Zastąpione** (nie usunięte bez zastępstwa): `lineLayer` i `networkLayers` (raster) zastąpiły `networkLines` i `networksSvg` (wektor).
+
+**Dowody:**
+- `tests/unit/kiut-vector.test.ts`, test 6 syntetycznych przypadków:
+  - prosta;
+  - L;
+  - linia przerywana;
+  - odgałęzienie;
+  - kropki;
+  - skala ×2.
+- `tests/unit/kiut-vector.test.ts`, wierność danym na prawdziwych odpowiedziach KIUT:
+  - pokrycie linii serwera ±3 px: Sobótka 88–94%, Siechnice 79–95%;
+  - osie poza danymi serwera ≤ 0,31%, czyli wektor nie dorysowuje sieci.
+- `tests/unit/utility-map.test.ts`: kolory wyłącznie z legendy (bez fioletu z mieszania) i `focusView` (5 testów).
+- `npm test` 170/170.
+- Render na żywych usługach: Sobótka 2,6 s, Batorz 2,7 s, Milicz 4,2 s, Siechnice 1,8 s.
+
+**Ograniczenia:**
+- Równoległe przewody tej samej sieci w jednej ulicy (1–2 px od siebie) stają się jedną linią.
+- Linia, którą serwer rysuje przerywaną z przerwami dłuższymi niż ~8 px (~5,6 m), zostaje przerywana.
+- Mapy z działką większą niż ~840 m pokazują, jak dotąd, tylko obszar wokół jej środka.
 
 ## UI i landing (23.10.2026)
 
