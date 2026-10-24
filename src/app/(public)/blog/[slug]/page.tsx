@@ -126,37 +126,6 @@ export default async function BlogArticlePage({
       <ArticleJsonLd article={article} />
       <FaqJsonLd faq={article.faq} />
 
-      {/* NAV */}
-      <nav className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-lg font-bold tracking-tight text-gray-900 font-playfair"
-          >
-            Sprawdź<span className="text-green-700">Działkę</span>.pl
-          </Link>
-          <div
-            className="hidden md:flex items-center gap-8 text-gray-700 font-playfair text-base"
-          >
-            <Link href="/blog" className="hover:text-gray-900 transition-colors">
-              Blog
-            </Link>
-            <Link href="/pricing" className="hover:text-gray-900 transition-colors">
-              Cennik
-            </Link>
-            <Link href="/login" className="hover:text-gray-900 transition-colors">
-              Zaloguj się
-            </Link>
-          </div>
-          <Link
-            href="/register"
-            className="bg-gray-900 text-white text-sm px-5 py-2 rounded-full hover:bg-gray-700 transition-colors font-playfair"
-          >
-            Zacznij za darmo
-          </Link>
-        </div>
-      </nav>
-
       {/* BREADCRUMB */}
       <div className="pt-20 px-6">
         <div className="max-w-3xl mx-auto">
