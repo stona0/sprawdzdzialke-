@@ -617,12 +617,20 @@ Gałąź `ui/redesign` (od `fix/autonomous-recovery`). Zakres: punkt 3 (poprawki
 - **Wyszukiwanie:** prymitywy `ui`, neutralna ramka instrukcji (zamiast niebieskiej), błąd z `role="alert"`, układ przy 375 px.
 - **Landing:** FAQ nad stopką, wspólny nagłówek i stopka, `HomePageContent` bez `'use client'`. Teksty bez obietnicy PDF, „60 sekund” i „PBC prosto z uchwały”; „Wszystko, czego potrzebujesz”. Hero bez zmian, tylko zdjęcie przycięte z 1087 do 978 px, żeby usunąć znak wodny Gemini.
 
+- **Logowanie, rejestracja, hasła (3b).**
+  - Wspólny `(auth)/layout.tsx`: tło z hero (`bg-cover bg-top` zamiast nieistniejącej klasy `bg-center-top`), pełna biała karta zamiast szkła.
+  - Każda strona to serwerowy `page.tsx` z `metadata` (tytuł; `noindex` dla przypomnienia i resetu hasła) oraz kliencki `*Form.tsx`. Logika handlerów sesji A przeniesiona bez zmian (porównane bajt po bajcie).
+  - `ui/Input`, `Label`, `Button`; wspólny `GoogleButton` (SVG był skopiowany dwa razy); komunikaty `role="alert"` / `role="status"`; `autoComplete`.
+  - Teksty: „Nie pamiętasz hasła?”, „e-mail”, przykład `jan@przyklad.pl` bez ogonków; rejestracja bez „w 60 sekund”.
+  - Placeholder w `ui/Input` jaśniejszy (gray-500): był prawie tak ciemny jak wpisany tekst.
+
 ### Usunięte (z powodem)
 - **`next-themes`:** aplikacja nie ma trybu ciemnego, a bez ThemeProvidera toast mógł się wyświetlić jako ciemny.
 - **Znacznik „✓ Zweryfikowano”** przy wyniku wyszukiwania: zastąpiony informacją o źródle („Dane z ewidencji gruntów (ULDK GUGiK)”). Znacznik powtarzał nagłówek „Działka znaleziona” i był kolejnym zielonym akcentem; ważniejsze jest, skąd pochodzą dane.
 - **Przycisk „Odśwież”** na stronie generowanego raportu: strona i tak odświeża się co 4 s.
 - **Obietnica PDF** („Pobierz raport PDF”, „Pobierz PDF”): raport to strona HTML, a przycisk wywołuje `print()`. Teraz „Drukuj / zapisz PDF”.
 - **Zduplikowane nawigacje i stopki** (landing, blog ×2, panel): zastąpione wspólnymi komponentami.
+- **Karta „szkło” na ekranach logowania** (`bg-white/80 backdrop-blur-md`): zastąpiona pełną białą kartą zgodnie z planem właściciela — formularz czytelnie oddziela się od zdjęcia.
 - **`'use client'` na całym landingu:** był potrzebny tylko dla menu mobilnego, które jest teraz w `SiteHeader`.
 
 ### Ryzyka szczątkowe
@@ -638,4 +646,5 @@ Gałąź `ui/redesign` (od `fix/autonomous-recovery`). Zakres: punkt 3 (poprawki
 
 ### Nie sprawdzono
 - „Zapłać” w trybie testowym Stripe na stagingu (ponowne użycie otwartej sesji na prawdziwym API). Logika jest pokryta testami z podstawionym Stripe.
-- Ekrany logowania, rejestracji i resetu (3b) oraz nowe sekcje landingu: jeszcze nie zrobione.
+- Nowe sekcje landingu `#funkcje` i „Jak to działa”: czekają na inspiracje właściciela.
+- Ekrany auth z prawdziwym Google i prawdziwym mailem resetu (wymaga konfiguracji właściciela, jak w sekcji 16); wygląd i logika sprawdzone na stagingu i w e2e (7 testów sesji A przechodzi).
