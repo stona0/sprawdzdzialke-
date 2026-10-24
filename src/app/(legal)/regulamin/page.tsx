@@ -22,7 +22,7 @@ export default function TermsPage() {
           i zawierania umów o dostarczenie treści cyfrowych.
         </li>
         <li>
-          Serwis prowadzi {COMPANY.name}, {COMPANY_ADDRESS}, NIP {COMPANY.nip}, REGON {COMPANY.regon}
+          Serwis prowadzi {COMPANY.name}, {COMPANY_ADDRESS}, NIP {COMPANY.nip}, REGON {COMPANY.regon}{' '}
           („Usługodawca”). Kontakt: {mail}.
         </li>
         <li>Regulamin jest udostępniany nieodpłatnie w Serwisie w formie, która umożliwia jego pobranie, utrwalenie i wydrukowanie.</li>
