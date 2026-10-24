@@ -88,9 +88,9 @@ export const article: BlogArticle = {
 <p>Najszybsza metoda — <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> weryfikuje w 60 sekund:</p>
 <ul>
 <li>Czy działka jest objęta MPZP i jakie jest przeznaczenie</li>
-<li>Parametry zabudowy (jeśli MPZP istnieje)</li>
+<li>Parametry zabudowy z planu ogólnego gminy (jeśli gmina go opublikowała)</li>
 <li>Strefy ochronne (Natura 2000, strefa zalewowa)</li>
-<li>Dostępność mediów</li>
+<li>Sieci uzbrojenia w pobliżu działki</li>
 <li>Rekomendacje AI co do możliwości zabudowy</li>
 </ul>
 

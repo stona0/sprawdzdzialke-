@@ -135,6 +135,6 @@ export const article: BlogArticle = {
 
 <h2>Gdzie znaleźć wszystko w jednym miejscu?</h2>
 
-<p>Sprawdzenie mediów u każdego operatora osobno to proces na kilka dni. <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> analizuje dostępność mediów jako część kompleksowego raportu o działce — razem z MPZP, strefami ochronnymi i rekomendacjami AI. Pierwszy raport jest darmowy.</p>
+<p>Sprawdzenie mediów u każdego operatora osobno to proces na kilka dni. <strong><a href="https://sprawdzdzialke.com">SprawdzDziałkę.com</a></strong> pokazuje w raporcie sieci uzbrojenia w pobliżu działki i ich odległość od granicy (z Krajowej Integracji Uzbrojenia Terenu) — razem z MPZP, strefami ochronnymi i rekomendacjami AI. O możliwości przyłączenia i tak decyduje operator sieci w warunkach przyłączenia. Pierwszy raport jest darmowy.</p>
 `
 };

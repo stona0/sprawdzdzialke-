@@ -82,7 +82,7 @@ export const article: BlogArticle = {
 
 <ul>
 <li>Sprawdza czy działka jest objęta MPZP</li>
-<li>Odczytuje przeznaczenie terenu i parametry zabudowy</li>
+<li>Odczytuje przeznaczenie terenu, a z planu ogólnego gminy także parametry zabudowy</li>
 <li>Analizuje dodatkowe czynniki (Natura 2000, strefy zalewowe, media)</li>
 <li>Generuje raport z interpretacją AI w 60 sekund</li>
 </ul>

@@ -157,10 +157,10 @@ export const article: BlogArticle = {
 <p>Wystarczy wpisać numer działki wraz z obrębem — aplikacja sama rozpoznaje format, pobiera dane i w mniej niż minutę dostarcza raport z:</p>
 
 <ul>
-<li>Wypis ewidencyjny z danymi o powierzchni, klasie gruntu i właścicielu</li>
+<li>Danymi ewidencyjnymi: obręb, gmina, powierzchnia z obrysu działki (bez danych właściciela — raport nie zastępuje wypisu z ewidencji)</li>
 <li>Analizą MPZP lub informacją o braku planu</li>
-<li>Mapą ryzyka zalewowego</li>
-<li>Oceną dostępu do mediów</li>
+<li>Informacją o zagrożeniu powodziowym (ISOK)</li>
+<li>Sieciami uzbrojenia w pobliżu działki</li>
 <li>Rekomendacjami AI: co sprawdzić dalej, na co uważać</li>
 </ul>
 
