@@ -46,9 +46,8 @@ test('callback z błędem od dostawcy (anulowana zgoda) → /login z komunikatem
 test('callback z ?next= na obcą domenę zostaje w serwisie', async ({ request }) => {
   const res = await request.get('/auth/callback?code=nieprawidlowy&next=%2F%2Fevil.example', { maxRedirects: 0 })
   expect(res.status()).toBe(307)
-  const location = new URL(res.headers().location)
-  expect(location.host).toBe('localhost:3100')
-  expect(location.pathname).toBe('/login')
+  // względny Location — przeglądarka zostaje na hoście, na którym jest (bez obcej domeny i bez hosta wdrożenia)
+  expect(res.headers().location).toMatch(/^\/login\?error=/)
 })
 
 test('reset hasła bez sesji (link wygasł) → prośba o nowy link', async ({ page }) => {
