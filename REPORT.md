@@ -680,7 +680,7 @@ Strona obiecywała trzy różne czasy: „w 60 sekund” (tytuł, hero, OG, reje
 | Wrocław Stare Miasto | 20,6 s (w tym 15 s timeoutu Overpass, potem bezpiecznik) |
 | Kłodzko, Długołęka, Batorz, Milicz, Siechnice, Radom, Sobótka | 7,1–8,2 s |
 
-Wszędzie AI odpowiedziało. Obietnica brzmi teraz „zwykle w mniej niż minutę”, a FAQ dodaje, że przy awarii rejestru ponowienia mogą trwać kilka minut (kolejka: 15/60/180 s). Tak samo pisze sesja UI. Do zmiany po scaleniu `ui/redesign` zostały: hero w `HomePageContent.tsx` i CTA w `blog/page.tsx` oraz `blog/[slug]`.
+Wszędzie AI odpowiedziało. Obietnica brzmi teraz „zwykle w mniej niż minutę”, a FAQ dodaje, że przy awarii rejestru ponowienia mogą trwać kilka minut (kolejka: 15/60/180 s). Tak samo pisze sesja UI. Po scaleniu `ui/redesign` poprawione też hero i CTA bloga.
 
 ### Otwarte blokery (po stronie właściciela)
 1. **Weryfikacja regulaminu i polityki przez prawnika**, potem `LEGAL_DRAFT = false` i usunięcie uwag `DraftNote`.
@@ -692,3 +692,9 @@ Wszędzie AI odpowiedziało. Obietnica brzmi teraz „zwykle w mniej niż minut�
 7. **Linie energetyczne z BDOT10k są obiecane w cenniku i FAQ.** Działają jednak tylko tam, gdzie wgrano kafle (`npm run etl:power-lines`, potem `etl:power-lines:upload`, sekcja 12). Pełnego przebiegu dla kraju jeszcze nie wykonano. Przed startem trzeba uruchomić ETL albo usunąć tę obietnicę.
 8. **Google Search Console:** domenę najprościej zweryfikować rekordem DNS TXT (właściwość „Domena”), co nie wymaga zmian w kodzie. Pusty blok `verification` z TODO usunięty z `layout.tsx`. Weryfikacja możliwa po odnowieniu domeny.
 9. **Klucz Anthropic z `.env.local` był jawnie w `.claude/launch.json`.** Trzeba go zrotować w konsoli Anthropic, a nową wartość wpisać do `.env.local` i na hostingu. Wpis w `launch.json` miał zostać usunięty w tej sesji, ale klasyfikator uprawnień zablokował zapis do pliku z sekretem, więc trzeba go usunąć ręcznie albo udzielić zgody.
+
+### Weryfikacja (24.10.2026, po scaleniu `ui/redesign` 90419ff)
+- `npx tsc --noEmit` bez błędów, `npm test` 176/176, `npm run build` OK, `npm run test:e2e` 13/13 (mock Supabase, fałszywe klucze Stripe).
+- W zbudowanym HTML: canonical `/blog`, `/regulamin` i `/pricing`, og:image na stronach z własnym `openGraph`, `apple-touch-icon` i `icon.svg`. `sitemap.xml` ma `/kontakt`, `/regulamin` i `/polityka-prywatnosci`, `robots.txt` bez zmian (wszystko poza `/api`, `/admin`, `/dashboard` i `/report` dozwolone).
+- Zrzuty 1280 px i 375 px stron `/`, `/pricing`, `/regulamin`, `/polityka-prywatnosci`, `/kontakt`, `/register`, `/login`, `/blog`, artykułu oraz okna płatności: żadna strona nie przewija się w poziomie. **Zrobione Playwrightem na mocku Supabase z `playwright.config.ts`, nie na stagingu**, bo konfiguracji stagingu w `.claude/launch.json` nie dało się dodać (pkt 9). Strony publiczne nie odpytują bazy, więc wyglądają tak samo, ale okno płatności widziano tylko z kontem z mocka.
+- Nie sprawdzono: rzeczywistej sesji Stripe Checkout z metadanymi zgody (wymaga kluczy testowych i stagingu), logowania Google i stron błędów (nie da się ich wywołać bez wstrzyknięcia błędu).
