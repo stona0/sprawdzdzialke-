@@ -94,7 +94,7 @@ test('pełna ścieżka: logowanie → działka → darmowy raport → płatny ra
   await page.goto('/dashboard')
   await expect(page.getByText('Każdy raport kosztuje 29 PLN.')).toBeVisible()
   await searchParcel(page, PAID_PARCEL)
-  await page.getByRole('button', { name: 'Kup raport — 29 PLN' }).click()
+  await page.getByRole('button', { name: 'Kup raport — 29 zł' }).click()
   await expect(page.getByRole('dialog').getByText('Kup raport – 29 PLN')).toBeVisible()
   await page.getByRole('button', { name: 'Anuluj' }).click()
 

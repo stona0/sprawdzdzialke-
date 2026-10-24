@@ -5,7 +5,11 @@ import {
   Search, MapPin, AlertCircle, CheckCircle2,
   ExternalLink, Loader2, Info
 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import type { ParcelData } from '@/lib/geoportal'
+import { REPORT_PRICE_LABEL } from '@/lib/pricing'
 
 interface Props {
   onParcelFound: (parcel: ParcelData) => void
@@ -76,74 +80,68 @@ export default function ParcelSearch({ onParcelFound, hasFreeReport }: Props) {
     <div className="space-y-5">
 
       {/* Karta wyszukiwania */}
-      <div className="border border-gray-100 rounded-2xl p-7 bg-white shadow-sm">
+      <div className="rounded-2xl border bg-card p-5 shadow-sm sm:p-7">
 
         {/* Instrukcja */}
-        <div className="flex gap-3 bg-blue-50/60 border border-blue-100 rounded-xl p-4 mb-6 text-sm text-blue-800">
-          <Info className="h-4 w-4 mt-0.5 shrink-0 text-blue-500" />
-          <div>
-            <p className="font-semibold mb-1.5">Jak znaleźć identyfikator działki?</p>
-            <ol className="list-decimal ml-4 space-y-1 text-xs text-blue-700">
+        <div className="mb-6 flex gap-3 rounded-xl border bg-muted p-4 text-sm text-gray-900">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+          <div className="min-w-0">
+            <p className="mb-1.5 font-semibold">Jak znaleźć identyfikator działki?</p>
+            <ol className="ml-4 list-decimal space-y-1 text-sm text-muted-foreground">
               <li>
                 Wejdź na{' '}
-                <a href="https://geoportal.gov.pl/pl/map/" target="_blank" rel="noopener noreferrer" className="underline font-semibold">
-                  geoportal.gov.pl/pl/map <ExternalLink className="h-3 w-3 inline ml-0.5" />
+                <a href="https://geoportal.gov.pl/pl/map/" target="_blank" rel="noopener noreferrer" className="whitespace-nowrap font-medium text-primary underline underline-offset-2">
+                  geoportal.gov.pl/pl/map <ExternalLink className="ml-0.5 inline h-3 w-3" aria-hidden />
                 </a>
               </li>
               <li>Wyszukaj adres lub odszukaj działkę na mapie</li>
-              <li>Kliknij na działkę → pojawi się <strong>Identyfikator działki</strong></li>
-              <li>Skopiuj wartość, np. <code className="bg-blue-100 px-1.5 py-0.5 rounded text-xs">141201_1.0001.6/2</code></li>
+              <li>Kliknij na działkę → pojawi się <strong className="text-gray-900">Identyfikator działki</strong></li>
+              <li>Skopiuj wartość, np. <code className="inline-block whitespace-nowrap rounded bg-white px-1.5 py-0.5 font-mono text-xs text-gray-900">141201_1.0001.6/2</code></li>
             </ol>
           </div>
         </div>
 
         {/* Formularz — JEDNO POLE */}
         <form onSubmit={handleSearch} className="space-y-5">
-          <div>
-            <label htmlFor="parcelId" className="block text-sm text-gray-600 mb-1.5">
-              Identyfikator działki (EGB)
-            </label>
-            <input
+          <div className="space-y-1.5">
+            <Label htmlFor="parcelId">Identyfikator działki (EGB)</Label>
+            <Input
               id="parcelId"
               placeholder="np. 141201_1.0001.6/2"
               value={parcelId}
               onChange={e => setParcelId(e.target.value)}
               disabled={loading || !!result}
               required
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm font-mono outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100 transition placeholder:text-gray-300 disabled:opacity-50"
+              autoComplete="off"
+              spellCheck={false}
+              aria-describedby="parcelId-hint"
+              aria-invalid={error ? true : undefined}
+              className="h-11 rounded-xl font-mono"
             />
-            <p className="mt-1.5 text-xs text-gray-400">
+            <p id="parcelId-hint" className="text-xs text-muted-foreground">
               Gmina zostanie rozpoznana automatycznie z kodu TERYT
             </p>
           </div>
 
           {error && (
-            <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl p-3">
-              <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+            <div role="alert" className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+              <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
               <span>{error}</span>
             </div>
           )}
 
           {!result ? (
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-3 rounded-full text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-60"
-            >
+            <Button type="submit" size="lg" variant="dark" disabled={loading} className="w-full">
               {loading ? (
-                <><Loader2 className="h-4 w-4 animate-spin" /> Wyszukuję w Geoportal…</>
+                <><Loader2 className="animate-spin" /> Wyszukuję w Geoportal…</>
               ) : (
-                <><Search className="h-4 w-4" /> Sprawdź działkę</>
+                <><Search /> Sprawdź działkę</>
               )}
-            </button>
+            </Button>
           ) : (
-            <button
-              type="button"
-              onClick={handleReset}
-              className="w-full py-3 rounded-full border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
-            >
+            <Button type="button" size="lg" variant="outline" onClick={handleReset} className="w-full">
               Szukaj innej działki
-            </button>
+            </Button>
           )}
         </form>
       </div>
@@ -169,78 +167,69 @@ function ParcelResultCard({
   hasFreeReport: boolean
   onGenerate: () => void
 }) {
+  const facts = [
+    ['Numer działki', parcel.numer || parcel.parcelId],
+    ['Gmina', parcel.gmina],
+    parcel.obreb ? ['Obręb', parcel.obreb] : null,
+    parcel.powiat ? ['Powiat', parcel.powiat] : null,
+    parcel.wojewodztwo ? ['Województwo', parcel.wojewodztwo] : null,
+    parcel.wspolrzedne ? ['Współrzędne', `${parcel.wspolrzedne.lat}, ${parcel.wspolrzedne.lng}`] : null,
+  ].filter((f): f is [string, string] => f !== null)
+
   return (
-    <div className="border border-green-200 bg-green-50/50 rounded-2xl p-7 space-y-5">
+    <section aria-labelledby="wynik-dzialki" className="space-y-5 rounded-2xl border bg-card p-5 shadow-sm sm:p-7">
       {/* Nagłówek */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <p className="flex items-center gap-2 font-semibold text-gray-800">
-          <CheckCircle2 className="h-5 w-5 text-green-600" />
+      <div>
+        <h2 id="wynik-dzialki" className="flex items-center gap-2 font-semibold text-gray-900">
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" aria-hidden />
           Działka znaleziona w Geoportal
-        </p>
-        <span className="text-xs px-3 py-1 rounded-full bg-green-100 text-green-700 border border-green-200 font-medium">
-          ✓ Zweryfikowano
-        </span>
+        </h2>
+        <p className="mt-1 text-xs text-muted-foreground">Dane z ewidencji gruntów (ULDK GUGiK)</p>
       </div>
 
       {/* Dane działki */}
-      <div className="grid sm:grid-cols-2 gap-3">
-        {[
-          ['Numer działki', parcel.numer || parcel.parcelId],
-          ['Gmina', parcel.gmina],
-          parcel.obreb ? ['Obręb', parcel.obreb] : null,
-          parcel.powiat ? ['Powiat', parcel.powiat] : null,
-          parcel.wojewodztwo ? ['Województwo', parcel.wojewodztwo] : null,
-          parcel.wspolrzedne ? ['Współrzędne', `${parcel.wspolrzedne.lat}, ${parcel.wspolrzedne.lng}`] : null,
-        ].filter(Boolean).map((item) => {
-          const [label, value] = item as [string, string]
-          return (
-            <div key={label}>
-              <p className="text-xs text-gray-400 uppercase tracking-widest mb-0.5">{label}</p>
-              <p className="text-sm font-medium text-gray-800">{value}</p>
-            </div>
-          )
-        })}
-      </div>
+      <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+        {facts.map(([label, value]) => (
+          <div key={label} className="min-w-0">
+            <dt className="text-xs text-muted-foreground">{label}</dt>
+            <dd className="break-words text-sm font-medium text-gray-900">{value}</dd>
+          </div>
+        ))}
+      </dl>
 
       {parcel.wspolrzedne && (
         <a
           href={`https://maps.google.com/maps?q=${parcel.wspolrzedne.lat},${parcel.wspolrzedne.lng}&z=16`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs text-green-700 hover:underline"
+          className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
         >
-          <MapPin className="h-3 w-3" />
+          <MapPin className="h-3.5 w-3.5" aria-hidden />
           Pokaż na mapie Google
-          <ExternalLink className="h-3 w-3" />
+          <ExternalLink className="h-3 w-3" aria-hidden />
         </a>
       )}
 
       {/* CTA */}
-      <div className="pt-4 border-t border-green-200">
+      <div className="space-y-3 border-t pt-5">
         {hasFreeReport ? (
-          <div className="space-y-2">
-            <p className="text-sm text-green-700">✓ Masz darmowy raport do wykorzystania</p>
-            <button
-              onClick={onGenerate}
-              className="w-full bg-green-700 text-white py-3 rounded-full text-sm font-medium hover:bg-green-800 transition-colors"
-            >
+          <>
+            <p className="text-sm text-muted-foreground">Masz darmowy raport do wykorzystania.</p>
+            <Button size="lg" onClick={onGenerate} className="w-full">
               Generuj darmowy raport
-            </button>
-          </div>
+            </Button>
+          </>
         ) : (
-          <div className="space-y-2">
-            <p className="text-sm text-gray-500">
-              Raport kosztuje <span className="font-semibold text-gray-800">29 PLN</span>
+          <>
+            <p className="text-sm text-muted-foreground">
+              Raport kosztuje <span className="font-semibold text-gray-900">{REPORT_PRICE_LABEL}</span>
             </p>
-            <button
-              onClick={onGenerate}
-              className="w-full bg-gray-900 text-white py-3 rounded-full text-sm font-medium hover:bg-gray-700 transition-colors"
-            >
-              Kup raport — 29 PLN
-            </button>
-          </div>
+            <Button size="lg" onClick={onGenerate} className="w-full">
+              Kup raport — {REPORT_PRICE_LABEL}
+            </Button>
+          </>
         )}
       </div>
-    </div>
+    </section>
   )
 }
