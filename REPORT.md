@@ -593,7 +593,17 @@ Po zmianie harnessu (`judge.mjs`, `run-eval.mjs`, `parcels.json`) runner odmawia
 - `tests/e2e/auth.spec.ts`: 7 testów na mocku Supabase, którego `/auth/v1/settings` odpowiada jak staging. Sprawdzają: błędne hasło, powrót na `redirectTo`, `redirectTo` na obcą domenę, wyłączony Google, błąd dostawcy w callbacku, `?next=` na obcą domenę, reset hasła bez sesji. Wszystkie przechodzą.
 - `npm test` 156/156; `npm run build` OK.
 
-**Nie sprawdzono:** pełnej ścieżki Google (wymaga konfiguracji właściciela i jego konta Google) ani resetu hasła z prawdziwym mailem.
+**Konfiguracja i weryfikacja na stagingu (24.10.2026):**
+- Właściciel skonfigurował Google w Google Cloud i Supabase według `docs/STAGING.md`. Ekran zgody jest w trybie „Testing” z listą testerów, bo publikacja wymaga polityki prywatności, której jeszcze nie ma.
+- `/auth/v1/settings`: `google = true`.
+- `authorize` zwraca 302 do accounts.google.com z `redirect_uri` projektu stagingu, a Google przechodzi do wyboru konta (bez `redirect_uri_mismatch` i `invalid_client`).
+- Właściciel zalogował się przez Google na `testdzialki.netlify.app` (wdrożona starsza wersja kodu; ścieżka OAuth bez zmian) i trafił do panelu.
+- W bazie stagingu Supabase dołączył tożsamość Google do istniejącego konta z tym samym adresem: `providers = [email, google]`, profil istnieje.
+
+**Nie sprawdzono:**
+- rejestracji nowego konta wyłącznie przez Google (ten sam trigger `handle_new_user` co przy e-mailu, potwierdzony 23.10);
+- resetu hasła z prawdziwym mailem;
+- nowych komunikatów błędów na wdrożonym stagingu, bo Netlify nie ma kredytów. Sprawdzone tylko lokalnie, testami e2e.
 
 ### Mapa uzbrojenia: linie wektorowe, widok przycięty do działki
 
