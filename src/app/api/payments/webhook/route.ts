@@ -62,13 +62,14 @@ export async function POST(request: NextRequest) {
     }
 
     // ── Zapisz płatność ─────────────────────────────────────────────
+    // Wiersz „pending” zapisany przy tworzeniu sesji (lib/checkout.ts) przechodzi w „paid”.
     await supabase.from('payments').upsert({
       user_id: userId,
       report_id: reportId,
       stripe_session_id: session.id,
       amount: (session.amount_total ?? 0) / 100,
       status: 'paid',
-    }, { onConflict: 'stripe_session_id', ignoreDuplicates: true })
+    }, { onConflict: 'stripe_session_id' })
 
     // ── Oznacz raport jako opłacony i dodaj do kolejki ──────────────
     await supabase

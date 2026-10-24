@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
-import { createCheckoutSession } from '@/lib/stripe'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
+import { startCheckout } from '@/lib/checkout'
+import { stripeCheckout } from '@/lib/stripe'
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -8,14 +9,17 @@ export async function POST(request: NextRequest) {
 
   if (!user) return NextResponse.json({ error: 'Nieautoryzowany' }, { status: 401 })
 
-  const { parcelId, gmina, reportId } = await request.json()
-  if (!parcelId || !gmina || !reportId) {
+  // Działkę i gminę bierzemy z raportu w bazie, nie z żądania.
+  const { reportId } = await request.json()
+  if (!reportId || typeof reportId !== 'string') {
     return NextResponse.json({ error: 'Brak wymaganych parametrów' }, { status: 400 })
   }
 
   try {
-    const url = await createCheckoutSession(user.id, parcelId, gmina, reportId, user.email!)
-    return NextResponse.json({ url })
+    const supabaseService = await createServiceClient()
+    const result = await startCheckout(supabaseService, stripeCheckout, { userId: user.id, email: user.email!, reportId })
+    if (!result.ok) return NextResponse.json({ error: result.error }, { status: result.status })
+    return NextResponse.json({ url: result.url })
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Błąd Stripe'
     return NextResponse.json({ error: message }, { status: 500 })

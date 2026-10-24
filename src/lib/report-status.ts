@@ -39,6 +39,7 @@ export async function resolveReportStatus(svc: SupabaseClient, report: ReportRow
     .from('payments')
     .select('created_at')
     .eq('report_id', report.id)
+    .eq('status', 'paid')
     .order('created_at', { ascending: false })
     .limit(1)
     .maybeSingle()

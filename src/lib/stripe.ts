@@ -1,11 +1,10 @@
 import Stripe from 'stripe'
+import type { CheckoutStripe } from './checkout'
+import { REPORT_PRICE_GROSZ } from './pricing'
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? 'placeholder', {
   apiVersion: '2026-04-22.dahlia',
 })
-
-export const REPORT_PRICE_PLN = 29
-export const REPORT_PRICE_GROSZ = REPORT_PRICE_PLN * 100
 
 export async function createCheckoutSession(
   userId: string,
@@ -13,7 +12,7 @@ export async function createCheckoutSession(
   gmina: string,
   reportId: string,
   userEmail: string
-): Promise<string> {
+): Promise<{ id: string; url: string }> {
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card', 'blik', 'p24'],
     line_items: [
@@ -41,7 +40,15 @@ export async function createCheckoutSession(
     },
   })
 
-  return session.url!
+  return { id: session.id, url: session.url! }
+}
+
+export const stripeCheckout: CheckoutStripe = {
+  retrieve: async id => {
+    const s = await stripe.checkout.sessions.retrieve(id)
+    return { status: s.status, url: s.url }
+  },
+  create: ({ userId, parcelId, gmina, reportId, email }) => createCheckoutSession(userId, parcelId, gmina, reportId, email),
 }
 
 export async function verifyPayment(sessionId: string) {
